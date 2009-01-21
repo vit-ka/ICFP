@@ -8,8 +8,8 @@
     <ProjectGuid>{C61454FA-06FA-4077-A4CD-C542F78D8DBA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DNA</RootNamespace>
-    <AssemblyName>DNA</AssemblyName>
+    <RootNamespace>Dna</RootNamespace>
+    <AssemblyName>Dna</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

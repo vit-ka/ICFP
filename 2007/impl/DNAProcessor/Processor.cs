@@ -1,6 +1,6 @@
 ﻿namespace DNAProcessor
 {
-    public class Class1
+    public class Processor
     {
     }
 }

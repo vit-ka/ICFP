@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dna", "Dna\Dna.csproj", "{C61454FA-06FA-4077-A4CD-C542F78D8DBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnaToRnaRunner", "DnaToRnaRunner\DnaToRnaRunner.csproj", "{871CBF34-A325-426A-8B88-DBDC04A4D63A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{FE691B09-22BD-465D-9ED4-B73B25F67C68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C61454FA-06FA-4077-A4CD-C542F78D8DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61454FA-06FA-4077-A4CD-C542F78D8DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61454FA-06FA-4077-A4CD-C542F78D8DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61454FA-06FA-4077-A4CD-C542F78D8DBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{871CBF34-A325-426A-8B88-DBDC04A4D63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{871CBF34-A325-426A-8B88-DBDC04A4D63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{871CBF34-A325-426A-8B88-DBDC04A4D63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{871CBF34-A325-426A-8B88-DBDC04A4D63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE691B09-22BD-465D-9ED4-B73B25F67C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE691B09-22BD-465D-9ED4-B73B25F67C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE691B09-22BD-465D-9ED4-B73B25F67C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE691B09-22BD-465D-9ED4-B73B25F67C68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

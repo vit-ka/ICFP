@@ -1,4 +1,4 @@
-namespace DnaToRnaRunner
+﻿namespace DnaToRnaRunner
 {
     public static class Helper
     {

@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Common
 {
@@ -16,9 +16,8 @@ namespace Common
     /// <typeparam name="ItemType">Тип элемента списка.</typeparam>
     public class RoapList<ItemType> : IEnumerable<ItemType>
     {
-        public void Add(int i)
-        {
-        }
+        /// <summary>  Размер каждого из дочерних массивов. </summary>
+        private const int _blockSize = 5;
 
         public int Length
         {
@@ -26,21 +25,6 @@ namespace Common
             {
                 return 0;
             }
-        }
-
-        public void AddRange(ICollection<ItemType> list)
-        {
-            
-        }
-
-        public void RemoveAt(int i)
-        {
-            
-        }
-
-        public void RemoveRange(int i, int i1)
-        {
-            
         }
 
         public ItemType this[int index]
@@ -52,9 +36,10 @@ namespace Common
 
             set
             {
-                
             }
         }
+
+        #region IEnumerable<ItemType> Members
 
         public IEnumerator<ItemType> GetEnumerator()
         {
@@ -65,5 +50,55 @@ namespace Common
         {
             return GetEnumerator();
         }
+
+        #endregion
+
+        public void Add(int i)
+        {
+        }
+
+        public void AddRange(ICollection<ItemType> list)
+        {
+        }
+
+        public void RemoveAt(int i)
+        {
+        }
+
+        public void RemoveRange(int i, int i1)
+        {
+        }
+
+        #region Nested type: ListItem
+
+        /// <summary>
+        /// Элемент списка, непосредственно хранящий значения.
+        /// </summary>
+        private class ListItem
+        {
+            public ListItem(int firstIndex)
+            {
+                Items = new ItemType[_blockSize];
+                FirstIndex = firstIndex;
+            }
+
+            public ItemType[] Items
+            {
+                [DebuggerStepThrough]
+                get;
+                [DebuggerStepThrough]
+                set;
+            }
+
+            public int FirstIndex
+            {
+                [DebuggerStepThrough]
+                get;
+                [DebuggerStepThrough]
+                set;
+            }
+        }
+
+        #endregion
     }
 }

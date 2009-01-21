@@ -1,0 +1,250 @@
+Content-Type: multipart/related; start=<op.mhtml.1216128403201.656249483b14bc6e@10.76.6.70>; boundary=----------nQ7IJ3xdsmhpJgFkNRPNX4
+Content-Location: http://smlnj.org/icfp08-contest/simulator.html
+Subject: =?utf-8?Q?ICFP=20Programming=20Contest=202008:=20Simulator?=
+MIME-Version: 1.0
+
+------------nQ7IJ3xdsmhpJgFkNRPNX4
+Content-Disposition: inline; filename=simulator.html
+Content-Type: text/html; charset=UTF-8; name=simulator.html
+Content-Id: <op.mhtml.1216128403201.656249483b14bc6e@10.76.6.70>
+Content-Location: http://smlnj.org/icfp08-contest/simulator.html
+Content-Transfer-Encoding: 8bit
+
+<HTML>
+<HEAD>
+<TITLE>ICFP Programming Contest 2008: Simulator</TITLE>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="style.css">
+</HEAD>
+<BODY>
+<H1>The Eleventh ICFP Programming Contest: Simulator</H1>
+
+<p>
+To help you test your controller, NASA is providing a simulator.
+This program is available for several different systems, including
+the LiveCD environment.
+To run the server, you must supply it with the name of a map file, so
+NASA is also providing some sample maps for download.
+
+<H2>Running the simulator</H2>
+
+For example, the command
+<BLOCKQUOTE>
+  <TT>./server -v map1.wrld</TT>
+</BLOCKQUOTE>
+will run the server on <TT>map1.wrld</TT> with a graphical view of the
+simulation.
+When the simulator starts up, it prints the message:
+<BLOCKQUOTE>
+  <TT>waiting for client connection on port</TT> <I>n</I>
+</BLOCKQUOTE>
+where <I>n</I> is the port number used to connect to the server.
+When running graphical mode, the simulator can be terminated by typing
+the `<TT>q</TT>' key.
+
+Assuming your program resides is in the \texttt{bin} directory, you can then
+run it with the command
+<BLOCKQUOTE>
+  <TT>bin/run</TT> <I>hostname</I> <I>n</I>
+</BLOCKQUOTE>
+where <I>hostname</I> is the name of the machine on which the server is
+running.
+
+You can also specify the port using the <tt>-p</tt> option.
+For example,
+<BLOCKQUOTE>
+  <TT>./server -p 19023 map1.wrld</TT>
+</BLOCKQUOTE>
+will run the server in non-graphical mode using port 19023.
+
+<H2>Map-file format</H2>
+<p>
+NASA has supplied some sample maps for download, but you may wish to define your own.
+<P>Maps are represented as JSON (JavaScript Object Notation) files.
+(See <TT>http://www.json.org/</TT> for details on JSON.)
+The format of a map file is as follows:
+</P><BLOCKQUOTE><FONT COLOR=blue><TT>
+{<BR/>
+"size" : </TT></FONT><FONT COLOR=blue><TT><I>INT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"timeLimit" : </TT></FONT><FONT COLOR=blue><TT><I>INT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"vehicleParams" : </TT></FONT><FONT COLOR=blue><TT><I>PARAMS</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"martianParams" : </TT></FONT><FONT COLOR=blue><TT><I>PARAMS</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"craters" : [ { "x" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>, "y" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>, "r" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT> }, ... ],<BR/>
+"boulders" : [ { "x" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>, "y" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>, "r" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT> }, ... ],<BR/>
+"runs" : [ </TT></FONT><FONT COLOR=blue><TT><I>RUN</I></TT></FONT><FONT COLOR=blue><TT>, ... ]<BR/>
+}
+</TT></FONT></BLOCKQUOTE><P>where <TT><I>PARAMS</I></TT> is a JSON object with the following
+format:
+</P><BLOCKQUOTE><FONT COLOR=blue><TT>
+{<BR/>
+"maxSpeed" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"accel" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"brake" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"turn" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"hardTurn" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"rotAccel" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"frontView" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"rearView" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT><BR/>
+}
+</TT></FONT></BLOCKQUOTE><P>and a <TT><I>RUN</I></TT> is a JSON object with the following
+format:
+</P><BLOCKQUOTE><FONT COLOR=blue><TT>
+{<BR/>
+"vehicle" : </TT></FONT><FONT COLOR=blue><TT><I>VEHICLE</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"enemies" : [ </TT></FONT><FONT COLOR=blue><TT><I>ENEMY</I></TT></FONT><FONT COLOR=blue><TT>, ... ]<BR/>
+}
+</TT></FONT></BLOCKQUOTE><P>A <TT><I>VEHICLE</I></TT> object has the form
+</P><BLOCKQUOTE><FONT COLOR=blue><TT>
+{<BR/>
+"x" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"y" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"dir" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT><BR/>
+}
+</TT></FONT></BLOCKQUOTE><P>and an <TT><I>ENEMY</I></TT> object is a vehicle object extended with the
+following extra fields:
+</P><BLOCKQUOTE><FONT COLOR=blue><TT>
+{<BR/>
+... </TT></FONT><FONT COLOR=blue><TT><I>as per VEHICLE</I></TT></FONT><FONT COLOR=blue><TT> ...<BR/>
+"speed" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT>,<BR/>
+"view" : </TT></FONT><FONT COLOR=blue><TT><I>FLOAT</I></TT></FONT><FONT COLOR=blue><TT><BR/>
+}
+</TT></FONT></BLOCKQUOTE>
+
+<H2>Downloads</H2>
+
+<p>
+The current version of the sample server is 1.1.
+It is available various versions.
+
+<table summary="downloads" cellspacing="5" cellpadding="2" align="center">
+  <tr>
+    <th><b>File</b></th>
+    <th><b>Size (bytes)</b></th>
+    <th><b>md5 hash</b></th>
+    <th width="40%"><b>Description</b></th>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="sample-maps.tgz">sample-maps.tgz</a></tt></td>
+    <td align="right">5516</td>
+    <td align="center">80f7a0549e0231b9e59e1e273ed9e8a8</td>
+    <td align="left">Sample maps (v1.1)</td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="livecd.tgz">livecd.tgz</a></tt></td>
+    <td align="right">361588</td>
+    <td align="center">5968d9d0de1e83fb3064774036923ae4</td>
+    <td align="left">Server for LiveCD environment (v1.2)</td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="no-gui-static.tgz">no-gui-static.tgz</a></tt></td>
+    <td align="right">526142</td>
+    <td align="center">ea72e4118ec5c6b4f02d1d16a26b42a0</td>
+    <td align="left">Sample-server that was statatically linked against the LiveCD (v1.2).
+      Does not have GUI support.
+    </td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="linux2.6.24.tgz">linux2.6.24.tgz</a></tt></td>
+    <td align="right">362976</td>
+    <td align="center">75196741cbc0e17d168cd78097e041c3</td>
+    <td align="left">Sample server for Linux 2.6.24 (v1.2)</td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="macos10.5-intel.tgz">macos10.5-intel.tgz</a></tt></td>
+    <td align="right">365139</td>
+    <td align="center">5cb02e0dc5fd67572391b999e2385841</td>
+    <td align="left">Sample server for Mac OS X 10.5/Intel (v1.2)</td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="macos10.4-intel.tgz">macos10.4-intel.tgz</a></tt></td>
+    <td align="right">367272</td>
+    <td align="center">945a7e8c8980fee1b3422d8e92ac0b26</td>
+    <td align="left">Sample server for Mac OS X 10.4/Intel (v1.2)</td>
+  </tr>
+  <tr>
+    <td align="left"><tt><a href="macos10.4-ppc.tgz">macos10.4-ppc.tgz</a></tt></td>
+    <td align="right">439324</td>
+    <td align="center">d8d4c543c31be10c5d0a83e7055039e3</td>
+    <td align="left">Sample server for Mac OS X 10.4/PowerPC (v1.2)</td>
+  </tr>
+</table>
+
+<h3>Change history</h3>
+<h4>Version 1.0</h4>
+Initial version.
+
+<h4>Maps Version 1.1</h4>
+<ul>
+  <li>Fixed boulders in craters problem</li>
+  <li>Tar file does not contain ".svn" or other crud</li>
+</ul>
+
+<h4>Server Version 1.1</h4>
+<ul>
+  <li>Added full-resolution Linux version and Mac OS X version.</li>
+  <li>Added <tt>-p</tt> command-line option.</li>
+  <li>The server now sets <tt>SO_REUSEADDR</tt>.</li>
+  <li>Rotational acceleration is properly modeled.</li>
+</ul>
+
+<h4>Server Version 1.2</h4>
+<ul>
+  <li>Fixed bug in Martian behavior.</li>
+  <li>Better messages when the server fails</li>
+  <li>Remove bogus <tt>glEnable(GL_DEPTH_TEST)<tt></li>
+  <li>The server now sets <tt>SO_LINGER</tt> (except on Mac OS 10.4
+    versions).</li>
+</ul>
+
+<p>
+<a href="http://icfpcontest.org/index.html">Back to contest home page</a>
+</body>
+</HTML>
+
+------------nQ7IJ3xdsmhpJgFkNRPNX4
+Content-Disposition: inline; filename=style.css
+Content-Type: text/css; charset=UTF-8; name=style.css
+Content-Location: http://smlnj.org/icfp08-contest/style.css
+Content-Transfer-Encoding: 8bit
+
+div, h1, h2, h3, table
+  { border: 3px solid
+  ; padding     : 2px
+  }
+
+h1 
+  { background-color: #acf
+  ; border-color    : #c99
+  ; text-align      : center
+  }
+
+h2
+  { background-color: #cfc
+  ; border-color    : #9c9
+  }
+            
+table, h3
+  { background-color: #ccf
+  ; border-color    : #99c
+  }
+
+div { background-color: #ddd;
+      width: 80%;
+      margin-left: auto; margin-right: auto; }
+
+var { color: #00c; }
+code { color: #d00; }
+
+th { text-align: left; }
+td { background-color: white; }
+
+table.results tr td { text-align: right; }
+table.results tr th { background-color: #ccf;font-size: small; }
+.failed { background-color: red; }
+.success { background-color: #9f9; }
+.score { background-color: #fc9; }
+.time { font-size: small; }
+.problem { background-color: #ff6; }
+.badrun { background-color: #f6f; }
+
+------------nQ7IJ3xdsmhpJgFkNRPNX4--

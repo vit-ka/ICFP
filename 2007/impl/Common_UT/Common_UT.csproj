@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Guard_UT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoapList_UT.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -10,9 +10,14 @@ namespace Common
             ArgumentNotNull(filename, "filename");
 
             if (!File.Exists(filename))
-                throw new InvalidDataException(String.Format("File \"{0}\" does not exists. Absolute path: \"{1}\"",
-                                                             filename,
-                                                             new FileInfo(filename).FullName));
+            {
+                string exceptionMessage =
+                    string.Format("File \"{0}\" does not exists. Absolute path: \"{1}\"",
+                                  filename,
+                                  new FileInfo(filename).FullName);
+
+                throw new InvalidDataException(exceptionMessage);
+            }
         }
 
         public static void ArgumentNotNull(object arg, string argName)

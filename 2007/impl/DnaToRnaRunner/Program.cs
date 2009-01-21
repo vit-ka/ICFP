@@ -34,6 +34,7 @@ namespace DnaToRnaRunner
 
             string readedDna = File.ReadAllText(_dnaFile);
 
+            // Обработка ДНК.
             var processor = new Processor();
             processor.ImportDna(readedDna);
             processor.ProcessDna();

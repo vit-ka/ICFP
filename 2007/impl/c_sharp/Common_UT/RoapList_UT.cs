@@ -14,28 +14,28 @@ namespace Common_UT
         {
             var list = new RoapList<int>();
 
-            Assert.AreEqual(0, list.Length);
+            Assert.AreEqual(0, list.Count);
 
             list.Add(12);
             list.Add(12);
             list.Add(13);
             list.Add(14);
-            Assert.AreEqual(4, list.Length);
+            Assert.AreEqual(4, list.Count);
 
             list.Add(16);
-            Assert.AreEqual(5, list.Length);
+            Assert.AreEqual(5, list.Count);
 
             list.Add(int.MaxValue);
-            Assert.AreEqual(6, list.Length);
+            Assert.AreEqual(6, list.Count);
 
             list.Add(int.MinValue);
-            Assert.AreEqual(7, list.Length);
+            Assert.AreEqual(7, list.Count);
 
             const int cycleCount = 1000000;
             for (int i = 0; i < cycleCount; ++i)
                 list.Add(i);
 
-            Assert.AreEqual(7 + cycleCount, list.Length);
+            Assert.AreEqual(7 + cycleCount, list.Count);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Common_UT
                 expectedList.Add(i);
             }
 
-            Assert.AreEqual(cycleCount, list.Length);
+            Assert.AreEqual(cycleCount, list.Count);
             Assert.That(list, Is.Unique);
             Assert.That(list, Is.EquivalentTo(expectedList));
         }
@@ -68,7 +68,7 @@ namespace Common_UT
 
             list.AddRange(expectedList);
 
-            Assert.AreEqual(cycleCount, list.Length);
+            Assert.AreEqual(cycleCount, list.Count);
             Assert.That(list, Is.Unique);
             Assert.That(list, Is.EquivalentTo(expectedList));
         }

@@ -82,6 +82,17 @@ namespace Common_UT
             {
                 Assert.IsInstanceOfType(typeof (ArgumentNullException), ex);
             }
+
+            // Передаем чушь вместо имени файла.
+            try
+            {
+                Guard.FileExists(":::::");
+                Assert.Fail("Exception must be thrown but no one has been catched. Incorrect path.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(typeof (ArgumentException), ex);
+            }
         }
     }
 }

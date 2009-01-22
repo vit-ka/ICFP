@@ -12,7 +12,6 @@
 
         public void ProcessDna()
         {
-                
         }
 
         public string ExportDna()

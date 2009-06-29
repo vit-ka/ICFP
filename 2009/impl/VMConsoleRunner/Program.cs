@@ -30,26 +30,40 @@ namespace ICFP2009.VMConsoleRunner
 
 
             VirtualMachine.Instance.Ports.Input[0x3e80] = 1001;
+
+            PrintInputPorts();
             VirtualMachine.Instance.RunOneStep();
-
-            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Output)
-            {
-                Console.WriteLine("Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
-            }
+            PrintOutputPorts();
 
 
-            VirtualMachine.Instance.Ports.Input[0x02] = 1000;
-            VirtualMachine.Instance.Ports.Input[0x03] = -1000;
+            PrintInputPorts();
 
             for (int i = 0; i < 1000; ++i )
                 VirtualMachine.Instance.RunOneStep();
 
-            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Output)
-            {
-                Console.WriteLine("Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
-            }
+            PrintOutputPorts();
 
             _log.InfoFormat("Interpretation finished...");
+        }
+
+        private static void PrintOutputPorts()
+        {
+            Console.WriteLine("Output:");
+
+            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Output)
+            {
+                Console.WriteLine(" * Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
+            }
+        }
+
+        private static void PrintInputPorts()
+        {
+            Console.WriteLine("Input:");
+
+            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Input)
+            {
+                Console.WriteLine(" * Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
+            }
         }
 
         private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -45,6 +45,7 @@ namespace ICFP2009.VirtualMachineLib
                             // Noop. Ничего не делаем.
                         case 0x00:
                             break;
+
                             // Cmpz. Операция сравнения.
                         case 0x01:
                             // С 23 по 21 биты. 10 бит.
@@ -57,40 +58,51 @@ namespace ICFP2009.VirtualMachineLib
                                 case 0x00:
                                     _statusRegister = memory[r1] < 0.0;
                                     break;
+
                                     // LEZ. Меньше или равно.
                                 case 0x01:
                                     _statusRegister = memory[r1] < 0.0 || memory[r1] == 0;
                                     break;
+
                                     // EQZ. Равно.
                                 case 0x02:
                                     _statusRegister = memory[r1] == 0;
                                     break;
+
                                     // GEZ. Больше или равно.
                                 case 0x03:
                                     _statusRegister = memory[r1] > 0.0 || memory[r1] == 0;
                                     break;
+
                                     // GTZ. Больше.
                                 case 0x04:
                                     _statusRegister = memory[r1] > 0.0;
                                     break;
+
                                 default:
-                                    throw new InvalidDataException(string.Format("Immediate \"0x{0:x}\" does not exists.", immediate));
+                                    throw new InvalidDataException(
+                                        string.Format("Immediate \"0x{0:x}\" does not exists.", immediate));
                             }
                             break;
+
                             // Sqrt. Квадратный корень.
                         case 0x02:
                             memory[_currentIndex] = Math.Sqrt(memory[r1]);
                             break;
+
                             // Copy. Копируем из одной области памяти в другую.
                         case 0x03:
                             memory[_currentIndex] = memory[r1];
                             break;
+
                             // Input. Читаем значение из порта.
                         case 0x04:
                             memory[_currentIndex] = ports.Input[r1];
                             break;
+
                         default:
-                            throw new InvalidDataException(string.Format("S-Type op code \"0x{0:x}\" does not exists.", sTypeOpCode));
+                            throw new InvalidDataException(
+                                string.Format("S-Type op code \"0x{0:x}\" does not exists.", sTypeOpCode));
                     }
                 }
                     // Значит D-Type
@@ -108,25 +120,30 @@ namespace ICFP2009.VirtualMachineLib
                         case 0x01:
                             memory[_currentIndex] = memory[r1] + memory[r2];
                             break;
+
                             // Sub. Вычитание.
                         case 0x02:
                             memory[_currentIndex] = memory[r1] + memory[r2];
                             break;
+
                             // Mult. Умножение.
                         case 0x03:
                             memory[_currentIndex] = memory[r1] * memory[r2];
                             break;
+
                             // Div. Деление.
                         case 0x04:
                             if (memory[r2] == 0)
                                 memory[_currentIndex] = 0.0;
-
-                            memory[_currentIndex] = memory[r1] / memory[r2];
+                            else
+                                memory[_currentIndex] = memory[r1] / memory[r2];
                             break;
+
                             // Output. Вывод в порт.
                         case 0x05:
                             ports.Output[r1] = memory[r2];
                             break;
+
                             // Phi. Что-то страшное.
                         case 0x06:
                             if (_statusRegister)
@@ -134,8 +151,10 @@ namespace ICFP2009.VirtualMachineLib
                             else
                                 memory[_currentIndex] = memory[r2];
                             break;
+
                         default:
-                            throw new InvalidDataException(string.Format("D-Type op code \"0x{0:x}\" does not exists.", opCode));
+                            throw new InvalidDataException(
+                                string.Format("D-Type op code \"0x{0:x}\" does not exists.", opCode));
                     }
                 }
             }

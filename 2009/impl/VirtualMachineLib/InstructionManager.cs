@@ -28,14 +28,14 @@ namespace ICFP2009.VirtualMachineLib
 
                 Int32 currentInstruction = _instructions[_currentIndex];
 
-                // С 21 по 28 биты. 4 бита.
-                var opCode = (byte) (currentInstruction & 0xF0000000 >> 28);
+                // С 31 по 28 биты. 4 бита.
+                var opCode = (byte) ((currentInstruction & 0xF0000000) >> 28);
 
                 // Значит S-Type
                 if (opCode == 0)
                 {
                     // С 27 по 24 биты. 4 бита.
-                    var sTypeOpCode = (byte) (currentInstruction & 0x0F000000 >> 24);
+                    var sTypeOpCode = (byte) ((currentInstruction & 0x0F000000) >> 24);
 
                     // C 13 по 0 биты. 14 бит.
                     var r1 = (Int16) (currentInstruction & 0x000003FF);
@@ -48,7 +48,7 @@ namespace ICFP2009.VirtualMachineLib
                             // Cmpz. Операция сравнения.
                         case 0x01:
                             // С 23 по 21 биты. 10 бит.
-                            var immediate = (byte) (currentInstruction & 0x00E00000 >> 21);
+                            var immediate = (byte) ((currentInstruction & 0x00E00000) >> 21);
 
                             // Тип сравнения.
                             switch (immediate)
@@ -97,7 +97,7 @@ namespace ICFP2009.VirtualMachineLib
                 else
                 {
                     // C 27 по 14 биты. 14 бит.
-                    var r1 = (Int16) (currentInstruction & 0x000FFC00 >> 14);
+                    var r1 = (Int16) ((currentInstruction & 0x000FFC00) >> 14);
 
                     // C 13 по 0 биты. 14 бит.
                     var r2 = (Int16) (currentInstruction & 0x000003FF);

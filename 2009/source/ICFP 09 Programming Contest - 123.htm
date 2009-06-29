@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0035)http://icfpcontest.org/teampage.php -->
+<HTML><HEAD><TITLE>ICFP 09 Programming Contest - 123</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<SCRIPT type=text/javascript 
+src="ICFP%2009%20Programming%20Contest%20-%20123_files/jquery.min.js"></SCRIPT>
+
+<SCRIPT src=""></SCRIPT>
+
+<SCRIPT src=""></SCRIPT>
+<LINK rel=StyleSheet type=text/css 
+href="ICFP%2009%20Programming%20Contest%20-%20123_files/style.css" media=screen>
+<META name=GENERATOR content="MSHTML 8.00.6001.18702"></HEAD>
+<BODY>
+<DIV class=nav><A class=nav href="http://icfpcontest.org/index.php">Main 
+Page</A> <A class=nav href="http://icfpcontest.org/teampage.php">Team Page</A> 
+<A class=nav href="http://icfpcontest.org/task-1.8.pdf">Specifications</A> <A 
+class=nav href="http://icfpcontest.org/scoreboard.php">Score Board</A> <A 
+class=nav href="http://icfpcontest.org/faq.php">FAQs</A> <A class=nav 
+href="http://www.icfpcontest.org/wordpress/?feed=rss2">RSS feed</A> <A class=nav 
+href="http://www.icfpcontest.org/wordpress/">Blog</A> </DIV>
+<DIV id=colorbox>
+<DIV class=login><SPAN id=loggedinas>Currently logged in as 123. <A class=logout 
+href="http://icfpcontest.org/logout.php">logout</A></SPAN> </DIV><SPAN 
+class=teamtitle>Team 123</SPAN> (Team ID # 864 ) 
+<P><SPAN class=score>Weighted Total Score ( problems solved)</SPAN> 
+<HR>
+
+<HR>
+
+<P align=justify>Make sure the configuration port assignment and the scenario 
+code in the your uploaded files match! <BR>A file with a scenario code of 1001, 
+but assigning 1002 to the configuration port will be invalidated before we 
+consider the lightning round leader board. <BR>It is your responsibility to get 
+the formats of the files correct. We only look at the header to decide which VM 
+image to use. (A clue to this happening is if you get exacly the same score on 
+two problems) </P>
+<HR>
+
+<HR>
+
+<P align=justify><FONT color=yellow>A third (and final) version of the final 
+(400X) binary has been issued at 13:00 (T+2D:0H). This will fix an issue with 
+the gravity effects of the moon being applied inconsitently. It should make 
+nominal difference if you never go to the moon, but some score have changed. 
+<BR><BR>You should use the latest binary for your testing. The problem(s) to be 
+solved remains identical, and previously submitted solutions for 4001 to 4004 
+will be retested and rescored automatically. <BR><BR>History: 
+<TABLE border=1>
+  <TBODY>
+  <TR>
+    <TD>Fixing</TD>
+    <TD>MD5</TD></TR>
+  <TR>
+    <TD>Fixing Moon's gravity being applied inconsistantly</TD>
+    <TD>db6906572307234f36f2830f8b618c43</TD></TR>
+  <TR>
+    <TD>Fixing scoring infidelity, <BR>and leaking refuling action. </TD>
+    <TD>b644b45a983ab07c54a6b3e69e72dba4</TD></TR>
+  <TR>
+    <TD>Original</TD>
+    <TD>b7c388efcb7cf7e26e430a75394be8ac</TD></TR></TBODY></TABLE></FONT></P>
+<HR>
+
+<HR>
+
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH rowSpan=2>
+      <H1>Upload Center </H1></TH>
+    <TD>
+      <FORM encType=multipart/form-data method=post name=traceuploadform 
+      action=upload.php align="center">
+      <TABLE align=center>
+        <TBODY>
+        <TR>
+          <TD>
+            <P>Upload any individual trace file (*.osf). We will check the 
+            header to include your team ID, as well as the scenario ID. There is 
+            a 1M limit. </P><INPUT size=10 type=file name=userfile> <INPUT 
+            type=hidden> <INPUT value="submit a scenario trace" type=submit> 
+        </TD></TR></TBODY></TABLE></FORM></TD></TR>
+  <TR>
+    <TD>
+      <FORM encType=multipart/form-data method=post name=sourceuploadform 
+      action=uploadPS.php>
+      <TABLE align=center>
+        <TBODY>
+        <TR>
+          <TD>
+            <P>Upload your entire source tree as *.tar or *.zip. Please, no 
+            images or other unnecessary large files. This should easily be below 
+            1MB, but if it grows too large, email submissions are an alternative 
+            when approved. </P>
+            <P>Please include a README, which will have details of how to build 
+            your solution. </P><INPUT size=10 type=file name=userfile> <INPUT 
+            type=hidden> <INPUT value="submit full source tree" type=submit> 
+        </TD></TR></TBODY></TABLE></FORM></TD></TR></TBODY></TABLE>
+<P align=justify>Be sure to upload your source tree at minimum <B>BEFORE</B> the 
+end of the lightning round and <B>BEFORE</B> the end of the entire competition. 
+Official scoring will consider the most recent <B>working</B> traces and source 
+as of exactly 24 hours and 72 hours into the competition. </P><!--
+<table align="center"><tr><td>
+	  <div class="solution_upload" id=""> <input type="button" value="UPLOAD a scenario trace (.osf)"/></div>
+
+</td><td>
+	  <div class="problemsolution_upload" teamid="864" id=""> <input type="button" value="UPLOAD your source tree"/> </div>
+
+</td></tr></table>
+-->
+<HR>
+
+<HR>
+
+<H1>Problems</H1>
+<HR>
+<SPAN class=problemtitle>Hohmann Transfer Orbit</SPAN> <SPAN class=toggle>
+<P>The Hohmann problem requires the controller to transfer the satellite, 
+initally in a circular orbit around earth, into a different circular orbit. The 
+simulator exposes environment sensor data, as shown in the table below. The 
+Score sensor is the score calculated (according to the formuale in sec- tion 7 
+of the specification document) by the simulation binary. This score will be 0.0 
+initially, and will only change when the task has been completed successfully. 
+The Fuel Remaining sensor represents a fuel guage, measured in units of delta-v. 
+At time step 0, the output of this sensor represents a full fuel tank. This 
+output will decrease as the thrust actuator is employed by the controller 
+program. The position of the controlled satellite relative to earth is 
+decomposed into vector components sx and sy . The radius of the target orbit is 
+exposed by the final sensor. </P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Output Port Address</TH>
+    <TH>Sensor </TH></TR>
+  <TR>
+    <TD>0x0 <BR>0x1 <BR>0x2 <BR>0x3 <BR>0x4 </TD>
+    <TD>Score <BR>Fuel Remaining <BR>s_x Relative to Earth <BR>s_y Relative to 
+      Earth <BR>Target Orbit Radius </TD></TR></TBODY></TABLE></SPAN>
+<P><A href="http://icfpcontest.org/binaries/bin1.obf">Download The Binary</A> 
+(MD5 hash: 964a163a60f15455b76a9fe6edfdf654)</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Scenario number</TH>
+    <TH>Status</TH>
+    <TH>Score</TH></TR>
+  <TR>
+    <TD>1001</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>1002</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>1003</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>1004</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR></TBODY></TABLE>
+<HR>
+<SPAN class=problemtitle>Meet and Greet</SPAN> <SPAN class=toggle>In Meet and 
+Greet, the contestant must move a satellite in a circular orbit about earth to 
+meet with a second satellite, also in a circular orbit. The target satellite 
+will maintain its orbit throughout the simulation. To successfully complete this 
+challenge, the position of the controlled satellite must remain within 1km of 
+the target for 900 consecutive seconds. The sensors associated with the Meet and 
+Greet problem binary are shown in the table below. These are the same as the 
+Hohmann problem, with the addition of two ports that give the vector to the 
+target satellite from the controlled satellite. 
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Output Port Address</TH>
+    <TH>Sensor </TH></TR>
+  <TR>
+    <TD>0x0 <BR>0x1 <BR>0x2 <BR>0x3 <BR>0x4<BR>0x5 </TD>
+    <TD>Score <BR>Fuel Remaining <BR>s_x Relative to Earth <BR>s_y Relative to 
+      Earth <BR>s_x Relative to Target Satellite <BR>s_y Relative to Target 
+      Satellite <BR></TD></TR></TBODY></TABLE></SPAN>
+<P><A href="http://icfpcontest.org/binaries/bin2.obf">Download The Binary</A> 
+(MD5 hash: 3776dd1510547979b61483de37093c6e)</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Scenario number</TH>
+    <TH>Status</TH>
+    <TH>Score</TH></TR>
+  <TR>
+    <TD>2001</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>2002</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>2003</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>2004</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR></TBODY></TABLE>
+<HR>
+<SPAN class=problemtitle>Eccentric Meet and Greet</SPAN> <SPAN class=toggle>This 
+problem generalizes the Meet and Greet problem. The task remains to move the 
+satellite from one orbit to meet with a target satellite. However, the orbits of 
+both satellites can be arbitrary ellipses. As with the Meet and Greet problem, 
+the completion criteria requires the controlled satellite to remain within 1km 
+of the target for 900 consecutive seconds. The sensor outputs for this problem 
+are the same as for the meet and greet problem, as shown in Meet and Greet's 
+table. Again, the actuator inputs are those shown in table 6 of the 
+specification document.</SPAN> 
+<P><A href="http://icfpcontest.org/binaries/bin3.obf">Download The Binary</A> 
+(MD5 hash: 063c974cd2c7d4ed6a2093bb0baab8e3)</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Scenario number</TH>
+    <TH>Status</TH>
+    <TH>Score</TH></TR>
+  <TR>
+    <TD>3001</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>3002</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>3003</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>3004</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR></TBODY></TABLE>
+<HR>
+<SPAN class=problemtitle>Operation Clear Skies</SPAN> <SPAN class=toggle>The 
+challenge of the Operation Clear Skies problem is to control the satellite so 
+that it visits a collection of twelve target satellites, each of which are in an 
+elliptical orbit around earth. To successfully visit a target satellite, the 
+controlled satellite must pass within 1000 meters of the satellite. There is no 
+requirement that the satellite maintain a position within this radius for any 
+longer than one time step. Note that it may be possible to cross paths with the 
+target satellite without being within the maximum scoring radius at a given time 
+step. This will not count as successfully visiting the satellite. Because the 
+Operation Clear Skies problem may require a large number of orbit transfer 
+maneuvers, there will be a special refueling station in orbit. Whenever the 
+controlled satellite passes within the visiting radius of the refueling station, 
+the amount of fuel required to fill the controlled satellite's tank will be 
+transferred from the station. The sensor output port mappings for the Operation 
+Clear Skies problem are shown in table 9 in the specification, reprinted below. 
+The sensors for this problem include a relative position vector between the 
+controlled satellite and each target satellite, as well as the fueling station. 
+There are twelve target satellites total, labelled target0 ... target11 , in 
+addition to the fueling station. In the sensor port mapping, each target 
+satellite has a sensor output which indicates whether that satellite has been 
+successfully visited. This output will be 1.0 if the satellite has been visited, 
+0.0 otherwise. 
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Output Port Address</TH>
+    <TD>Sensor</TH> </TD>
+  <TR>
+    <TD>0x0 <BR>0x1 <BR>0x2 <BR>0x3 <BR>0x4 <BR>0x5 <BR>0x6 <BR>0x7 <BR>0x8 
+      <BR>0x9 <BR>0xA <BR>0xB <BR>0xC <BR>...<BR>3*k+0x7 <BR>3*k+0x8 <BR>3*k+0x9 
+    </TD>
+    <TD>Score <BR>Fuel Remaining <BR>s_x Relative to Earth <BR>s_y Relative to 
+      Earth <BR>s_x Relative to Fueling Station <BR>s_y Relative to Fueling 
+      Station <BR>Fuel Remaining on Station <BR>s_x Relative to target_0 <BR>s_y 
+      Relative to target_0 <BR>target_0 Successfully Collected <BR>s_x Relative 
+      to target_1 <BR>s_y Relative to target_1 <BR>target_1 Successfully 
+      Collected <BR>... <BR>s_x Relative to target_k <BR>s_y Relative to 
+      target_k <BR>target_k Successfully Collected </TD></TR></TBODY></TABLE></SPAN>
+<P><A href="http://icfpcontest.org/binaries/bin4.obf">Download The Binary</A> 
+(MD5 hash: db6906572307234f36f2830f8b618c43)</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Scenario number</TH>
+    <TH>Status</TH>
+    <TH>Score</TH></TR>
+  <TR>
+    <TD>4001</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>4002</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>4003</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR>
+  <TR>
+    <TD>4004</TD>
+    <TD>not submitted </TD>
+    <TD>--- </TD></TR></TBODY></TABLE>
+<HR>
+
+<HR>
+
+<H1>Submissions History</H1>
+<P>Remember, only your most recent entries count! (scored above). This history 
+should help you decide which ones to submit last before the 24- and 72-hour 
+deadlines.</P>
+<TABLE align=center>
+  <TBODY>
+  <TR>
+    <TH bgColor=#303030>Solution ID </TH>
+    <TH bgColor=#303030>Timestamp</TH>
+    <TH bgColor=#303030>Scenario</TH>
+    <TH bgColor=#303030>Status</TH>
+    <TH bgColor=#303030>Score</TH></TR></TBODY></TABLE></DIV></BODY></HTML>

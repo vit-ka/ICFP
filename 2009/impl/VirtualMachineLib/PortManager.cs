@@ -32,7 +32,9 @@ namespace ICFP2009.VirtualMachineLib
             {
                 get
                 {
-                    return _ports[index];
+                    if (_ports.ContainsKey(index))
+                        return _ports[index];
+                    return 0.0;
                 }
                 set
                 {
@@ -43,6 +45,8 @@ namespace ICFP2009.VirtualMachineLib
                 }
             }
 
+            #region IEnumerable<KeyValuePair<short,double>> Members
+
             public IEnumerator<KeyValuePair<short, double>> GetEnumerator()
             {
                 return _ports.GetEnumerator();
@@ -52,6 +56,8 @@ namespace ICFP2009.VirtualMachineLib
             {
                 return GetEnumerator();
             }
+
+            #endregion
         }
 
         #endregion

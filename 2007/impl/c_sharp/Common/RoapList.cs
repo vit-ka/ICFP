@@ -172,7 +172,7 @@ namespace Common
         /// <returns>Последний блок в списке.</returns>
         private ListBlock GetLastBlock()
         {
-            ListBlock lastBlock = null;
+            ListBlock lastBlock;
 
             if (_linkList.Count == 0)
             {
@@ -181,6 +181,7 @@ namespace Common
             }
             else
                 lastBlock = _linkList[_linkList.Count - 1];
+
             return lastBlock;
         }
 

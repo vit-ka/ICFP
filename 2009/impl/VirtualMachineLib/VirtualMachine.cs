@@ -12,6 +12,7 @@ namespace ICFP2009.VirtualMachineLib
 
         private InstructionManager _instructionManager;
         private MemoryManager _memoryManager;
+        private PortManager _portManager;
 
         /// <summary>
         /// Чтобы никто не уволок.
@@ -59,6 +60,12 @@ namespace ICFP2009.VirtualMachineLib
 
             _instructionManager = new InstructionManager(instructions);
             _memoryManager = new MemoryManager(initialMemory);
+            _portManager = new PortManager();
+        }
+
+        public void StartInterpretation()
+        {
+            
         }
 
         private static BinaryFrame ReadFrame(BinaryReader binaryReader, int frameIndex)

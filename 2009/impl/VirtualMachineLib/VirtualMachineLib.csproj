@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="InstructionManager.cs" />
     <Compile Include="MemoryManager.cs" />
+    <Compile Include="PortManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VirtualMachine.cs" />
   </ItemGroup>

@@ -9,6 +9,9 @@ namespace ICFP2009.VirtualMachineLib
 
         public MemoryManager(List<double> initialMemory)
         {
+            for (int index = initialMemory.Count; index < Int16.MaxValue; ++index)
+                initialMemory.Add(0.0);
+
             _memory = initialMemory.ToArray();
         }
 

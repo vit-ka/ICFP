@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ICFP2009.VirtualMachineLib;
 using log4net;
@@ -23,11 +24,20 @@ namespace ICFP2009.VMConsoleRunner
             using (var stream = new FileStream(args[0], FileMode.Open, FileAccess.Read))
                 VirtualMachine.Instance.LoadBinary(stream);
 
-            _log.InfoFormat("Starting interpretation...");
-            VirtualMachine.Instance.StartInterpretation();
-            _log.InfoFormat("Interpretation finished...");
-
             _log.InfoFormat("VM Image loaded.");
+
+            _log.InfoFormat("Starting interpretation...");
+
+
+            VirtualMachine.Instance.Ports.Input[0x3e80] = 1001;
+            VirtualMachine.Instance.RunOneStep();
+
+            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Output)
+            {
+                Console.WriteLine("Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
+            }
+
+            _log.InfoFormat("Interpretation finished...");
         }
 
         private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)

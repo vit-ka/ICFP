@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using log4net;
@@ -62,11 +63,11 @@ namespace ICFP2009.VirtualMachineLib
         }
 
         internal MemoryManager Memory { get; private set; }
-        internal PortManager Ports { get; private set; }
+        public PortManager Ports { get; private set; }
 
-        public void StartInterpretation()
+        public void RunOneStep()
         {
-            _instructionManager.StartMainLoop();
+            _instructionManager.RunOneStep();
         }
 
         private static BinaryFrame ReadFrame(BinaryReader binaryReader, int frameIndex)
@@ -78,18 +79,35 @@ namespace ICFP2009.VirtualMachineLib
 
             // Если четный индекс, то сначала идет значение памяти, а потом инструкция кода
             // иначе наоборот.
+            UInt64 memoryValue;
+            UInt32 instructionValue;
             if (frameIndex % 2 == 0)
             {
-                frame.Memory = binaryReader.ReadDouble();
-                frame.Instruction = binaryReader.ReadInt32();
+                memoryValue = binaryReader.ReadUInt64();
+                instructionValue = binaryReader.ReadUInt32();
             }
             else
             {
-                frame.Instruction = binaryReader.ReadInt32();
-                frame.Memory = binaryReader.ReadDouble();
+                instructionValue = binaryReader.ReadUInt32();
+                memoryValue = binaryReader.ReadUInt64();
             }
 
+            frame.Memory = BitConverter.ToDouble(CorrectLittleEndian(BitConverter.GetBytes(memoryValue)), 0);
+            frame.Instruction = BitConverter.ToInt32(CorrectLittleEndian(BitConverter.GetBytes(instructionValue)), 0);
+
             return frame;
+        }
+
+        private static byte[] CorrectLittleEndian(byte[] input)
+        {
+            for (int i = 0; i <= input.Length / 2; ++i)
+            {
+                byte temp = input[i];
+                input[i] = input[input.Length - i - 1];
+                input[input.Length - i - 1] = temp;
+            }
+
+            return input;
         }
 
         #region Nested type: BinaryFrame

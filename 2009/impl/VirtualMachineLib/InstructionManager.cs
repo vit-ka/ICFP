@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ICFP2009.VirtualMachineLib
 {
     internal class InstructionManager
     {
-        private const double _epsilon = 1e-15;
         private readonly Int32[] _instructions;
         private Int16 _currentIndex;
         private bool _statusRegister;
@@ -15,13 +15,17 @@ namespace ICFP2009.VirtualMachineLib
             _instructions = instructions.ToArray();
         }
 
-        public void StartMainLoop()
+        public void RunOneStep()
         {
             MemoryManager memory = VirtualMachine.Instance.Memory;
             PortManager ports = VirtualMachine.Instance.Ports;
 
-            while (true)
+            _currentIndex = -1;
+
+            while (_currentIndex + 1 < _instructions.Length)
             {
+                ++_currentIndex;
+
                 Int32 currentInstruction = _instructions[_currentIndex];
 
                 // С 21 по 28 биты. 4 бита.
@@ -55,20 +59,22 @@ namespace ICFP2009.VirtualMachineLib
                                     break;
                                     // LEZ. Меньше или равно.
                                 case 0x01:
-                                    _statusRegister = memory[r1] < 0.0 || Math.Abs(memory[r1]) < _epsilon;
+                                    _statusRegister = memory[r1] < 0.0 || memory[r1] == 0;
                                     break;
                                     // EQZ. Равно.
                                 case 0x02:
-                                    _statusRegister = Math.Abs(memory[r1]) < _epsilon;
+                                    _statusRegister = memory[r1] == 0;
                                     break;
                                     // GEZ. Больше или равно.
                                 case 0x03:
-                                    _statusRegister = memory[r1] > 0.0 || Math.Abs(memory[r1]) < _epsilon;
+                                    _statusRegister = memory[r1] > 0.0 || memory[r1] == 0;
                                     break;
                                     // GTZ. Больше.
                                 case 0x04:
                                     _statusRegister = memory[r1] > 0.0;
                                     break;
+                                default:
+                                    throw new InvalidDataException(string.Format("Immediate \"0x{0:x}\" does not exists.", immediate));
                             }
                             break;
                             // Sqrt. Квадратный корень.
@@ -83,6 +89,8 @@ namespace ICFP2009.VirtualMachineLib
                         case 0x04:
                             memory[_currentIndex] = ports.Input[r1];
                             break;
+                        default:
+                            throw new InvalidDataException(string.Format("S-Type op code \"0x{0:x}\" does not exists.", sTypeOpCode));
                     }
                 }
                     // Значит D-Type
@@ -110,7 +118,7 @@ namespace ICFP2009.VirtualMachineLib
                             break;
                             // Div. Деление.
                         case 0x04:
-                            if (Math.Abs(memory[r2]) < _epsilon)
+                            if (memory[r2] == 0)
                                 memory[_currentIndex] = 0.0;
 
                             memory[_currentIndex] = memory[r1] / memory[r2];
@@ -126,6 +134,8 @@ namespace ICFP2009.VirtualMachineLib
                             else
                                 memory[_currentIndex] = memory[r2];
                             break;
+                        default:
+                            throw new InvalidDataException(string.Format("D-Type op code \"0x{0:x}\" does not exists.", opCode));
                     }
                 }
             }

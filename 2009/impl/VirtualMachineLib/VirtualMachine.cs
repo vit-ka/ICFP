@@ -11,8 +11,6 @@ namespace ICFP2009.VirtualMachineLib
         private static VirtualMachine _instance;
 
         private InstructionManager _instructionManager;
-        private MemoryManager _memoryManager;
-        private PortManager _portManager;
 
         /// <summary>
         /// Чтобы никто не уволок.
@@ -59,13 +57,16 @@ namespace ICFP2009.VirtualMachineLib
             _log.InfoFormat("Reader {0} frames.", frameIndex);
 
             _instructionManager = new InstructionManager(instructions);
-            _memoryManager = new MemoryManager(initialMemory);
-            _portManager = new PortManager();
+            Memory = new MemoryManager(initialMemory);
+            Ports = new PortManager();
         }
+
+        internal MemoryManager Memory { get; private set; }
+        internal PortManager Ports { get; private set; }
 
         public void StartInterpretation()
         {
-            
+            _instructionManager.StartMainLoop();
         }
 
         private static BinaryFrame ReadFrame(BinaryReader binaryReader, int frameIndex)

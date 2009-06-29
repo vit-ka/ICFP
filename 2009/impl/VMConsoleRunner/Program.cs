@@ -23,6 +23,10 @@ namespace ICFP2009.VMConsoleRunner
             using (var stream = new FileStream(args[0], FileMode.Open, FileAccess.Read))
                 VirtualMachine.Instance.LoadBinary(stream);
 
+            _log.InfoFormat("Starting interpretation...");
+            VirtualMachine.Instance.StartInterpretation();
+            _log.InfoFormat("Interpretation finished...");
+
             _log.InfoFormat("VM Image loaded.");
         }
 

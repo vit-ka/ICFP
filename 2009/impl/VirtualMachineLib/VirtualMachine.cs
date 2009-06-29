@@ -81,13 +81,13 @@ namespace ICFP2009.VirtualMachineLib
             // иначе наоборот.
             if (frameIndex % 2 == 0)
             {
-                frame.Memory = binaryReader.ReadInt64();
+                frame.Memory = binaryReader.ReadDouble();
                 frame.Instruction = binaryReader.ReadInt32();
             }
             else
             {
                 frame.Instruction = binaryReader.ReadInt32();
-                frame.Memory = binaryReader.ReadInt64();
+                frame.Memory = binaryReader.ReadDouble();
             }
 
             return frame;

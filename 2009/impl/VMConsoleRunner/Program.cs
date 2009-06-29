@@ -37,6 +37,18 @@ namespace ICFP2009.VMConsoleRunner
                 Console.WriteLine("Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
             }
 
+
+            VirtualMachine.Instance.Ports.Input[0x02] = 1000;
+            VirtualMachine.Instance.Ports.Input[0x03] = -1000;
+
+            for (int i = 0; i < 1000; ++i )
+                VirtualMachine.Instance.RunOneStep();
+
+            foreach (KeyValuePair<short, double> portValue in VirtualMachine.Instance.Ports.Output)
+            {
+                Console.WriteLine("Port: 0x{0:x}. Value: {1}", portValue.Key, portValue.Value);
+            }
+
             _log.InfoFormat("Interpretation finished...");
         }
 

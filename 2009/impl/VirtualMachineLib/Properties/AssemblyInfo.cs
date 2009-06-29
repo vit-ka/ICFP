@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Impl")]
+[assembly: AssemblyTitle("VirtualMachineLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Impl")]
-[assembly: AssemblyCopyright("Copyright ©  2009")]
+[assembly: AssemblyCompany("KG")]
+[assembly: AssemblyProduct("VirtualMachineLib")]
+[assembly: AssemblyCopyright("Copyright © KG 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b0a75f70-c187-43b3-a761-5bfd24f4c6cd")]
+[assembly: Guid("4d5ebb49-69ce-40ac-946b-e88b3651ec32")]
 
 // Version information for an assembly consists of the following four values:
 //

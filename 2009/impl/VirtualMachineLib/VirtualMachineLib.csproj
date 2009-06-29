@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{20E566A6-3B19-45A7-8E48-61347095C5AB}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0342D138-41FD-4E6C-B73E-9479877271D5}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Impl</RootNamespace>
-    <AssemblyName>Impl</AssemblyName>
+    <RootNamespace>ICFP2009.VirtualMachineLib</RootNamespace>
+    <AssemblyName>ICFP2009.VirtualMachineLib</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

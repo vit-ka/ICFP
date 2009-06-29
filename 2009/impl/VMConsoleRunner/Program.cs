@@ -35,6 +35,8 @@ namespace ICFP2009.VMConsoleRunner
             VirtualMachine.Instance.RunOneStep();
             PrintOutputPorts();
 
+            VirtualMachine.Instance.Ports.Input[0x2] = 1000;
+            VirtualMachine.Instance.Ports.Input[0x3] = 1000;
 
             PrintInputPorts();
 

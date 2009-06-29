@@ -38,7 +38,7 @@ namespace ICFP2009.VirtualMachineLib
                     var sTypeOpCode = (byte) ((currentInstruction & 0x0F000000) >> 24);
 
                     // C 13 по 0 биты. 14 бит.
-                    var r1 = (Int16) (currentInstruction & 0x000003FF);
+                    var r1 = (Int16) (currentInstruction & 0x00003FFF);
 
                     switch (sTypeOpCode)
                     {
@@ -109,10 +109,10 @@ namespace ICFP2009.VirtualMachineLib
                 else
                 {
                     // C 27 по 14 биты. 14 бит.
-                    var r1 = (Int16) ((currentInstruction & 0x000FFC00) >> 14);
+                    var r1 = (Int16) ((currentInstruction & 0x0FFFC000) >> 14);
 
                     // C 13 по 0 биты. 14 бит.
-                    var r2 = (Int16) (currentInstruction & 0x000003FF);
+                    var r2 = (Int16)  (currentInstruction & 0x00003FFF);
 
                     switch (opCode)
                     {

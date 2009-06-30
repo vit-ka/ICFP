@@ -3,22 +3,49 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Visualizer" Height="474" Width="882">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
-        <Canvas Grid.Column="0" Name="_mainCanvas">
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <TextBox Width="500" Name="_pathTextBox">..\..\..\..\source\bin1.obf</TextBox>
+            <Button Width="120" Click="LoadButton_Click">Load</Button>
+        </StackPanel>
+
+        <Canvas Grid.Column="0" Grid.Row="1" Name="_mainCanvas">
         </Canvas>
         
-        <GroupBox Grid.Column="1" Width="200">
+        <GroupBox Grid.Column="1"  Grid.Row="1" Width="200">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label Content="Порты:" Grid.Row="0"/>
                 <ListBox Name="_portsListBox" Grid.Row="1"> </ListBox>
+                <GroupBox Grid.Row="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="0" Name="_problemNumberTextBox">1001</TextBox>
+                        <TextBox Grid.Row="1" Name="_dVxTextBox">0</TextBox>
+                        <TextBox Grid.Row="2" Name="_dVyTextBox">0</TextBox>
+                        <Button Grid.Row="3" Name="_nextButton" Click="_nextButton_Click">Next step</Button>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </GroupBox>
     </Grid>

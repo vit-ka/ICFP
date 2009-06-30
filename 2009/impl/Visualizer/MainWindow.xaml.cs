@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
+using ICFP2009.VirtualMachineLib;
 
 namespace ICFP2009.Visualizer
 {
@@ -11,7 +14,34 @@ namespace ICFP2009.Visualizer
         {
             InitializeComponent();
 
-            _portsListBox.Items.Add("123");
+            LoadButton_Click(this, null);
+        }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var stream = new FileStream(_pathTextBox.Text, FileMode.Open, FileAccess.Read))
+                VirtualMachine.Instance.LoadBinary(stream);
+        }
+
+        private void _nextButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetUpInputPorts();
+            VirtualMachine.Instance.RunOneStep();
+            UpdateOutputPorts();
+        }
+
+        private void UpdateOutputPorts()
+        {
+            _portsListBox.Items.Clear();
+            foreach (var pair in VirtualMachine.Instance.Ports.Output)
+                _portsListBox.Items.Add(string.Format("0x{0:x4}:{1:g}", pair.Key, pair.Value));
+        }
+
+        private void SetUpInputPorts()
+        {
+            VirtualMachine.Instance.Ports.Input[0x3e80] = Int16.Parse(_problemNumberTextBox.Text);
+            VirtualMachine.Instance.Ports.Input[0x0002] = Int16.Parse(_dVxTextBox.Text);
+            VirtualMachine.Instance.Ports.Input[0x0003] = Int16.Parse(_dVyTextBox.Text);
         }
     }
 }

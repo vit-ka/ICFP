@@ -98,6 +98,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtualMachineLib\VirtualMachineLib.csproj">
+      <Project>{0342D138-41FD-4E6C-B73E-9479877271D5}</Project>
+      <Name>VirtualMachineLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -28,6 +28,7 @@ namespace ICFP2009.Visualizer
             SetUpInputPorts();
             VirtualMachine.Instance.RunOneStep();
             UpdateOutputPorts();
+            _mainCanvas.InvalidateVisual();
         }
 
         private void UpdateOutputPorts()

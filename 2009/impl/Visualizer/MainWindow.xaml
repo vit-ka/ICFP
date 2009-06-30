@@ -40,11 +40,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBox Grid.Row="0" Name="_problemNumberTextBox">1001</TextBox>
                         <TextBox Grid.Row="1" Name="_dVxTextBox">0</TextBox>
                         <TextBox Grid.Row="2" Name="_dVyTextBox">0</TextBox>
                         <Button Grid.Row="3" Name="_nextButton" Click="_nextButton_Click">Next step</Button>
+                        <Button Grid.Row="4" Name="_next1000Button" Click="_next1000Button_Click">Next 1000 steps</Button>
                     </Grid>
                 </GroupBox>
             </Grid>

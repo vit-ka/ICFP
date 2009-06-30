@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using ICFP2009.VirtualMachineLib;
 
@@ -28,7 +29,22 @@ namespace ICFP2009.Visualizer
             SetUpInputPorts();
             VirtualMachine.Instance.RunOneStep();
             UpdateOutputPorts();
+            _mainCanvas.StepCompleted();
             _mainCanvas.InvalidateVisual();
+        }
+
+        private void _next1000Button_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 1000; ++i)
+            {
+                SetUpInputPorts();
+                VirtualMachine.Instance.RunOneStep();
+                UpdateOutputPorts();
+                _mainCanvas.StepCompleted();
+                _mainCanvas.InvalidateVisual();
+                InvalidateVisual();
+                Thread.Sleep(10);
+            }
         }
 
         private void UpdateOutputPorts()
@@ -44,5 +60,6 @@ namespace ICFP2009.Visualizer
             VirtualMachine.Instance.Ports.Input[0x0002] = Int16.Parse(_dVxTextBox.Text);
             VirtualMachine.Instance.Ports.Input[0x0003] = Int16.Parse(_dVyTextBox.Text);
         }
+
     }
 }

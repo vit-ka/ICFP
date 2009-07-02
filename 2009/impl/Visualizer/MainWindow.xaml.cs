@@ -42,8 +42,6 @@ namespace ICFP2009.Visualizer
                 UpdateOutputPorts();
                 _mainCanvas.StepCompleted();
                 _mainCanvas.InvalidateVisual();
-                InvalidateVisual();
-                Thread.Sleep(10);
             }
         }
 
@@ -61,5 +59,16 @@ namespace ICFP2009.Visualizer
             VirtualMachine.Instance.Ports.Input[0x0003] = Int16.Parse(_dVyTextBox.Text);
         }
 
+        private void _factorSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _mainCanvas.AdditionalFactor = _factorSlider.Value;
+            _mainCanvas.InvalidateVisual();
+        }
+
+        private void _reseButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadButton_Click(this, null);
+            _mainCanvas.Reset();
+        }
     }
 }

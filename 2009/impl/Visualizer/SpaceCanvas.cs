@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -10,9 +11,9 @@ namespace ICFP2009.Visualizer
     public class SpaceCanvas : Control
     {
         private readonly IList<Point> _previousPositions = new List<Point>();
+        private int _currentProblem;
         private Point _maxDistancePoint = new Point(0, 0);
         private Point _speedVector = new Point(0, 0);
-        private Size _size;
 
         static SpaceCanvas()
         {
@@ -20,38 +21,84 @@ namespace ICFP2009.Visualizer
                 typeof (SpaceCanvas), new FrameworkPropertyMetadata(typeof (SpaceCanvas)));
         }
 
+        public double AdditionalFactor { get; set; }
+
         public void StepCompleted()
         {
-            double sx = VirtualMachine.Instance.Ports.Output[0x0002];
-            double sy = VirtualMachine.Instance.Ports.Output[0x0003];
+            double sx = -VirtualMachine.Instance.Ports.Output[0x0002];
+            double sy = -VirtualMachine.Instance.Ports.Output[0x0003];
+
+            _currentProblem = ((int) VirtualMachine.Instance.Ports.Input[0x3E80]) / 1000;
 
             _speedVector.X -= VirtualMachine.Instance.Ports.Input[0x0002];
             _speedVector.Y -= VirtualMachine.Instance.Ports.Input[0x0003];
 
-            if (Math.Sqrt(sx * sx + sy * sy) >
-                Math.Sqrt(_maxDistancePoint.X * _maxDistancePoint.X + _maxDistancePoint.Y * _maxDistancePoint.Y))
-                _maxDistancePoint = new Point(sx, sy);
+            UpdateMaxDistancePoint(sx, sy);
 
             _previousPositions.Add(new Point(sx, sy));
         }
 
+        private void UpdateMaxDistancePoint(double sx, double sy)
+        {
+            if (Math.Sqrt(sx * sx + sy * sy) >
+                Math.Sqrt(_maxDistancePoint.X * _maxDistancePoint.X + _maxDistancePoint.Y * _maxDistancePoint.Y))
+                _maxDistancePoint = new Point(sx, sy);
+        }
+
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            _size = sizeInfo.NewSize;
+            InvalidateVisual();
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            double centerX = _size.Width / 2.0;
-            double centerY = _size.Height / 2.0;
+            double centerX = RenderSize.Width / 2.0;
+            double centerY = RenderSize.Height / 2.0;
 
-            if (centerX == 0 || centerY == 0)
+            if (centerX == 0 || centerY == 0 || _previousPositions.Count == 0)
                 return;
+
+            EvalProblemAttributes(_currentProblem);
 
             double factor = Math.Min(centerX, centerY) /
                             Math.Sqrt(
                                 _maxDistancePoint.X * _maxDistancePoint.X + _maxDistancePoint.Y * _maxDistancePoint.Y) /
                             1.2;
+
+            factor *= AdditionalFactor;
+
+            // Рисуем текущий масштаб.
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("Zoom: {0:e}x", factor),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 5));
+
+            // Рисуем скорость
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("Vx: {0:e} km/s", _speedVector.X),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 15));
+
+                        drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("Vy: {0:e} km/s", _speedVector.Y),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 25));
+
             IList<Point> transformedPositions = TransformPositions(factor, centerX, centerY);
 
             // Линии сетки вокруг земли.
@@ -65,7 +112,6 @@ namespace ICFP2009.Visualizer
                 5,
                 5);
 
-
             // Траектория перелета.
             DrawTrack(drawingContext, transformedPositions);
 
@@ -78,6 +124,9 @@ namespace ICFP2009.Visualizer
                 GetVector(currentPosition, _speedVector)
                 );
 
+            // Рисуем части, зависимые от задачи.
+            DrawProblemAttributes(new Point(centerX, centerY), drawingContext, factor);
+
             // Текущее положение спутника.
             if (transformedPositions.Count > 0)
             {
@@ -87,6 +136,34 @@ namespace ICFP2009.Visualizer
                     currentPosition,
                     5,
                     5);
+            }
+        }
+
+        private void EvalProblemAttributes(int problem)
+        {
+            switch (_currentProblem)
+            {
+                case 1:
+                    double targetOrbit = VirtualMachine.Instance.Ports.Output[0x0004];
+
+                    UpdateMaxDistancePoint(0, targetOrbit);
+
+                    break;
+            }
+        }
+
+        private void DrawProblemAttributes(Point center, DrawingContext context, double factor)
+        {
+            switch (_currentProblem)
+            {
+                case 1:
+                    double targetOrbit = VirtualMachine.Instance.Ports.Output[0x0004];
+                    targetOrbit *= factor;
+
+                    context.DrawEllipse(
+                        Brushes.Transparent, new Pen(Brushes.DarkRed, 1.5), center, targetOrbit, targetOrbit);
+                    
+                    break;
             }
         }
 
@@ -117,12 +194,12 @@ namespace ICFP2009.Visualizer
         private void DrawGrid(double centerX, double centerY, double factor, DrawingContext drawingContext)
         {
             double invertFactor = 1 / factor;
-            
+
             while (invertFactor > 3)
                 invertFactor = invertFactor / 2;
 
-            double gridStep = Math.Max(_size.Width, _size.Height) / 10.0 / invertFactor;
-            
+            double gridStep = Math.Max(RenderSize.Width, RenderSize.Height) / 10.0 / invertFactor;
+
             for (int i = 0; i < 20; ++i)
             {
                 drawingContext.DrawEllipse(
@@ -134,8 +211,8 @@ namespace ICFP2009.Visualizer
             }
 
             const double alphaStep = Math.PI * 2.0 / 16.0;
-            var maxDimension = (int) Math.Max(_size.Width, _size.Height);
-            
+            var maxDimension = (int)Math.Max(RenderSize.Width, RenderSize.Height);
+
             for (double a = 0; a < 2 * Math.PI; a += alphaStep)
             {
                 drawingContext.DrawLine(
@@ -153,6 +230,13 @@ namespace ICFP2009.Visualizer
                 result.Add(new Point(point.X * factor + centerX, point.Y * factor + centerY));
 
             return result;
+        }
+
+        public void Reset()
+        {
+            _previousPositions.Clear();
+            _speedVector = new Point(0, 0);
+            _maxDistancePoint = new Point(0, 0);
         }
     }
 }

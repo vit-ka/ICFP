@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0342D138-41FD-4E6C-B73E-9479877271D5}</ProjectGuid>
+    <ProjectGuid>{994A2986-2B70-4791-9392-F02D373EC056}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ICFP2009.VirtualMachineLib</RootNamespace>
-    <AssemblyName>ICFP2009.VirtualMachineLib</AssemblyName>
+    <RootNamespace>ICFP2009.Common</RootNamespace>
+    <AssemblyName>ICFP2009.Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -49,13 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InstructionManager.cs" />
-    <Compile Include="MemoryManager.cs" />
-    <Compile Include="PortManager.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Vector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StateResetedEventArgs.cs" />
-    <Compile Include="StepCompletedEventArgs.cs" />
-    <Compile Include="VirtualMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

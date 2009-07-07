@@ -58,31 +58,26 @@ namespace ICFP2009.VirtualMachineLib
                                     // LTZ. Меньше чем.
                                 case 0x00:
                                     _statusRegister = memory[r1] < 0.0;
-                                    //Console.WriteLine("Compare: {0} < 0.0 == {1}", memory[r1], _statusRegister);
                                     break;
 
                                     // LEZ. Меньше или равно.
                                 case 0x01:
                                     _statusRegister = memory[r1] < 0.0 || memory[r1] == 0.0;
-                                    //Console.WriteLine("Compare: {0} < 0.0 || {0} == 0.0  == {1}", memory[r1], _statusRegister);
                                     break;
 
                                     // EQZ. Равно.
                                 case 0x02:
                                     _statusRegister = memory[r1] == 0;
-                                    //Console.WriteLine("Compare: {0} == 0.0  == {1}", memory[r1], _statusRegister);
                                     break;
 
                                     // GEZ. Больше или равно.
                                 case 0x03:
                                     _statusRegister = memory[r1] > 0.0 && memory[r1] == 0.0;
-                                    //Console.WriteLine("Compare: {0} > 0.0 || {0} == 0.0  == {1}", memory[r1], _statusRegister);
                                     break;
 
                                     // GTZ. Больше.
                                 case 0x04:
                                     _statusRegister = memory[r1] > 0.0;
-                                    //Console.WriteLine("Compare: {0} > 0.0  == {1}", memory[r1], _statusRegister);
                                     break;
 
                                 default:
@@ -94,19 +89,16 @@ namespace ICFP2009.VirtualMachineLib
                             // Sqrt. Квадратный корень.
                         case 0x02:
                             memory[_currentIndex] = Math.Sqrt(memory[r1]);
-                            //Console.WriteLine("Sqrt({0}) == {1}", memory[r1], memory[_currentIndex]);
                             break;
 
                             // Copy. Копируем из одной области памяти в другую.
                         case 0x03:
                             memory[_currentIndex] = memory[r1];
-                            //Console.WriteLine("Copy({0}) == {1}", memory[r1], memory[_currentIndex]);
                             break;
 
                             // Input. Читаем значение из порта.
                         case 0x04:
                             memory[_currentIndex] = ports.Input[r1];
-                            //Console.WriteLine("From input({0}) == {1}", r1, memory[_currentIndex]);
                             break;
 
                         default:

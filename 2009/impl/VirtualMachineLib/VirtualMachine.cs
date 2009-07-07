@@ -20,6 +20,24 @@ namespace ICFP2009.VirtualMachineLib
         {
         }
 
+        public event EventHandler<StepCompletedEventArgs> StepCompleted;
+        public event EventHandler<StateResetedEventArgs> StateReseted;
+
+        private void InvokeStateReseted(StateResetedEventArgs e)
+        {
+            EventHandler<StateResetedEventArgs> reseted = StateReseted;
+            if (reseted != null)
+                reseted(this, e);
+        }
+
+        private void InvokeStepCompleted(StepCompletedEventArgs e)
+        {
+            EventHandler<StepCompletedEventArgs> completed = StepCompleted;
+            if (completed != null)
+                completed(this, e);
+        }
+
+
         public static VirtualMachine Instance
         {
             get
@@ -60,6 +78,8 @@ namespace ICFP2009.VirtualMachineLib
             _instructionManager = new InstructionManager(instructions);
             Memory = new MemoryManager(initialMemory);
             Ports = new PortManager();
+
+            InvokeStateReseted(new StateResetedEventArgs());
         }
 
         internal MemoryManager Memory { get; private set; }
@@ -68,6 +88,7 @@ namespace ICFP2009.VirtualMachineLib
         public void RunOneStep()
         {
             _instructionManager.RunOneStep();
+            InvokeStepCompleted(new StepCompletedEventArgs());
         }
 
         private static BinaryFrame ReadFrame(BinaryReader binaryReader, int frameIndex)

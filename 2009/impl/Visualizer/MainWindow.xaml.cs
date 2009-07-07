@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using ICFP2009.VirtualMachineLib;
 
@@ -29,8 +28,6 @@ namespace ICFP2009.Visualizer
             SetUpInputPorts();
             VirtualMachine.Instance.RunOneStep();
             UpdateOutputPorts();
-            _mainCanvas.StepCompleted();
-            _mainCanvas.InvalidateVisual();
         }
 
         private void _next1000Button_Click(object sender, RoutedEventArgs e)
@@ -40,8 +37,6 @@ namespace ICFP2009.Visualizer
                 SetUpInputPorts();
                 VirtualMachine.Instance.RunOneStep();
                 UpdateOutputPorts();
-                _mainCanvas.StepCompleted();
-                _mainCanvas.InvalidateVisual();
             }
         }
 
@@ -55,8 +50,6 @@ namespace ICFP2009.Visualizer
         private void SetUpInputPorts()
         {
             VirtualMachine.Instance.Ports.Input[0x3e80] = Int16.Parse(_problemNumberTextBox.Text);
-            VirtualMachine.Instance.Ports.Input[0x0002] = Int16.Parse(_dVxTextBox.Text);
-            VirtualMachine.Instance.Ports.Input[0x0003] = Int16.Parse(_dVyTextBox.Text);
         }
 
         private void _factorSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -65,10 +58,9 @@ namespace ICFP2009.Visualizer
             _mainCanvas.InvalidateVisual();
         }
 
-        private void _reseButton_Click(object sender, RoutedEventArgs e)
+        private void _resetButton_Click(object sender, RoutedEventArgs e)
         {
             LoadButton_Click(this, null);
-            _mainCanvas.Reset();
         }
     }
 }

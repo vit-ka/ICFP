@@ -5,15 +5,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using ICFP2009.VirtualMachineLib;
+using Vector=ICFP2009.Common.Vector;
 
 namespace ICFP2009.Visualizer
 {
     public class SpaceCanvas : Control
     {
-        private readonly IList<Point> _previousPositions = new List<Point>();
         private int _currentProblem;
         private Point _maxDistancePoint = new Point(0, 0);
-        private Point _speedVector = new Point(0, 0);
 
         static SpaceCanvas()
         {
@@ -21,21 +20,30 @@ namespace ICFP2009.Visualizer
                 typeof (SpaceCanvas), new FrameworkPropertyMetadata(typeof (SpaceCanvas)));
         }
 
+        public SpaceCanvas()
+        {
+            VirtualMachine.Instance.StateReseted += VMStateReseted;
+            VirtualMachine.Instance.StepCompleted += VMStepCompleted;
+        }
+
         public double AdditionalFactor { get; set; }
 
-        public void StepCompleted()
+        private void VMStepCompleted(object sender, StepCompletedEventArgs e)
         {
-            double sx = -VirtualMachine.Instance.Ports.Output[0x0002];
-            double sy = -VirtualMachine.Instance.Ports.Output[0x0003];
+            StepCompleted();
+        }
 
+        private void VMStateReseted(object sender, StateResetedEventArgs e)
+        {
+            Reset();
+        }
+
+        private void StepCompleted()
+        {
             _currentProblem = ((int) VirtualMachine.Instance.Ports.Input[0x3E80]) / 1000;
+            UpdateMaxDistancePoint(Actuator.Actuator.Instance.Position.X, Actuator.Actuator.Instance.Position.Y);
 
-            _speedVector.X -= VirtualMachine.Instance.Ports.Input[0x0002];
-            _speedVector.Y -= VirtualMachine.Instance.Ports.Input[0x0003];
-
-            UpdateMaxDistancePoint(sx, sy);
-
-            _previousPositions.Add(new Point(sx, sy));
+            InvalidateVisual();
         }
 
         private void UpdateMaxDistancePoint(double sx, double sy)
@@ -55,7 +63,7 @@ namespace ICFP2009.Visualizer
             double centerX = RenderSize.Width / 2.0;
             double centerY = RenderSize.Height / 2.0;
 
-            if (centerX == 0 || centerY == 0 || _previousPositions.Count == 0)
+            if (centerX == 0 || centerY == 0 || Actuator.Actuator.Instance.Track.Count == 0)
                 return;
 
             EvalProblemAttributes(_currentProblem);
@@ -67,7 +75,50 @@ namespace ICFP2009.Visualizer
 
             factor *= AdditionalFactor;
 
-            // Рисуем текущий масштаб.
+            DrawInfo(drawingContext, factor);
+
+            IList<Point> transformedPositions = TransformPositions(factor, centerX, centerY);
+
+            // Линии сетки вокруг земли.
+            DrawGrid(centerX, centerY, factor, drawingContext);
+
+            // Рисуем землю.
+            drawingContext.DrawEllipse(
+                Brushes.DarkGray,
+                new Pen(Brushes.LightGray, 1.0),
+                new Point(centerX, centerY),
+                6.357e6 * factor,
+                6.357e6 * factor);
+
+            // Траектория перелета.
+            DrawTrack(drawingContext, transformedPositions);
+
+            Point currentPosition = transformedPositions[transformedPositions.Count - 1];
+
+            // Вектор скорости спутника.
+            drawingContext.DrawLine(
+                new Pen(Brushes.DarkGreen, 1.0),
+                currentPosition,
+                GetVector(currentPosition, Actuator.Actuator.Instance.DeltaSpeed)
+                );
+
+            // Рисуем части, зависимые от задачи.
+            DrawProblemAttributes(new Point(centerX, centerY), drawingContext, factor);
+
+            // Текущее положение спутника.
+            if (transformedPositions.Count > 0)
+            {
+                drawingContext.DrawEllipse(
+                    Brushes.DarkGreen,
+                    new Pen(Brushes.LightGreen, 1.0),
+                    currentPosition,
+                    2.5,
+                    2.5);
+            }
+        }
+
+        private void DrawInfo(DrawingContext drawingContext, double factor)
+        {
             drawingContext.DrawText(
                 new FormattedText(
                     string.Format("Zoom: {0:e}x", factor),
@@ -81,7 +132,7 @@ namespace ICFP2009.Visualizer
             // Рисуем скорость
             drawingContext.DrawText(
                 new FormattedText(
-                    string.Format("Vx: {0:e} km/s", _speedVector.X),
+                    string.Format("Vx: {0:e} km/s", Actuator.Actuator.Instance.Speed.X),
                     CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
@@ -89,9 +140,9 @@ namespace ICFP2009.Visualizer
                     Brushes.Black),
                 new Point(5, 15));
 
-                        drawingContext.DrawText(
+            drawingContext.DrawText(
                 new FormattedText(
-                    string.Format("Vy: {0:e} km/s", _speedVector.Y),
+                    string.Format("Vy: {0:e} km/s", Actuator.Actuator.Instance.Speed.Y),
                     CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
@@ -99,44 +150,58 @@ namespace ICFP2009.Visualizer
                     Brushes.Black),
                 new Point(5, 25));
 
-            IList<Point> transformedPositions = TransformPositions(factor, centerX, centerY);
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("V: {0:e} km/s", Actuator.Actuator.Instance.Speed.Length),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 35));
 
-            // Линии сетки вокруг земли.
-            DrawGrid(centerX, centerY, factor, drawingContext);
+            // Рисуем изменение скорости
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("DVx: {0:e} km/s", Actuator.Actuator.Instance.DeltaSpeed.X),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 45));
 
-            // Рисуем землю.
-            drawingContext.DrawEllipse(
-                Brushes.DarkGray,
-                new Pen(Brushes.LightGray, 1.0),
-                new Point(centerX, centerY),
-                5,
-                5);
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("DVy: {0:e} km/s", Actuator.Actuator.Instance.DeltaSpeed.Y),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 55));
 
-            // Траектория перелета.
-            DrawTrack(drawingContext, transformedPositions);
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("DV: {0:e} km/s", Actuator.Actuator.Instance.DeltaSpeed.Length),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 65));
 
-            Point currentPosition = transformedPositions[transformedPositions.Count - 1];
+            drawingContext.DrawText(
+                new FormattedText(
+                    string.Format("Distance to target orbit: {0:e} km", Actuator.Actuator.Instance.DistanceToTargetOrbit),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    10,
+                    Brushes.Black),
+                new Point(5, 75));
 
-            // Вектор скорости спутника.
-            drawingContext.DrawLine(
-                new Pen(Brushes.DarkGreen, 1.0),
-                currentPosition,
-                GetVector(currentPosition, _speedVector)
-                );
-
-            // Рисуем части, зависимые от задачи.
-            DrawProblemAttributes(new Point(centerX, centerY), drawingContext, factor);
-
-            // Текущее положение спутника.
-            if (transformedPositions.Count > 0)
-            {
-                drawingContext.DrawEllipse(
-                    Brushes.DarkGreen,
-                    new Pen(Brushes.LightGreen, 1.0),
-                    currentPosition,
-                    5,
-                    5);
-            }
+            
         }
 
         private void EvalProblemAttributes(int problem)
@@ -162,16 +227,16 @@ namespace ICFP2009.Visualizer
 
                     context.DrawEllipse(
                         Brushes.Transparent, new Pen(Brushes.DarkRed, 1.5), center, targetOrbit, targetOrbit);
-                    
+
                     break;
             }
         }
 
-        private Point GetVector(Point center, Point vector)
+        private Point GetVector(Point center, Vector vector)
         {
-            double factor = Math.Log(Math.Sqrt(_speedVector.X * _speedVector.X + _speedVector.Y * _speedVector.Y)) * 5.0;
+            double factor = Math.Log(vector.Length) * 5.0;
 
-            double alpha = Math.Atan2(_speedVector.X, _speedVector.Y);
+            double alpha = Math.Atan2(vector.X, vector.Y);
 
             double dx = factor * Math.Sin(alpha);
             double dy = factor * Math.Cos(alpha);
@@ -211,7 +276,7 @@ namespace ICFP2009.Visualizer
             }
 
             const double alphaStep = Math.PI * 2.0 / 16.0;
-            var maxDimension = (int)Math.Max(RenderSize.Width, RenderSize.Height);
+            var maxDimension = (int) Math.Max(RenderSize.Width, RenderSize.Height);
 
             for (double a = 0; a < 2 * Math.PI; a += alphaStep)
             {
@@ -224,18 +289,16 @@ namespace ICFP2009.Visualizer
 
         private IList<Point> TransformPositions(double factor, double centerX, double centerY)
         {
-            IList<Point> result = new List<Point>(_previousPositions.Count);
+            IList<Point> result = new List<Point>(Actuator.Actuator.Instance.Track.Count);
 
-            foreach (Point point in _previousPositions)
+            foreach (Common.Point point in Actuator.Actuator.Instance.Track)
                 result.Add(new Point(point.X * factor + centerX, point.Y * factor + centerY));
 
             return result;
         }
 
-        public void Reset()
+        private void Reset()
         {
-            _previousPositions.Clear();
-            _speedVector = new Point(0, 0);
             _maxDistancePoint = new Point(0, 0);
         }
     }

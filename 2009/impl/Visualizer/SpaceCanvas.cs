@@ -60,6 +60,8 @@ namespace ICFP2009.Visualizer
 
         protected override void OnRender(DrawingContext drawingContext)
         {
+            drawingContext.DrawRectangle(Brushes.Black, new Pen(Brushes.DarkRed, 0), new Rect(RenderSize));
+
             double centerX = RenderSize.Width / 2.0;
             double centerY = RenderSize.Height / 2.0;
 
@@ -126,7 +128,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 5));
 
             // Рисуем скорость
@@ -137,7 +139,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 15));
 
             drawingContext.DrawText(
@@ -147,7 +149,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 25));
 
             drawingContext.DrawText(
@@ -157,7 +159,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 35));
 
             // Рисуем изменение скорости
@@ -168,7 +170,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 45));
 
             drawingContext.DrawText(
@@ -178,7 +180,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 55));
 
             drawingContext.DrawText(
@@ -188,7 +190,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 65));
 
             drawingContext.DrawText(
@@ -198,7 +200,7 @@ namespace ICFP2009.Visualizer
                     FlowDirection.LeftToRight,
                     new Typeface("Consolas"),
                     10,
-                    Brushes.Black),
+                    Brushes.White),
                 new Point(5, 75));
 
             
@@ -269,7 +271,7 @@ namespace ICFP2009.Visualizer
             {
                 drawingContext.DrawEllipse(
                     Brushes.Transparent,
-                    new Pen(Brushes.LightBlue, 1.0),
+                    new Pen(Brushes.LightBlue, 0.3),
                     new Point(centerX, centerY),
                     i * gridStep,
                     i * gridStep);
@@ -281,7 +283,7 @@ namespace ICFP2009.Visualizer
             for (double a = 0; a < 2 * Math.PI; a += alphaStep)
             {
                 drawingContext.DrawLine(
-                    new Pen(Brushes.LightBlue, 1.0),
+                    new Pen(Brushes.LightBlue, 0.3),
                     new Point(centerX, centerY),
                     new Point(centerX + maxDimension * Math.Sin(a), centerY + maxDimension * Math.Cos(a)));
             }

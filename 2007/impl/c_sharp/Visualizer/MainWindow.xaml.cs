@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using DnaRunner;
@@ -30,11 +31,26 @@ namespace Visualizer
         {
             _dnaRunner =
                 new DnaRunner.DnaRunner(
-                    new FileStream(Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
+                    new FileStream(
+                        Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
                     new MemoryStream());
 
             _dnaRunner.SomeCharsWrittenToRna += DnaRunnerSomeCharsWrittenToRna;
             _dnaRunner.SomeCommandOfDnaHasBeenProcessed += DnaRunnerSomeCommandOfDnaHasBeenProcessed;
+            _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
+        }
+
+        private void DnaRunnerDnaProcessingFinished(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(
+                DispatcherPriority.Normal,
+                new VoidDelegate(
+                    () =>
+                    {
+                        const string message = "Обработка ДНК завершена.";
+                        _logListBox.Items.Add(message);
+                        _logListBox.ScrollIntoView(message);
+                    }));
         }
 
         private void DnaRunnerSomeCommandOfDnaHasBeenProcessed(object sender,
@@ -45,8 +61,9 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        _logListBox.Items.Add(e.TotalCommandProcessed);
-                        _logListBox.ScrollIntoView(e.TotalCommandProcessed);
+                        string message = string.Format("Обработано {0} команд ДНК.", e.TotalCommandProcessed);
+                        _logListBox.Items.Add(message);
+                        _logListBox.ScrollIntoView(message);
                     }));
         }
 
@@ -57,8 +74,9 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        _logListBox.Items.Add(e.TotalCharsCount);
-                        _logListBox.ScrollIntoView(e.TotalCharsCount);
+                        string message = string.Format("Произведено {0} символов РНК.", e.TotalCharsCount);
+                        _logListBox.Items.Add(message);
+                        _logListBox.ScrollIntoView(message);
                     }));
         }
     }

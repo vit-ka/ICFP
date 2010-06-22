@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using RapeStrings;
 
 namespace DnaRunner
 {
@@ -10,18 +11,18 @@ namespace DnaRunner
     /// </summary>
     public class DnaRunner
     {
-        private readonly object _runningMutex = new object();
-
-        private Thread _runningThread;
-        private string _runningDna;
-        private RunningState _state;
-        private int _totalCommandProcessed;
-        private int _totalCharsOfRna;
-        private readonly StreamWriter _rnaWriter;
-        private int _lastRaisedCharsCountOverEvent;
-        private int _lastRaisedCommandsCountOverEvent;
         private const int _commandRaiseEventLimit = 1;
         private const int _charsRaiseEventLimit = 50;
+        private readonly StreamWriter _rnaWriter;
+        private readonly object _runningMutex = new object();
+        private int _lastRaisedCharsCountOverEvent;
+        private int _lastRaisedCommandsCountOverEvent;
+
+        private RapeString _runningDna;
+        private Thread _runningThread;
+        private RunningState _state;
+        private int _totalCharsOfRna;
+        private int _totalCommandProcessed;
 
         /// <summary>
         /// Constructor of DNA processor.
@@ -33,7 +34,7 @@ namespace DnaRunner
             if (inputStream.CanSeek)
                 inputStream.Seek(0, SeekOrigin.Begin);
 
-            _runningDna = new StreamReader(inputStream).ReadToEnd();
+            _runningDna = new RapeString(new StreamReader(inputStream).ReadToEnd());
 
             RnaStream = outputStream;
             _rnaWriter = new StreamWriter(RnaStream);
@@ -81,19 +82,15 @@ namespace DnaRunner
 
                 ++_totalCommandProcessed;
 
-                var pattern = DecodePattern();
-                
-                if (pattern == null)
-                {
-                    continue;
-                }
+                PatternInfo pattern = DecodePattern();
 
-                var template = DecodeTemplate();
+                if (pattern == null)
+                    continue;
+
+                TemplateInfo template = DecodeTemplate();
 
                 if (template == null)
-                {
                     continue;
-                }
 
                 MatchReplace(pattern, template);
 
@@ -118,17 +115,17 @@ namespace DnaRunner
 
         private void MatchReplace(PatternInfo pattern, TemplateInfo template)
         {
-            var index = 0;
-            var environment = new List<string>();
+            int index = 0;
+            var environment = new List<RapeString>();
             var counters = new List<int>();
 
-            foreach (var pat in pattern)
+            foreach (PatternItemInfo pat in pattern)
             {
                 if (pat.IsBase)
                 {
                     if (_runningDna[index] == pat.Symbol)
                         ++index;
-                    else 
+                    else
                         return;
                     continue;
                 }
@@ -145,9 +142,7 @@ namespace DnaRunner
                 {
                     var patterIndex = _runningDna.IndexOf(pat.SearchPattern, index);
                     if (patterIndex != -1)
-                    {
                         index = patterIndex + pat.SearchPattern.Length;
-                    }
                     else
                         return;
 
@@ -168,36 +163,36 @@ namespace DnaRunner
                 }
             }
 
-            _runningDna = _runningDna.Substring(index);
+            _runningDna = _runningDna.Substring(index, _runningDna.Length - index);
             Replace(template, environment);
         }
 
-        private void Replace(TemplateInfo template, List<string> environment)
+        private void Replace(TemplateInfo template, List<RapeString> environment)
         {
-            var newPrefix = string.Empty;
+            var newPrefix = new RapeString();
 
-            foreach (var temp in template)
+            foreach (TemplateItemInfo temp in template)
             {
                 if (temp.IsBase)
                 {
-                    newPrefix += temp.Symbol;
+                    newPrefix.Append(temp.Symbol);
                     continue;
                 }
 
                 if (temp.IsProtect)
                 {
-                    newPrefix += Protect(temp.Level, environment[temp.Reference]);
+                    newPrefix.Append(Protect(temp.Level, environment[temp.Reference]));
                     continue;
                 }
 
                 if (temp.IsAsNat)
                 {
-                    newPrefix += AsNat(environment[temp.Reference].Length);
+                    newPrefix.Append(AsNat(environment[temp.Reference].Length));
                     continue;
                 }
             }
 
-            _runningDna = newPrefix + _runningDna;
+            _runningDna.AddFirst(newPrefix);
         }
 
         private static string AsNat(int number)
@@ -209,29 +204,49 @@ namespace DnaRunner
             return "C" + AsNat(number / 2);
         }
 
-        private static string Protect(int level, string str)
+        private static RapeString Protect(int level, RapeString str)
         {
             if (level == 0)
                 return str;
-            
+
             return Protect(level - 1, Quote(str));
         }
 
-        private static string Quote(string str)
+        private static RapeString Quote(RapeString str)
         {
             if (str.StartsWith("I"))
-                return "C" + Quote(str.Substring(1));
+            {
+                str.RemoveFromBegin(1);
+                var str2 = Quote(str);
+                str2.AddFirst("C");
+                return str2;
+            }
 
             if (str.StartsWith("C"))
-                return "F" + Quote(str.Substring(1));
-
+            {
+                str.RemoveFromBegin(1);
+                var str2 = Quote(str);
+                str2.AddFirst("F");
+                return str2;
+            }
+                       
             if (str.StartsWith("F"))
-                return "P" + Quote(str.Substring(1));
+            {
+                str.RemoveFromBegin(1);
+                var str2 = Quote(str);
+                str2.AddFirst("P");
+                return str2;
+            }
 
             if (str.StartsWith("P"))
-                return "IC" + Quote(str.Substring(1));
+            {
+                str.RemoveFromBegin(1);
+                var str2 = Quote(str);
+                str2.AddFirst("IC");
+                return str2;
+            }
 
-            return string.Empty;
+            return new RapeString();
         }
 
         private TemplateInfo DecodeTemplate()
@@ -243,61 +258,61 @@ namespace DnaRunner
             {
                 if (_runningDna.StartsWith("C"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     template.AppendBack('I');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("F"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     template.AppendBack('C');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("P"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     template.AppendBack('F');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IC"))
                 {
-                    _runningDna = _runningDna.Substring(2);
+                    _runningDna.RemoveFromBegin(2);
                     template.AppendBack('P');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IF") || _runningDna.StartsWith("IP"))
                 {
-                    _runningDna = _runningDna.Substring(2);
-                    var level = DecodeNumber();
-                    var reference = DecodeNumber();
+                    _runningDna.RemoveFromBegin(2);
+                    int level = DecodeNumber();
+                    int reference = DecodeNumber();
                     template.AddReference(reference, level);
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIF"))
                 {
-                    _runningDna = _runningDna.Substring(3);
+                    _runningDna.RemoveFromBegin(3);
                     flag = false;
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IIP"))
                 {
-                    _runningDna = _runningDna.Substring(3);
-                    var reference = DecodeNumber();
+                    _runningDna.RemoveFromBegin(3);
+                    int reference = DecodeNumber();
                     template.AddLengthOfReference(reference);
                     continue;
                 }
 
                 if (_runningDna.StartsWith("III"))
                 {
-                    string toRna = _runningDna.Substring(3, 7);
-                    OutputToRna(toRna);
-                    _runningDna = _runningDna.Substring(10);
+                    RapeString toRna = _runningDna.Substring(3, 7);
+                    OutputToRna(toRna.ToString());
+                    _runningDna.RemoveFromBegin(10);
                     continue;
                 }
 
@@ -323,35 +338,35 @@ namespace DnaRunner
             {
                 if (_runningDna.StartsWith("C"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     result.AppendBack('I');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("F"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     result.AppendBack('C');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("P"))
                 {
-                    _runningDna = _runningDna.Substring(1);
+                    _runningDna.RemoveFromBegin(1);
                     result.AppendBack('F');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IC"))
                 {
-                    _runningDna = _runningDna.Substring(2);
+                    _runningDna.RemoveFromBegin(2);
                     result.AppendBack('P');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IP"))
                 {
-                    _runningDna = _runningDna.Substring(2);
+                    _runningDna.RemoveFromBegin(2);
                     int number = DecodeNumber();
                     result.AppendSkip(number);
                     continue;
@@ -359,7 +374,7 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("IF"))
                 {
-                    _runningDna = _runningDna.Substring(3);
+                    _runningDna.RemoveFromBegin(3);
                     string consts = DecodeConsts();
                     result.AppendSearch(consts);
                     continue;
@@ -367,7 +382,7 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("IIP"))
                 {
-                    _runningDna = _runningDna.Substring(3);
+                    _runningDna.RemoveFromBegin(3);
                     ++level;
                     result.IncreaseLevel();
                     continue;
@@ -375,7 +390,7 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIF"))
                 {
-                    _runningDna = _runningDna.Substring(3);
+                    _runningDna.RemoveFromBegin(3);
                     if (level == 0)
                     {
                         flag = false;
@@ -389,9 +404,9 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("III"))
                 {
-                    string toRna = _runningDna.Substring(3, 7);
-                    OutputToRna(toRna);
-                    _runningDna = _runningDna.Substring(10);
+                    RapeString toRna = _runningDna.Substring(3, 7);
+                    OutputToRna(toRna.ToString());
+                    _runningDna.RemoveFromBegin(10);
                     continue;
                 }
 
@@ -410,29 +425,29 @@ namespace DnaRunner
         {
             if (_runningDna.StartsWith("C"))
             {
-                _runningDna = _runningDna.Substring(1);
-                var consts = DecodeConsts();
+                _runningDna.RemoveFromBegin(1);
+                string consts = DecodeConsts();
                 return "I" + consts;
             }
 
             if (_runningDna.StartsWith("F"))
             {
-                _runningDna = _runningDna.Substring(1);
-                var consts = DecodeConsts();
+                _runningDna.RemoveFromBegin(1);
+                string consts = DecodeConsts();
                 return "C" + consts;
             }
 
             if (_runningDna.StartsWith("P"))
             {
-                _runningDna = _runningDna.Substring(1);
-                var consts = DecodeConsts();
+                _runningDna.RemoveFromBegin(1);
+                string consts = DecodeConsts();
                 return "F" + consts;
             }
 
             if (_runningDna.StartsWith("IC"))
             {
-                _runningDna = _runningDna.Substring(2);
-                var consts = DecodeConsts();
+                _runningDna.RemoveFromBegin(2);
+                string consts = DecodeConsts();
                 return "P" + consts;
             }
 
@@ -443,25 +458,25 @@ namespace DnaRunner
         {
             if (_runningDna.StartsWith("P"))
             {
-                _runningDna = _runningDna.Substring(1);
+                _runningDna.RemoveFromBegin(1);
                 return 0;
             }
 
             if (_runningDna.StartsWith("I") || _runningDna.StartsWith("F"))
             {
-                _runningDna = _runningDna.Substring(1);
-                var number = DecodeNumber();
+                _runningDna.RemoveFromBegin(1);
+                int number = DecodeNumber();
                 return number * 2;
             }
 
             if (_runningDna.StartsWith("C"))
             {
-                _runningDna = _runningDna.Substring(1);
-                var number = DecodeNumber();
+                _runningDna.RemoveFromBegin(1);
+                int number = DecodeNumber();
                 return number * 2 + 1;
             }
 
-            if (string.IsNullOrEmpty(_runningDna))
+            if (_runningDna.Length == 0)
             {
                 lock (_runningMutex)
                 {

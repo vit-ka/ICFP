@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 using DnaRunner;
+using Visualizer.Properties;
 
 namespace Visualizer
 {
@@ -29,7 +30,7 @@ namespace Visualizer
         {
             _dnaRunner =
                 new DnaRunner.DnaRunner(
-                    new FileStream("..\\..\\..\\..\\..\\source\\endo.dna", FileMode.Open, FileAccess.Read, FileShare.None),
+                    new FileStream(Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
                     new MemoryStream());
 
             _dnaRunner.SomeCharsWrittenToRna += DnaRunnerSomeCharsWrittenToRna;

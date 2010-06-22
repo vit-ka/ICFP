@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace RapeStrings
@@ -9,7 +10,7 @@ namespace RapeStrings
     /// </summary>
     public class RapeString
     {
-        private readonly int _count;
+        private int _count;
         private readonly LinkedList<RapeSector> _sectors;
 
         /// <summary>
@@ -43,6 +44,7 @@ namespace RapeStrings
             }
 
             _count = chars.Length;
+            CheckCount();
         }
 
         /// <summary>
@@ -56,6 +58,20 @@ namespace RapeStrings
             }
         }
 
+        private void CheckCount()
+        {
+            int temp = 0;
+            foreach (var rapeSector in _sectors)
+            {
+                temp += rapeSector.Count;
+            }
+
+            if (temp != _count)
+            {
+                File.WriteAllText("D:\\123.txt", "aaaa!");
+            }
+        }
+
         /// <summary>
         /// Access to element at index.
         /// </summary>
@@ -66,6 +82,7 @@ namespace RapeStrings
             get
             {
                 int currentFirstIndex = 0;
+
                 LinkedListNode<RapeSector> currentNode = _sectors.First;
                 while (currentNode != null && currentNode.Value.Count + currentFirstIndex < index)
                 {
@@ -122,7 +139,7 @@ namespace RapeStrings
 
             while (remainsToRemove > 0)
             {
-                if (currentNode.Value.Count < remainsToRemove)
+                if (currentNode.Value.Count <= remainsToRemove)
                 {
                     remainsToRemove -= currentNode.Value.Count;
                     _sectors.RemoveFirst();
@@ -204,12 +221,16 @@ namespace RapeStrings
             foreach (var rapeSector in str._sectors)
             {
                 _sectors.AddLast(rapeSector);
-            }    
+                _count += rapeSector.Count;
+            }
+            CheckCount();
         }
 
         private void Append(RapeSector value)
         {
             _sectors.AddLast(value);
+            _count += value.Count;
+            CheckCount();
         }
 
         private void Append(char[] charArray)
@@ -226,8 +247,10 @@ namespace RapeStrings
                     currentNode = _sectors.AddLast(new RapeSector());
                 }
                 currentNode.Value[currentIndex] = charArray[indexInArray];
+                ++currentNode.Value.Count;
                 ++currentIndex;
                 ++indexInArray;
+                ++_count;
             }
         }
 
@@ -255,8 +278,11 @@ namespace RapeStrings
             while (currentNode != null)
             {
                 _sectors.AddFirst(currentNode.Value);
+                _count += currentNode.Value.Count;
                 currentNode = currentNode.Previous;
             }
+
+            CheckCount();
         }
 
         /// <summary>
@@ -279,24 +305,32 @@ namespace RapeStrings
                 {
                     sector[innerIndex] = chars[charIndex];
                 }
+                sector.Count = RapeSector.SectorSize;
 
                 if (currentSector == null)
                     currentSector = _sectors.AddFirst(sector);
                 else
                     _sectors.AddAfter(currentSector, sector);
+
+                _count += sector.Count;
             }
+
+            CheckCount();
 
             var lastSector = new RapeSector();
             for (int innerIndex = 0; charIndex < chars.Length; ++innerIndex, ++charIndex)
             {
                 lastSector[innerIndex] = chars[charIndex];
             }
-
+            lastSector.Count = chars.Length % RapeSector.SectorSize;
 
             if (currentSector == null)
                 _sectors.AddFirst(lastSector);
             else
                 _sectors.AddAfter(currentSector, lastSector);
+            _count += lastSector.Count;
+
+            CheckCount();
         }
 
         /// <summary>
@@ -323,14 +357,16 @@ namespace RapeStrings
                     
             while (currentNode != null)
             {
-                if (index > currentNode.Value.Count)
+                if (index >= currentNode.Value.Count)
                 {
                     index = 0;
+                    currentFirstIndex += currentNode.Value.Count;
                     currentNode = currentNode.Next;
+
                     continue;
                 }
 
-                if (!IsPatternCompare(index, searchPattern, currentNode))
+                if (!IsPatternCompare(index, searchPattern, currentFirstIndex, currentNode))
                 {
                     ++index;
                 }
@@ -343,24 +379,24 @@ namespace RapeStrings
             return -1;
         }
 
-        private bool IsPatternCompare(int index, string searchPattern, LinkedListNode<RapeSector> currentNode)
+        private bool IsPatternCompare(int index, string searchPattern, int firstIndexOfNode, LinkedListNode<RapeSector> currentNode)
         {
-            int shift = 0;
-            int totalShift = 0;
+            int indexInNode = index;
+            int indexInPattern = 0;
 
-            while (totalShift <= searchPattern.Length && currentNode != null)
+            while (indexInPattern < searchPattern.Length && currentNode != null)
             {
-                if (shift >= currentNode.Value.Count)
+                if (indexInNode >= currentNode.Value.Count)
                 {
                     currentNode = currentNode.Next;
-                    shift = 0;
+                    indexInNode = 0;
                 }
 
-                if (currentNode.Value[shift + index] != searchPattern[totalShift])
+                if (currentNode.Value[indexInNode] != searchPattern[indexInPattern])
                     return false;
 
-                ++shift;
-                ++totalShift;
+                ++indexInNode;
+                ++indexInPattern;
             }
 
             return currentNode != null;
@@ -423,7 +459,7 @@ namespace RapeStrings
 
         public void RemoveFromBegin(int remainsToRemove)
         {
-            for (int index = 0; index < remainsToRemove; ++index)
+            for (int index = 0; index + remainsToRemove < Count; ++index)
             {
                 _chars[index] = _chars[index + remainsToRemove];
             }
@@ -447,7 +483,7 @@ namespace RapeStrings
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("Chars: {0}", new string(_chars));
+            return string.Format("Chars: {0}", new string(_chars, 0, Count));
         }
     }
 }

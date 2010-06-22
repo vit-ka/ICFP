@@ -20,7 +20,7 @@ namespace DnaRunner
         private readonly StreamWriter _rnaWriter;
         private int _lastRaisedCharsCountOverEvent;
         private int _lastRaisedCommandsCountOverEvent;
-        private const int _commandRaiseEventLimit = 50;
+        private const int _commandRaiseEventLimit = 1;
         private const int _charsRaiseEventLimit = 50;
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace DnaRunner
                 MatchReplace(pattern, template);
 
                 // Raise event.
-                if (_totalCommandProcessed - _lastRaisedCommandsCountOverEvent > _commandRaiseEventLimit)
+                if (_totalCommandProcessed - _lastRaisedCommandsCountOverEvent >= _commandRaiseEventLimit)
                 {
                     InvokeSomeCommandOfDnaHasBeenProcessed(_totalCommandProcessed);
                     _lastRaisedCommandsCountOverEvent = _totalCommandProcessed;
@@ -136,7 +136,7 @@ namespace DnaRunner
                 if (pat.IsSkip)
                 {
                     index += pat.SkipCount;
-                    if (index >= _runningDna.Length)
+                    if (index > _runningDna.Length)
                         return;
                     continue;
                 }
@@ -193,13 +193,14 @@ namespace DnaRunner
                 if (temp.IsAsNat)
                 {
                     newPrefix += AsNat(environment[temp.Reference].Length);
+                    continue;
                 }
             }
 
             _runningDna = newPrefix + _runningDna;
         }
 
-        private string AsNat(int number)
+        private static string AsNat(int number)
         {
             if (number == 0)
                 return "P";
@@ -208,7 +209,7 @@ namespace DnaRunner
             return "C" + AsNat(number / 2);
         }
 
-        private string Protect(int level, string str)
+        private static string Protect(int level, string str)
         {
             if (level == 0)
                 return str;
@@ -216,7 +217,7 @@ namespace DnaRunner
             return Protect(level - 1, Quote(str));
         }
 
-        private string Quote(string str)
+        private static string Quote(string str)
         {
             if (str.StartsWith("I"))
                 return "C" + Quote(str.Substring(1));
@@ -372,7 +373,7 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIP"))
+                if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIF"))
                 {
                     _runningDna = _runningDna.Substring(3);
                     if (level == 0)
@@ -477,7 +478,7 @@ namespace DnaRunner
             _totalCharsOfRna += value.Length;
 
             // Raise event.
-            if (_totalCharsOfRna - _lastRaisedCharsCountOverEvent > _charsRaiseEventLimit)
+            if (_totalCharsOfRna - _lastRaisedCharsCountOverEvent >= _charsRaiseEventLimit)
             {
                 InvokeSomeCharsWrittenToRna(_totalCharsOfRna);
                 _lastRaisedCharsCountOverEvent = _totalCharsOfRna;

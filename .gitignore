@@ -1,0 +1,8 @@
+.svn
+bin
+obj
+__binaryOutput
+*.suo
+*.pdb
+*.user
+*_ReSharper*

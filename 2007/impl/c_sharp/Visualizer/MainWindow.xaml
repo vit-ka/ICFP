@@ -1,0 +1,27 @@
+﻿<Window x:Class="Visualizer.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow" Height="429" Width="727"
+        Loaded="Window_Loaded">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<Button Grid.Row="0" Grid.Column="0" x:Name="_runDnaButton" Click="RunDnaButtonClick">Run DNA</Button>
+		</Grid>
+		<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="_logListBox"/>
+	</Grid>
+</Window>

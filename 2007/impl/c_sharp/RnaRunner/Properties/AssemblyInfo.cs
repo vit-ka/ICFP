@@ -1,29 +1,26 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using log4net.Config;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-
-[assembly: AssemblyTitle("DnaToRnaRunner")]
+[assembly: AssemblyTitle("RnaRunner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KG")]
-[assembly: AssemblyProduct("DnaToRnaRunner")]
-[assembly: AssemblyCopyright("Copyright © KG 2009")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("RnaRunner")]
+[assembly: AssemblyCopyright("Copyright ©  2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
-
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-
-[assembly: Guid("394d3cf0-3b3f-477b-9301-82bea7a95bd5")]
+[assembly: Guid("76ee8a9b-7f94-4bc0-82eb-c043d168acbf")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,7 +32,5 @@ using log4net.Config;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]

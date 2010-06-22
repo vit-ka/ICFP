@@ -146,7 +146,7 @@ namespace DnaRunner
                     var patterIndex = _runningDna.IndexOf(pat.SearchPattern, index);
                     if (patterIndex != -1)
                     {
-                        index = patterIndex;
+                        index = patterIndex + pat.SearchPattern.Length;
                     }
                     else
                         return;

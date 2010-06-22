@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -117,6 +118,119 @@ namespace DnaRunner
 
         private void MatchReplace(PatternInfo pattern, TemplateInfo template)
         {
+            var index = 0;
+            var environment = new List<string>();
+            var counters = new List<int>();
+
+            foreach (var pat in pattern)
+            {
+                if (pat.IsBase)
+                {
+                    if (_runningDna[index] == pat.Symbol)
+                        ++index;
+                    else 
+                        return;
+                    continue;
+                }
+
+                if (pat.IsSkip)
+                {
+                    index += pat.SkipCount;
+                    if (index >= _runningDna.Length)
+                        return;
+                    continue;
+                }
+
+                if (pat.IsSearch)
+                {
+                    var patterIndex = _runningDna.IndexOf(pat.SearchPattern, index);
+                    if (patterIndex != -1)
+                    {
+                        index = patterIndex;
+                    }
+                    else
+                        return;
+
+                    continue;
+                }
+
+                if (pat.IsLevelUp)
+                {
+                    counters.Insert(0, index);
+                    continue;
+                }
+
+                if (pat.IsLevelDown)
+                {
+                    environment.Add(_runningDna.Substring(counters[0], index - counters[0]));
+                    counters.RemoveAt(0);
+                    continue;
+                }
+            }
+
+            _runningDna = _runningDna.Substring(index);
+            Replace(template, environment);
+        }
+
+        private void Replace(TemplateInfo template, List<string> environment)
+        {
+            var newPrefix = string.Empty;
+
+            foreach (var temp in template)
+            {
+                if (temp.IsBase)
+                {
+                    newPrefix += temp.Symbol;
+                    continue;
+                }
+
+                if (temp.IsProtect)
+                {
+                    newPrefix += Protect(temp.Level, environment[temp.Reference]);
+                    continue;
+                }
+
+                if (temp.IsAsNat)
+                {
+                    newPrefix += AsNat(environment[temp.Reference].Length);
+                }
+            }
+
+            _runningDna = newPrefix + _runningDna;
+        }
+
+        private string AsNat(int number)
+        {
+            if (number == 0)
+                return "P";
+            if (number % 2 == 0)
+                return "I" + AsNat(number / 2);
+            return "C" + AsNat(number / 2);
+        }
+
+        private string Protect(int level, string str)
+        {
+            if (level == 0)
+                return str;
+            
+            return Protect(level - 1, Quote(str));
+        }
+
+        private string Quote(string str)
+        {
+            if (str.StartsWith("I"))
+                return "C" + Quote(str.Substring(1));
+
+            if (str.StartsWith("C"))
+                return "F" + Quote(str.Substring(1));
+
+            if (str.StartsWith("F"))
+                return "P" + Quote(str.Substring(1));
+
+            if (str.StartsWith("P"))
+                return "IC" + Quote(str.Substring(1));
+
+            return string.Empty;
         }
 
         private TemplateInfo DecodeTemplate()
@@ -129,28 +243,28 @@ namespace DnaRunner
                 if (_runningDna.StartsWith("C"))
                 {
                     _runningDna = _runningDna.Substring(1);
-                    template.AppendBack("I");
+                    template.AppendBack('I');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("F"))
                 {
                     _runningDna = _runningDna.Substring(1);
-                    template.AppendBack("C");
+                    template.AppendBack('C');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("P"))
                 {
                     _runningDna = _runningDna.Substring(1);
-                    template.AppendBack("F");
+                    template.AppendBack('F');
                     continue;
                 }
 
                 if (_runningDna.StartsWith("IC"))
                 {
                     _runningDna = _runningDna.Substring(2);
-                    template.AppendBack("P");
+                    template.AppendBack('P');
                     continue;
                 }
 
@@ -246,7 +360,7 @@ namespace DnaRunner
                 {
                     _runningDna = _runningDna.Substring(3);
                     string consts = DecodeConsts();
-                    result.AppendReplace(consts);
+                    result.AppendSearch(consts);
                     continue;
                 }
 

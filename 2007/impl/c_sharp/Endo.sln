@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RnaRunner", "RnaRunner\RnaRunner.csproj", "{5AC133B3-E2D9-4486-A911-6C37B67A62A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapeStrings", "RapeStrings\RapeStrings.csproj", "{7E842E0D-1B17-4645-80A4-6A69E9343B66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RopeStrings", "RopeStrings\RopeStrings.csproj", "{7E842E0D-1B17-4645-80A4-6A69E9343B66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

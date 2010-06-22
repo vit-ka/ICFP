@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using RapeStrings;
+using RopeStrings;
 
 namespace DnaRunner
 {
@@ -18,7 +18,7 @@ namespace DnaRunner
         private int _lastRaisedCharsCountOverEvent;
         private int _lastRaisedCommandsCountOverEvent;
 
-        private RapeString _runningDna;
+        private RopeString _runningDna;
         private Thread _runningThread;
         private RunningState _state;
         private int _totalCharsOfRna;
@@ -34,7 +34,7 @@ namespace DnaRunner
             if (inputStream.CanSeek)
                 inputStream.Seek(0, SeekOrigin.Begin);
 
-            _runningDna = new RapeString(new StreamReader(inputStream).ReadToEnd());
+            _runningDna = new RopeString(new StreamReader(inputStream).ReadToEnd());
 
             RnaStream = outputStream;
             _rnaWriter = new StreamWriter(RnaStream);
@@ -116,7 +116,7 @@ namespace DnaRunner
         private void MatchReplace(PatternInfo pattern, TemplateInfo template)
         {
             int index = 0;
-            var environment = new List<RapeString>();
+            var environment = new List<RopeString>();
             var counters = new List<int>();
 
             foreach (PatternItemInfo pat in pattern)
@@ -167,9 +167,9 @@ namespace DnaRunner
             Replace(template, environment);
         }
 
-        private void Replace(TemplateInfo template, List<RapeString> environment)
+        private void Replace(TemplateInfo template, List<RopeString> environment)
         {
-            var newPrefix = new RapeString();
+            var newPrefix = new RopeString();
 
             foreach (TemplateItemInfo temp in template)
             {
@@ -204,7 +204,7 @@ namespace DnaRunner
             return "C" + AsNat(number / 2);
         }
 
-        private static RapeString Protect(int level, RapeString str)
+        private static RopeString Protect(int level, RopeString str)
         {
             if (level == 0)
                 return str;
@@ -212,7 +212,7 @@ namespace DnaRunner
             return Protect(level - 1, Quote(str));
         }
 
-        private static RapeString Quote(RapeString str)
+        private static RopeString Quote(RopeString str)
         {
             if (str.StartsWith("I"))
             {
@@ -246,7 +246,7 @@ namespace DnaRunner
                 return str2;
             }
 
-            return new RapeString();
+            return new RopeString();
         }
 
         private TemplateInfo DecodeTemplate()
@@ -310,7 +310,7 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("III"))
                 {
-                    RapeString toRna = _runningDna.Substring(3, 7);
+                    RopeString toRna = _runningDna.Substring(3, 7);
                     OutputToRna(toRna.ToString());
                     _runningDna.RemoveFromBegin(10);
                     continue;
@@ -404,7 +404,7 @@ namespace DnaRunner
 
                 if (_runningDna.StartsWith("III"))
                 {
-                    RapeString toRna = _runningDna.Substring(3, 7);
+                    RopeString toRna = _runningDna.Substring(3, 7);
                     OutputToRna(toRna.ToString());
                     _runningDna.RemoveFromBegin(10);
                     continue;

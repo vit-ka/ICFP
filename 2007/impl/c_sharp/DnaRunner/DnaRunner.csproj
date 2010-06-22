@@ -57,9 +57,9 @@
     <Compile Include="TemplateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RapeStrings\RapeStrings.csproj">
+    <ProjectReference Include="..\RopeStrings\RopeStrings.csproj">
       <Project>{7E842E0D-1B17-4645-80A4-6A69E9343B66}</Project>
-      <Name>RapeStrings</Name>
+      <Name>RopeStrings</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

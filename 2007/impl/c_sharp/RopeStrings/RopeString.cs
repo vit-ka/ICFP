@@ -3,42 +3,42 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace RapeStrings
+namespace RopeStrings
 {
     /// <summary>
-    /// Class for representing rape-behaviour of string.
+    /// Class for representing rope-behaviour of string.
     /// </summary>
-    public class RapeString
+    public class RopeString
     {
         private int _count;
-        private readonly LinkedList<RapeSector> _sectors;
+        private readonly LinkedList<RopeSector> _sectors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public RapeString()
+        public RopeString()
         {
-            _sectors = new LinkedList<RapeSector>();
-            _sectors.AddFirst(new RapeSector());
+            _sectors = new LinkedList<RopeSector>();
+            _sectors.AddFirst(new RopeSector());
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         /// <param name="initializeString">Initialization string.</param>
-        public RapeString(string initializeString)
+        public RopeString(string initializeString)
         {
-            _sectors = new LinkedList<RapeSector>();
+            _sectors = new LinkedList<RopeSector>();
 
             char[] chars = initializeString.ToCharArray();
 
-            for (int index = 0; index < chars.Length; index += RapeSector.SectorSize)
+            for (int index = 0; index < chars.Length; index += RopeSector.SectorSize)
             {
-                var sector = new RapeSector();
-                for (int innerIndex = 0; innerIndex < RapeSector.SectorSize && index + innerIndex < chars.Length; ++innerIndex)
+                var sector = new RopeSector();
+                for (int innerIndex = 0; innerIndex < RopeSector.SectorSize && index + innerIndex < chars.Length; ++innerIndex)
                     sector[innerIndex] = chars[index + innerIndex];
-                sector.Count = index + RapeSector.SectorSize < chars.Length
-                                   ? RapeSector.SectorSize
+                sector.Count = index + RopeSector.SectorSize < chars.Length
+                                   ? RopeSector.SectorSize
                                    : chars.Length - index;
                 _sectors.AddLast(sector);
             }
@@ -61,9 +61,9 @@ namespace RapeStrings
         private void CheckCount()
         {
             int temp = 0;
-            foreach (var rapeSector in _sectors)
+            foreach (var ropeSector in _sectors)
             {
-                temp += rapeSector.Count;
+                temp += ropeSector.Count;
             }
 
             if (temp != _count)
@@ -83,7 +83,7 @@ namespace RapeStrings
             {
                 int currentFirstIndex = 0;
 
-                LinkedListNode<RapeSector> currentNode = _sectors.First;
+                LinkedListNode<RopeSector> currentNode = _sectors.First;
                 while (currentNode != null && currentNode.Value.Count + currentFirstIndex < index)
                 {
                     currentFirstIndex += currentNode.Value.Count;
@@ -109,7 +109,7 @@ namespace RapeStrings
 
             int index = 0;
             int indexInNode = 0;
-            LinkedListNode<RapeSector> currentNode = _sectors.First;
+            LinkedListNode<RopeSector> currentNode = _sectors.First;
             while (index < pattern.Length)
             {
                 if (indexInNode >= currentNode.Value.Count)
@@ -135,7 +135,7 @@ namespace RapeStrings
         public void RemoveFromBegin(int count)
         {
             int remainsToRemove = count;
-            LinkedListNode<RapeSector> currentNode = _sectors.First;
+            LinkedListNode<RopeSector> currentNode = _sectors.First;
 
             while (remainsToRemove > 0)
             {
@@ -158,17 +158,17 @@ namespace RapeStrings
         /// </summary>
         /// <param name="from">Index from.</param>
         /// <param name="length">Length of substring.</param>
-        public RapeString Substring(int from, int length)
+        public RopeString Substring(int from, int length)
         {
             int currentFirstIndex = 0;
-            LinkedListNode<RapeSector> currentNode = _sectors.First;
+            LinkedListNode<RopeSector> currentNode = _sectors.First;
             while (currentNode != null && currentNode.Value.Count + currentFirstIndex < from)
             {
                 currentFirstIndex += currentNode.Value.Count;
                 currentNode = currentNode.Next;
             }
 
-            var result = new RapeString();
+            var result = new RopeString();
 
             if (currentNode != null)
             {
@@ -216,35 +216,35 @@ namespace RapeStrings
         /// Adds values to the end of string.
         /// </summary>
         /// <param name="str">Values to add</param>
-        public void Append(RapeString str)
+        public void Append(RopeString str)
         {
-            foreach (var rapeSector in str._sectors)
+            foreach (var ropeSector in str._sectors)
             {
-                _sectors.AddLast(rapeSector);
-                _count += rapeSector.Count;
+                _sectors.AddLast(ropeSector);
+                _count += ropeSector.Count;
             }
             CheckCount();
         }
 
-        private void Append(RapeSector value)
+        private void Append(RopeSector value)
         {
             _sectors.AddLast(value);
             _count += value.Count;
-            CheckCount();
+            //CheckCount();
         }
 
         private void Append(char[] charArray)
         {
-            LinkedListNode<RapeSector> currentNode = _sectors.Last;
+            LinkedListNode<RopeSector> currentNode = _sectors.Last;
             int currentIndex = currentNode.Value.Count;
             int indexInArray = 0;
 
             while (indexInArray < charArray.Length)
             {
-                if (currentIndex >= RapeSector.SectorSize)
+                if (currentIndex >= RopeSector.SectorSize)
                 {
                     currentIndex = 0;
-                    currentNode = _sectors.AddLast(new RapeSector());
+                    currentNode = _sectors.AddLast(new RopeSector());
                 }
                 currentNode.Value[currentIndex] = charArray[indexInArray];
                 ++currentNode.Value.Count;
@@ -271,9 +271,9 @@ namespace RapeStrings
         /// Add content to the begin of string.
         /// </summary>
         /// <param name="str">Value to adding.</param>
-        public void AddFirst(RapeString str)
+        public void AddFirst(RopeString str)
         {
-            LinkedListNode<RapeSector> currentNode = str._sectors.Last;
+            LinkedListNode<RopeSector> currentNode = str._sectors.Last;
 
             while (currentNode != null)
             {
@@ -293,19 +293,19 @@ namespace RapeStrings
         {
             var chars = str.ToCharArray();
 
-            int countSectors = chars.Length / RapeSector.SectorSize;
+            int countSectors = chars.Length / RopeSector.SectorSize;
             int charIndex = 0;
 
-            LinkedListNode<RapeSector> currentSector = null;
+            LinkedListNode<RopeSector> currentSector = null;
 
             for (int index = 0; index < countSectors; ++index)
             {
-                var sector = new RapeSector();
-                for (int innerIndex = 0; innerIndex < RapeSector.SectorSize; ++innerIndex, ++charIndex)
+                var sector = new RopeSector();
+                for (int innerIndex = 0; innerIndex < RopeSector.SectorSize; ++innerIndex, ++charIndex)
                 {
                     sector[innerIndex] = chars[charIndex];
                 }
-                sector.Count = RapeSector.SectorSize;
+                sector.Count = RopeSector.SectorSize;
 
                 if (currentSector == null)
                     currentSector = _sectors.AddFirst(sector);
@@ -317,12 +317,12 @@ namespace RapeStrings
 
             CheckCount();
 
-            var lastSector = new RapeSector();
+            var lastSector = new RopeSector();
             for (int innerIndex = 0; charIndex < chars.Length; ++innerIndex, ++charIndex)
             {
                 lastSector[innerIndex] = chars[charIndex];
             }
-            lastSector.Count = chars.Length % RapeSector.SectorSize;
+            lastSector.Count = chars.Length % RopeSector.SectorSize;
 
             if (currentSector == null)
                 _sectors.AddFirst(lastSector);
@@ -342,7 +342,7 @@ namespace RapeStrings
         public int IndexOf(string searchPattern, int startIndex)
         {
             int currentFirstIndex = 0;
-            LinkedListNode<RapeSector> currentNode = _sectors.First;
+            LinkedListNode<RopeSector> currentNode = _sectors.First;
 
             while (currentNode != null && currentNode.Value.Count + currentFirstIndex < startIndex)
             {
@@ -379,7 +379,7 @@ namespace RapeStrings
             return -1;
         }
 
-        private bool IsPatternCompare(int index, string searchPattern, int firstIndexOfNode, LinkedListNode<RapeSector> currentNode)
+        private bool IsPatternCompare(int index, string searchPattern, int firstIndexOfNode, LinkedListNode<RopeSector> currentNode)
         {
             int indexInNode = index;
             int indexInPattern = 0;
@@ -413,77 +413,12 @@ namespace RapeStrings
         {
             var builder = new StringBuilder(_count);
 
-            foreach (var rapeSector in _sectors)
+            foreach (var ropeSector in _sectors)
             {
-                builder.Append(rapeSector.ToCharArray());
+                builder.Append(ropeSector.ToCharArray());
             }
 
             return builder.ToString();
-        }
-    }
-
-    internal class RapeSector
-    {
-        private const int _sectorSize = 50;
-
-        private readonly char[] _chars = new char[_sectorSize];
-
-        /// <summary>
-        /// Size of sector in chars.
-        /// </summary>
-        public static int SectorSize
-        {
-            get
-            {
-                return _sectorSize;
-            }
-        }
-
-        /// <summary>
-        /// Count of items.
-        /// </summary>
-        public int Count { get; set; }
-
-        public char this[int index]
-        {
-            get
-            {
-                return _chars[index];
-            }
-
-            set
-            {
-                _chars[index] = value;
-            }
-        }
-
-        public void RemoveFromBegin(int remainsToRemove)
-        {
-            for (int index = 0; index + remainsToRemove < Count; ++index)
-            {
-                _chars[index] = _chars[index + remainsToRemove];
-            }
-
-            Count -= remainsToRemove;
-        }
-
-        public char[] ToCharArray()
-        {
-            var result = new char[Count];
-            Array.Copy(_chars, 0, result, 0, Count);
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString()
-        {
-            return string.Format("Chars: {0}", new string(_chars, 0, Count));
         }
     }
 }

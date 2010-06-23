@@ -54,6 +54,8 @@ namespace Visualizer
                         @"D:\Projects\ICFP\2007\source\Rna\RNA_WithDefaultPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
+
+            _canvas.RnaRunner = _rnaRunner;
         }
 
         void RnaRunnerExecutionFinished(object sender, EventArgs e)
@@ -120,20 +122,8 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        var memoryStream = new MemoryStream();
-                        _rnaRunner.Bitmap.Save(memoryStream, ImageFormat.Png);
-
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-
                         ++_index;
-
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        bitmapImage.StreamSource = memoryStream;
-                        bitmapImage.EndInit();
-
-                        _image.Source = bitmapImage;
-
+                        _canvas.InvalidateVisual();
                         DoEvents();
                     }));
         }

@@ -25,10 +25,10 @@ namespace RnaRunner
         private static readonly Color _white = Color.FromArgb(255, 255, 255);
         private readonly string _sourceRna;
         private readonly object _stateMutex = new object();
-        private IList<Bitmap> _bitmaps;
+        private IList<PixelMap> _bitmaps;
         private IList<byte> _bucketAlpha;
         private IList<Color> _bucketColor;
-        private Color _currentColor;
+        private Pixel _currentColor;
         private int _currentIndexOfRna;
 
         private Size _defaultSize = new Size(600, 600);
@@ -55,9 +55,17 @@ namespace RnaRunner
         /// <summary>
         /// Image produced from RNA.
         /// </summary>
-        public Bitmap Bitmap
+        public PixelMap Bitmap
         {
-            get { return _bitmaps[0]; }
+            get
+            {
+//                var result = new Bitmap(_defaultSize.Width, _defaultSize.Height, PixelFormat.Format32bppArgb);
+//                for (int x = 0; x < 600; ++x)
+//                    for (int y = 0; y < 600; ++y )
+//                        result.SetPixel(x, y, _bitmaps[0][x, y].Color);
+
+                return _bitmaps[0];
+            }
         }
 
         ///<summary>
@@ -101,21 +109,30 @@ namespace RnaRunner
                              {
                                  IsBackground = true
                              };
-            thread.Start();
-
+          
             _currentIndexOfRna = 0;
-            _bitmaps = new List<Bitmap>();
+            _bitmaps = new List<PixelMap>();
             _position = new Point(0, 0);
             _mark = new Point(0, 0);
             _direction = Direction.E;
             _bucketColor = new List<Color>();
             _bucketAlpha = new List<byte>();
             _bitmaps.Add(CreateTransperentBitmap());
+
+            thread.Start();
         }
 
-        private Bitmap CreateTransperentBitmap()
+        private static PixelMap CreateTransperentBitmap()
         {
-            return new Bitmap(_defaultSize.Width, _defaultSize.Height, PixelFormat.Format32bppArgb);
+            var result = new PixelMap();
+
+            for (int x = 0; x < 600; ++x)
+                for (int y = 0; y < 600; ++y)
+                {
+                    result[x,y] = new Pixel(_black, _transparent);
+                }
+
+            return result;
         }
 
         private void ProcessRna()
@@ -213,17 +230,13 @@ namespace RnaRunner
                 for (int x = 0; x < 600; ++x)
                     for (int y = 0; y < 600; ++y)
                     {
-                        Color color0 = _bitmaps[0].GetPixel(x, y);
-                        Color color1 = _bitmaps[1].GetPixel(x, y);
+                        Pixel p0 = _bitmaps[0][x, y];
+                        Pixel p1 = _bitmaps[1][x, y];
 
-                        _bitmaps[1].SetPixel(
-                            x,
-                            y,
-                            Color.FromArgb(
-                                (color1.A*color0.A)/255,
-                                (color1.R*color0.A)/255,
-                                (color1.G*color0.A)/255,
-                                (color1.B*color0.A)/255));
+                        _bitmaps[1][x, y] = new Pixel(Color.FromArgb((p1.Color.R*p0.Transparency)/255,
+                                                                     (p1.Color.G*p0.Transparency)/255,
+                                                                     (p1.Color.B*p0.Transparency)/255),
+                                                      (byte) ((p1.Transparency*p0.Transparency)/255));
                     }
 
                 _bitmaps.RemoveAt(0);
@@ -237,24 +250,22 @@ namespace RnaRunner
                 for (int x = 0; x < 600; ++x)
                     for (int y = 0; y < 600; ++y)
                     {
-                        Color color0 = _bitmaps[0].GetPixel(x, y);
-                        Color color1 = _bitmaps[1].GetPixel(x, y);
+                        Pixel p0 = _bitmaps[0][x, y];
+                        Pixel p1 = _bitmaps[1][x, y];
 
-                        _bitmaps[1].SetPixel(
-                            x,
-                            y,
-                            Color.FromArgb(
-                                (color0.A + (color1.A*(255 - color0.A))/255),
-                                (color0.R + (color1.R*(255 - color0.A))/255),
-                                (color0.G + (color1.G*(255 - color0.A))/255),
-                                (color0.B + (color1.B*(255 - color0.A))/255)));
+                        _bitmaps[1][x, y] =
+                            new Pixel(Color.FromArgb((p0.Color.R + (p1.Color.R*(255 - p0.Transparency))/255),
+                                                     (p0.Color.G + (p1.Color.R*(255 - p0.Transparency))/255),
+                                                     (p0.Color.B + (p1.Color.R*(255 - p0.Transparency))/255)),
+                                                     (byte)
+                                                     (p0.Transparency + (p1.Transparency*(255 - p0.Transparency))/255));
                     }
 
                 _bitmaps.RemoveAt(0);
             }
         }
 
-        private void AddBitmap(Bitmap bitmap)
+        private void AddBitmap(PixelMap bitmap)
         {
             if (_bitmaps.Count < 10)
             {
@@ -264,8 +275,8 @@ namespace RnaRunner
 
         private void TryFill()
         {
-            Color newColor = _currentColor;
-            Color oldColor = GetPixel(_position);
+            Pixel newColor = _currentColor;
+            Pixel oldColor = GetPixel(_position);
 
             if (newColor != oldColor)
             {
@@ -273,7 +284,7 @@ namespace RnaRunner
             }
         }
 
-        private void Fill(Point position, Color oldColor)
+        private void Fill(Point position, Pixel oldColor)
         {
             var front = new Queue<Point>();
             front.Enqueue(position);
@@ -297,9 +308,9 @@ namespace RnaRunner
             }
         }
 
-        private Color GetPixel(Point position)
+        private Pixel GetPixel(Point position)
         {
-            return _bitmaps[0].GetPixel(position.X, position.Y);
+            return _bitmaps[0][position.X, position.Y];
         }
 
         private void Line(Point position, Point mark)
@@ -327,7 +338,7 @@ namespace RnaRunner
 
         private void SetPixel(int x, int y)
         {
-            _bitmaps[0].SetPixel(x, y, _currentColor);
+            _bitmaps[0][x, y] = _currentColor;
         }
 
         private Direction TurnClockwise(Direction direction)
@@ -402,9 +413,9 @@ namespace RnaRunner
                 rC = gC = bC = 0;
             }
 
-            _currentColor = Color.FromArgb((int) Math.Floor(aC), (int) Math.Floor(rC*aC/255.0),
-                                           (int) Math.Floor(gC*aC/255.0),
-                                           (int) Math.Floor(bC*aC/255.0));
+            _currentColor = new Pixel(Color.FromArgb((int) Math.Floor(rC*aC/255.0),
+                                                     (int) Math.Floor(gC*aC/255.0),
+                                                     (int) Math.Floor(bC*aC/255.0)), (byte) Math.Floor(aC));
         }
 
         #region Nested type: Direction
@@ -428,5 +439,97 @@ namespace RnaRunner
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Map of pixels.
+    /// </summary>
+    public class PixelMap
+    {
+        private Pixel[,] _map;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public PixelMap()
+        {
+            _map = new Pixel[600,600];
+        }
+
+        /// <summary>
+        /// Indexator of pixels.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <returns>Pixel at given position.</returns>
+        public Pixel this[int x, int y]
+        {
+            get { return _map[x, y]; }
+            set { _map[x, y] = value;}
+        }
+    }
+
+    /// <summary>
+    /// Pixel of map.
+    /// </summary>
+    public class Pixel
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="color">Color of pixel.</param>
+        /// <param name="transparency">Transperency of pixel.</param>
+        public Pixel(Color color, byte transparency)
+        {
+            Color = color;
+            Transparency = transparency;
+        }
+
+        /// <summary>
+        /// Color of pixel.
+        /// </summary>
+        public Color Color { get; set; }
+
+        /// <summary>
+        /// Transperency of pixel.
+        /// </summary>
+        public byte Transparency { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Pixel other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return other.Color.Equals(Color) && other.Transparency == Transparency;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (Pixel)) return false;
+            return Equals((Pixel) obj);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Color.GetHashCode()*397) ^ Transparency.GetHashCode();
+            }
+        }
     }
 }

@@ -237,7 +237,7 @@ namespace DnaRunner
         {
             var result = new StringBuilder();
 
-            for (int index = str.Length - 1; index >= 0; --index )
+            for (int index = 0; index < str.Length; ++index )
             {
                 switch (str[index])
                 {

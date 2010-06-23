@@ -72,8 +72,7 @@ namespace Visualizer
                     }));
         }
 
-        private static DispatcherOperationCallback exitFrameCallback = new
-                            DispatcherOperationCallback(ExitFrame);
+        private static readonly DispatcherOperationCallback _exitFrameCallback = ExitFrame;
 
         /// <summary>
         /// Processes all UI messages currently in the message queue.
@@ -82,16 +81,14 @@ namespace Visualizer
         {
 
             // Create new nested message pump.
-            DispatcherFrame nestedFrame = new DispatcherFrame();
-
+            var nestedFrame = new DispatcherFrame();
 
 
             // Dispatch a callback to the current message queue, when getting called, 
             // this callback will end the nested message loop.
             // note that the priority of this callback should be lower than the that of UI event messages.
             DispatcherOperation exitOperation = Dispatcher.CurrentDispatcher.BeginInvoke(
-                                                  DispatcherPriority.Background, exitFrameCallback, nestedFrame);
-
+                                                  DispatcherPriority.Background, _exitFrameCallback, nestedFrame);
 
 
             // pump the nested message loop, the nested message loop will 

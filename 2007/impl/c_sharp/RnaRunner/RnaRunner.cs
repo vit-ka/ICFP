@@ -194,12 +194,15 @@ namespace RnaRunner
                         break;
                     case "PCCPFFP":
                         AddBitmap(CreateTransperentBitmap());
+                        InvokeSomeDrawCommandsExecuted();
                         break;
                     case "PFFPCCP":
                         Compose();
+                        InvokeSomeDrawCommandsExecuted();
                         break;
                     case "PFFICCF":
                         Clip();
+                        InvokeSomeDrawCommandsExecuted();
                         break;
                 }
 
@@ -278,17 +281,25 @@ namespace RnaRunner
 
         private void Fill(Point position, Color oldColor)
         {
-            if (GetPixel(position) == oldColor)
+            var front = new Queue<Point>();
+            front.Enqueue(position);
+
+            while (front.Count > 0)
             {
-                SetPixel(position.X, position.Y);
-                if (position.X > 0)
-                    Fill(new Point(position.X - 1, position.Y), oldColor);
-                if (position.X < 599)
-                    Fill(new Point(position.X + 1, position.Y), oldColor);
-                if (position.Y > 0)
-                    Fill(new Point(position.X, position.Y - 1), oldColor);
-                if (position.Y < 599)
-                    Fill(new Point(position.X, position.Y + 1), oldColor);
+                var point = front.Dequeue();
+
+                if (GetPixel(point) == oldColor)
+                {
+                    SetPixel(point.X, point.Y);
+                    if (point.X > 0)
+                        front.Enqueue(new Point(point.X - 1, point.Y));
+                    if (point.X < 599)
+                        front.Enqueue(new Point(point.X + 1, point.Y));
+                    if (point.Y > 0)
+                        front.Enqueue(new Point(point.X, point.Y - 1));
+                    if (point.Y < 599)
+                        front.Enqueue(new Point(point.X, point.Y + 1));
+                }
             }
         }
 
@@ -364,13 +375,13 @@ namespace RnaRunner
             switch (direction)
             {
                 case Direction.N:
-                    return new Point(position.X, (position.Y - 1) % 600);
+                    return new Point(position.X, position.Y != 0 ? position.Y - 1 : 599);
                 case Direction.E:
                     return new Point((position.X + 1) % 600, position.Y);
                 case Direction.S:
                     return new Point(position.X, (position.Y + 1) % 600);
                 case Direction.W:
-                    return new Point((position.X - 1) % 600, position.Y);
+                    return new Point(position.X != 0 ? position.X - 1 : 599, position.Y);
             }
 
             return new Point();

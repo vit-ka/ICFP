@@ -51,7 +51,7 @@ namespace Visualizer
             _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
 
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
-                        @"D:\Projects\ICFP\2007\source\Rna\RNA_Withoutprefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
+                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithDefaultPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
         }
@@ -59,8 +59,18 @@ namespace Visualizer
         void RnaRunnerExecutionFinished(object sender, EventArgs e)
         {
             DrawBitmap();
+            Dispatcher.Invoke(
+                DispatcherPriority.Normal,
+                new VoidDelegate(
+                    () =>
+                    {
+                        const string message = "Обработка РНК завершена.";
+                        _logListBox.Items.Add(message);
+                        _logListBox.ScrollIntoView(message);
+                    }));
         }
 
+        private int _index;
         private void DrawBitmap()
         {
             Dispatcher.Invoke(
@@ -72,20 +82,33 @@ namespace Visualizer
 
                         memoryStream.Seek(0, SeekOrigin.Begin);
 
-                        memoryStream.WriteTo(new FileStream("D:\\123.png", FileMode.Create));
+                        ++_index;
+                        _rnaRunner.Bitmap.Save(
+                            new FileStream(
+                                "D:\\out_" + _index + ".png", FileMode.Create, FileAccess.Write, FileShare.None),
+                            ImageFormat.Png);
 
                         var bitmapImage = new BitmapImage();
                         bitmapImage.BeginInit();
                         bitmapImage.StreamSource = memoryStream;
                         bitmapImage.EndInit();
 
-                        _image.Source = bitmapImage;
+                        //_image.Source = bitmapImage;
                     }));
         }
 
         void RnaRunnerSomeDrawCommandsExecuted(object sender, EventArgs e)
         {
             DrawBitmap();
+            Dispatcher.Invoke(
+                DispatcherPriority.Normal,
+                new VoidDelegate(
+                    () =>
+                    {
+                        const string message = "Изменения в изображении.";
+                        _logListBox.Items.Add(message);
+                        _logListBox.ScrollIntoView(message);
+                    }));
         }
 
         private void DnaRunnerDnaProcessingFinished(object sender, EventArgs e)

@@ -41,6 +41,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -101,6 +102,10 @@
     <ProjectReference Include="..\DnaRunner\DnaRunner.csproj">
       <Project>{D94689DE-E998-4D27-946A-D990D1E901CC}</Project>
       <Name>DnaRunner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RnaRunner\RnaRunner.csproj">
+      <Project>{5AC133B3-E2D9-4486-A911-6C37B67A62A8}</Project>
+      <Name>RnaRunner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

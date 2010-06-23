@@ -15,10 +15,11 @@ namespace DnaRunner
 
         private Thread _runningThread;
         private string _runningDna;
+        private readonly string _sourceDna;
         private RunningState _state;
         private int _totalCommandProcessed;
         private int _totalCharsOfRna;
-        private readonly StreamWriter _rnaWriter;
+        private StreamWriter _rnaWriter;
         private int _lastRaisedCharsCountOverEvent;
         private int _lastRaisedCommandsCountOverEvent;
         private const int _commandRaiseEventLimit = 1;
@@ -34,12 +35,19 @@ namespace DnaRunner
             if (inputStream.CanSeek)
                 inputStream.Seek(0, SeekOrigin.Begin);
 
-            _runningDna = new StreamReader(inputStream).ReadToEnd();
+            _sourceDna = new StreamReader(inputStream).ReadToEnd();
 
             RnaStream = outputStream;
-            _rnaWriter = new StreamWriter(RnaStream);
 
             _state = RunningState.Stoped;
+        }
+
+        /// <summary>
+        /// Prefix of DNA.
+        /// </summary>
+        public string Prefix
+        {
+            get; set;
         }
 
         ///<summary>
@@ -58,6 +66,13 @@ namespace DnaRunner
                     return;
                 _state = RunningState.Running;
             }
+
+            _rnaWriter = new StreamWriter(RnaStream);
+            _runningDna = Prefix + _sourceDna;
+            _totalCharsOfRna = 0;
+            _totalCommandProcessed = 0;
+            _lastRaisedCharsCountOverEvent = 0;
+            _lastRaisedCommandsCountOverEvent = 0;
 
             _runningThread = new Thread(ProcessDna);
             _runningThread.Start();

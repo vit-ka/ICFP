@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace DnaRunner
@@ -219,19 +220,28 @@ namespace DnaRunner
 
         private static string Quote(string str)
         {
-            if (str.StartsWith("I"))
-                return "C" + Quote(str.Substring(1));
+            var result = new StringBuilder();
 
-            if (str.StartsWith("C"))
-                return "F" + Quote(str.Substring(1));
+            for (int index = str.Length - 1; index >= 0; --index )
+            {
+                switch (str[index])
+                {
+                    case 'I':
+                        result.Append("C");
+                        break;
+                    case 'C':
+                        result.Append("F");
+                        break;
+                    case 'F':
+                        result.Append("P");
+                        break;
+                    case 'P':
+                        result.Append("IC");
+                        break;
+                }
+            }
 
-            if (str.StartsWith("F"))
-                return "P" + Quote(str.Substring(1));
-
-            if (str.StartsWith("P"))
-                return "IC" + Quote(str.Substring(1));
-
-            return string.Empty;
+            return result.ToString();
         }
 
         private TemplateInfo DecodeTemplate()
@@ -441,27 +451,11 @@ namespace DnaRunner
 
         private int DecodeNumber()
         {
-            if (_runningDna.StartsWith("P"))
-            {
-                _runningDna = _runningDna.Substring(1);
-                return 0;
-            }
+            int result = 0;
 
-            if (_runningDna.StartsWith("I") || _runningDna.StartsWith("F"))
-            {
-                _runningDna = _runningDna.Substring(1);
-                var number = DecodeNumber();
-                return number * 2;
-            }
+            int firstPIndex = _runningDna.IndexOf('P');
 
-            if (_runningDna.StartsWith("C"))
-            {
-                _runningDna = _runningDna.Substring(1);
-                var number = DecodeNumber();
-                return number * 2 + 1;
-            }
-
-            if (string.IsNullOrEmpty(_runningDna))
+            if (firstPIndex == -1)
             {
                 lock (_runningMutex)
                 {
@@ -469,7 +463,21 @@ namespace DnaRunner
                 }
             }
 
-            return 0;
+            for (int index = firstPIndex - 1; index >= 0; --index)
+            {
+                if (_runningDna[index] == 'I' || _runningDna[index] == 'F')
+                {
+                    result *= 2;
+                }
+                else if (_runningDna[index] == 'C')
+                {
+                    result = result * 2 + 1;
+                }
+            }
+
+            _runningDna = _runningDna.Substring(firstPIndex + 1);
+
+            return result;
         }
 
         private void OutputToRna(string value)

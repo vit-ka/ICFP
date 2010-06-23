@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Media.Imaging;
 
 namespace RnaRunner
 {
@@ -14,16 +13,8 @@ namespace RnaRunner
     /// </summary>
     public class RnaRunner
     {
-        private readonly object _stateMutex = new object();
-        private int _currentIndexOfRna;
-        private readonly string _sourceRna;
-
-        private IList<Color> _bucket;
-
-        private RnaRunnerState _state;
-
-        private IList<Bitmap> _bitmaps;
-
+        private const byte _transparent = 0;
+        private const byte _opaque = 255;
         private static readonly Color _black = Color.FromArgb(0, 0, 0);
         private static readonly Color _red = Color.FromArgb(255, 0, 0);
         private static readonly Color _green = Color.FromArgb(0, 255, 0);
@@ -32,22 +23,20 @@ namespace RnaRunner
         private static readonly Color _magenta = Color.FromArgb(255, 0, 255);
         private static readonly Color _cyan = Color.FromArgb(0, 255, 255);
         private static readonly Color _white = Color.FromArgb(255, 255, 255);
-
-        private static readonly Color _transparent = Color.FromArgb(0, _white);
-        private static readonly Color _opaque = Color.FromArgb(255, _white);
-
-        private Point _position;
-        private Point _mark;
+        private readonly string _sourceRna;
+        private readonly object _stateMutex = new object();
+        private IList<Bitmap> _bitmaps;
+        private IList<byte> _bucketAlpha;
+        private IList<Color> _bucketColor;
+        private Color _currentColor;
+        private int _currentIndexOfRna;
 
         private Size _defaultSize = new Size(600, 600);
 
-        private enum Direction
-        {
-            N, E, S, W
-        }
-
         private Direction _direction;
-        private Color _currentColor;
+        private Point _mark;
+        private Point _position;
+        private RnaRunnerState _state;
 
         /// <summary>
         /// Constructor of RNA processor.
@@ -68,10 +57,7 @@ namespace RnaRunner
         /// </summary>
         public Bitmap Bitmap
         {
-            get
-            {
-                return _bitmaps[0];
-            }
+            get { return _bitmaps[0]; }
         }
 
         ///<summary>
@@ -112,9 +98,9 @@ namespace RnaRunner
             }
 
             var thread = new Thread(ProcessRna)
-                {
-                    IsBackground = true
-                };
+                             {
+                                 IsBackground = true
+                             };
             thread.Start();
 
             _currentIndexOfRna = 0;
@@ -122,7 +108,8 @@ namespace RnaRunner
             _position = new Point(0, 0);
             _mark = new Point(0, 0);
             _direction = Direction.E;
-            _bucket = new List<Color>();
+            _bucketColor = new List<Color>();
+            _bucketAlpha = new List<byte>();
             _bitmaps.Add(CreateTransperentBitmap());
         }
 
@@ -135,7 +122,7 @@ namespace RnaRunner
         {
             while (_currentIndexOfRna + 7 < _sourceRna.Length)
             {
-                var command = _sourceRna.Substring(_currentIndexOfRna, 7);
+                string command = _sourceRna.Substring(_currentIndexOfRna, 7);
 
                 switch (command)
                 {
@@ -170,7 +157,8 @@ namespace RnaRunner
                         AddColorToBucket(_opaque);
                         break;
                     case "PIIPICP":
-                        _bucket = new List<Color>();
+                        _bucketColor = new List<Color>();
+                        _bucketAlpha = new List<byte>();
                         break;
                     case "PIIIIIP":
                         _position = Move(_position, _direction);
@@ -212,6 +200,12 @@ namespace RnaRunner
             InvokeExecutionFinished();
         }
 
+        private void AddColorToBucket(byte color)
+        {
+            _bucketAlpha.Insert(0, color);
+            EvaluateCurrentColor();
+        }
+
         private void Clip()
         {
             if (_bitmaps.Count >= 2)
@@ -219,17 +213,17 @@ namespace RnaRunner
                 for (int x = 0; x < 600; ++x)
                     for (int y = 0; y < 600; ++y)
                     {
-                        var color0 = _bitmaps[0].GetPixel(x, y);
-                        var color1 = _bitmaps[1].GetPixel(x, y);
+                        Color color0 = _bitmaps[0].GetPixel(x, y);
+                        Color color1 = _bitmaps[1].GetPixel(x, y);
 
                         _bitmaps[1].SetPixel(
                             x,
                             y,
                             Color.FromArgb(
-                                (color1.A * color0.A) / 255,
-                                (color1.R * color0.A) / 255,
-                                (color1.G * color0.A) / 255,
-                                (color1.B * color0.A) / 255));
+                                (color1.A*color0.A)/255,
+                                (color1.R*color0.A)/255,
+                                (color1.G*color0.A)/255,
+                                (color1.B*color0.A)/255));
                     }
 
                 _bitmaps.RemoveAt(0);
@@ -243,17 +237,17 @@ namespace RnaRunner
                 for (int x = 0; x < 600; ++x)
                     for (int y = 0; y < 600; ++y)
                     {
-                        var color0 = _bitmaps[0].GetPixel(x, y);
-                        var color1 = _bitmaps[1].GetPixel(x, y);
+                        Color color0 = _bitmaps[0].GetPixel(x, y);
+                        Color color1 = _bitmaps[1].GetPixel(x, y);
 
                         _bitmaps[1].SetPixel(
                             x,
                             y,
                             Color.FromArgb(
-                                (color0.A + (color1.A * (255 - color0.A)) / 255)%255,
-                                (color0.R + (color1.R * (255 - color0.A)) / 255)%255,
-                                (color0.G + (color1.G * (255 - color0.A)) / 255)%255,
-                                (color0.B + (color1.B * (255 - color0.A)) / 255)%255));
+                                (color0.A + (color1.A*(255 - color0.A))/255),
+                                (color0.R + (color1.R*(255 - color0.A))/255),
+                                (color0.G + (color1.G*(255 - color0.A))/255),
+                                (color0.B + (color1.B*(255 - color0.A))/255)));
                     }
 
                 _bitmaps.RemoveAt(0);
@@ -270,8 +264,8 @@ namespace RnaRunner
 
         private void TryFill()
         {
-            var newColor = _currentColor;
-            var oldColor = GetPixel(_position);
+            Color newColor = _currentColor;
+            Color oldColor = GetPixel(_position);
 
             if (newColor != oldColor)
             {
@@ -286,7 +280,7 @@ namespace RnaRunner
 
             while (front.Count > 0)
             {
-                var point = front.Dequeue();
+                Point point = front.Dequeue();
 
                 if (GetPixel(point) == oldColor)
                 {
@@ -310,19 +304,19 @@ namespace RnaRunner
 
         private void Line(Point position, Point mark)
         {
-            var deltaX = mark.X - position.X;
-            var deltaY = mark.Y - position.Y;
+            int deltaX = mark.X - position.X;
+            int deltaY = mark.Y - position.Y;
 
-            var d = Math.Max(Math.Abs(deltaX), Math.Abs(deltaY));
+            int d = Math.Max(Math.Abs(deltaX), Math.Abs(deltaY));
 
-            int c = deltaX * deltaY <= 0 ? 1 : 0;
+            int c = deltaX*deltaY <= 0 ? 1 : 0;
 
-            var x = position.X * d + (d - c) / 2;
-            var y = position.Y * d + (d - c) / 2;
+            int x = position.X*d + (d - c)/2;
+            int y = position.Y*d + (d - c)/2;
 
             for (int index = 0; index < d; ++index)
             {
-                SetPixel(x / d, y / d);
+                SetPixel(x/d, y/d);
 
                 x += deltaX;
                 y += deltaY;
@@ -377,9 +371,9 @@ namespace RnaRunner
                 case Direction.N:
                     return new Point(position.X, position.Y != 0 ? position.Y - 1 : 599);
                 case Direction.E:
-                    return new Point((position.X + 1) % 600, position.Y);
+                    return new Point((position.X + 1)%600, position.Y);
                 case Direction.S:
-                    return new Point(position.X, (position.Y + 1) % 600);
+                    return new Point(position.X, (position.Y + 1)%600);
                 case Direction.W:
                     return new Point(position.X != 0 ? position.X - 1 : 599, position.Y);
             }
@@ -389,19 +383,41 @@ namespace RnaRunner
 
         private void AddColorToBucket(Color color)
         {
-            _bucket.Add(color);
+            _bucketColor.Insert(0, color);
             EvaluateCurrentColor();
         }
 
         private void EvaluateCurrentColor()
         {
-            var rC = _bucket.Sum(color => color.R) / _bucket.Count;
-            var gC = _bucket.Sum(color => color.G) / _bucket.Count;
-            var bC = _bucket.Sum(color => color.B) / _bucket.Count;
-            var aC = _bucket.Sum(color => color.A) / _bucket.Count;
+            double rC = Math.Floor(_bucketColor.Sum(color => color.R)/(double) _bucketColor.Count);
+            double gC = Math.Floor(_bucketColor.Sum(color => color.G)/(double) _bucketColor.Count);
+            double bC = Math.Floor(_bucketColor.Sum(color => color.B)/(double) _bucketColor.Count);
+            double aC = Math.Floor(_bucketAlpha.Sum(color => color)/(double) _bucketAlpha.Count);
 
-            _currentColor = Color.FromArgb(rC * aC / 255, gC * aC / 255, bC * aC / 255, aC);
+            if (_bucketAlpha.Count == 0)
+                aC = 255;
+
+            if (_bucketColor.Count == 0)
+            {
+                rC = gC = bC = 0;
+            }
+
+            _currentColor = Color.FromArgb((int) Math.Floor(aC), (int) Math.Floor(rC*aC/255.0),
+                                           (int) Math.Floor(gC*aC/255.0),
+                                           (int) Math.Floor(bC*aC/255.0));
         }
+
+        #region Nested type: Direction
+
+        private enum Direction
+        {
+            N,
+            E,
+            S,
+            W
+        }
+
+        #endregion
 
         #region Nested type: RnaRunnerState
 

@@ -254,9 +254,9 @@ namespace RnaRunner
                         Pixel p1 = _bitmaps[1][x, y];
 
                         _bitmaps[1][x, y] =
-                            new Pixel(Color.FromArgb((p0.Color.R + (p1.Color.R*(255 - p0.Transparency))/255),
-                                                     (p0.Color.G + (p1.Color.R*(255 - p0.Transparency))/255),
-                                                     (p0.Color.B + (p1.Color.R*(255 - p0.Transparency))/255)),
+                            new Pixel(Color.FromArgb((int) (p0.Color.R + Math.Floor(p1.Color.R*(255 - p0.Transparency)/255.0)),
+                                                     (int) (p0.Color.G + Math.Floor(p1.Color.G*(255 - p0.Transparency)/255.0)),
+                                                     (int) (p0.Color.B + Math.Floor(p1.Color.B*(255 - p0.Transparency)/255.0))),
                                                      (byte)
                                                      (p0.Transparency + (p1.Transparency*(255 - p0.Transparency))/255));
                     }
@@ -439,97 +439,5 @@ namespace RnaRunner
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// Map of pixels.
-    /// </summary>
-    public class PixelMap
-    {
-        private Pixel[,] _map;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public PixelMap()
-        {
-            _map = new Pixel[600,600];
-        }
-
-        /// <summary>
-        /// Indexator of pixels.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <returns>Pixel at given position.</returns>
-        public Pixel this[int x, int y]
-        {
-            get { return _map[x, y]; }
-            set { _map[x, y] = value;}
-        }
-    }
-
-    /// <summary>
-    /// Pixel of map.
-    /// </summary>
-    public class Pixel
-    {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="color">Color of pixel.</param>
-        /// <param name="transparency">Transperency of pixel.</param>
-        public Pixel(Color color, byte transparency)
-        {
-            Color = color;
-            Transparency = transparency;
-        }
-
-        /// <summary>
-        /// Color of pixel.
-        /// </summary>
-        public Color Color { get; set; }
-
-        /// <summary>
-        /// Transperency of pixel.
-        /// </summary>
-        public byte Transparency { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Pixel other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return other.Color.Equals(Color) && other.Transparency == Transparency;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (Pixel)) return false;
-            return Equals((Pixel) obj);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (Color.GetHashCode()*397) ^ Transparency.GetHashCode();
-            }
-        }
     }
 }

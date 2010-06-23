@@ -250,10 +250,10 @@ namespace RnaRunner
                             x,
                             y,
                             Color.FromArgb(
-                                color0.A + (color1.A * (255 - color0.A)) / 255,
-                                color0.R + (color1.R * (255 - color0.A)) / 255,
-                                color0.G + (color1.G * (255 - color0.A)) / 255,
-                                color0.B + (color1.B * (255 - color0.A)) / 255));
+                                (color0.A + (color1.A * (255 - color0.A)) / 255)%255,
+                                (color0.R + (color1.R * (255 - color0.A)) / 255)%255,
+                                (color0.G + (color1.G * (255 - color0.A)) / 255)%255,
+                                (color0.B + (color1.B * (255 - color0.A)) / 255)%255));
                     }
 
                 _bitmaps.RemoveAt(0);

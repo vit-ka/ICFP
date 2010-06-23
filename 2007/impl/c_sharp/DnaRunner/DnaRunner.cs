@@ -202,12 +202,21 @@ namespace DnaRunner
 
                 if (temp.IsProtect)
                 {
+                    if (temp.Reference >= environment.Count)
+                        continue;
+
                     newPrefix += Protect(temp.Level, environment[temp.Reference]);
                     continue;
                 }
 
                 if (temp.IsAsNat)
                 {
+                    if (temp.Reference >= environment.Count)
+                    {
+                        newPrefix += AsNat(0);
+                        continue;
+                    }
+
                     newPrefix += AsNat(environment[temp.Reference].Length);
                     continue;
                 }

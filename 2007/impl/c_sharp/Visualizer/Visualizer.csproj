@@ -89,6 +89,7 @@
     <Compile Include="BitmapCanvas.xaml.cs">
       <DependentUpon>BitmapCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BitmapConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

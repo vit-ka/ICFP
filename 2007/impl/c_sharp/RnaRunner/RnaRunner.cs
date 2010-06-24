@@ -55,7 +55,7 @@ namespace RnaRunner
         /// <summary>
         /// Image produced from RNA.
         /// </summary>
-        public PixelMap Bitmap
+        public PixelMap PixelMap
         {
             get
             {

@@ -142,6 +142,9 @@ namespace DnaRunner
             {
                 if (pat.IsBase)
                 {
+                    if (index >= _runningDna.Length)
+                        return;
+
                     if (_runningDna[index] == pat.Symbol)
                         ++index;
                     else 
@@ -152,7 +155,7 @@ namespace DnaRunner
                 if (pat.IsSkip)
                 {
                     index += pat.SkipCount;
-                    if (index > _runningDna.Length)
+                    if (index >= _runningDna.Length)
                         return;
                     continue;
                 }

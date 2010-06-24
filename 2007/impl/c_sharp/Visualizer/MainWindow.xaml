@@ -25,6 +25,7 @@
             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="_prefixTextBox">IIPIFFCPICICIICPIICIPPPICIIC</TextBox>
 		</Grid>
 		<ListBox Grid.Row="1" Grid.Column="0" x:Name="_logListBox"/>
-        <Visualizer:BitmapCanvas Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_canvas" Width="600" Height="600"/>
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_image" Width="600" Height="600"/>
+        <!--<Visualizer:BitmapCanvas Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_canvas" Width="600" Height="600"/>-->
 	</Grid>
 </Window>

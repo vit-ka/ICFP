@@ -27,6 +27,17 @@ namespace Visualizer
 
         private void RunDnaButtonClick(object sender, RoutedEventArgs e)
         {
+            _dnaRunner =
+                new DnaRunner.DnaRunner(
+                    new FileStream(
+                        Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
+                    new FileStream(
+                        "D:\\RNA_"+_prefixTextBox.Text+".txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite));
+
+            _dnaRunner.SomeCharsWrittenToRna += DnaRunnerSomeCharsWrittenToRna;
+            _dnaRunner.SomeCommandOfDnaHasBeenProcessed += DnaRunnerSomeCommandOfDnaHasBeenProcessed;
+            _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
+
             _dnaRunner.Prefix = _prefixTextBox.Text;
             _dnaRunner.Start();
         }
@@ -34,28 +45,17 @@ namespace Visualizer
 
         private void RunRnaButtonClick(object sender, RoutedEventArgs e)
         {
-            _rnaRunner.Start();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            _dnaRunner =
-                new DnaRunner.DnaRunner(
-                    new FileStream(
-                        Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
-                    new FileStream(
-                        "D:\\OutRNA.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite));
-
-            _dnaRunner.SomeCharsWrittenToRna += DnaRunnerSomeCharsWrittenToRna;
-            _dnaRunner.SomeCommandOfDnaHasBeenProcessed += DnaRunnerSomeCommandOfDnaHasBeenProcessed;
-            _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
-
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
                         @"D:\Projects\ICFP\2007\source\Rna\RNA_WithSelfCheckPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
 
-            _canvas.RnaRunner = _rnaRunner;
+            _rnaRunner.Start();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //_canvas.RnaRunner = _rnaRunner;
         }
 
         void RnaRunnerExecutionFinished(object sender, EventArgs e)
@@ -120,7 +120,8 @@ namespace Visualizer
                     () =>
                     {
                         ++_index;
-                        _canvas.InvalidateVisual();
+                        _image.Source = BitmapConverter.Convert(_rnaRunner.PixelMap);
+                        //_canvas.InvalidateVisual();
                         DoEvents();
                     }));
         }

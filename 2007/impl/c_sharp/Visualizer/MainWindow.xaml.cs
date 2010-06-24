@@ -46,7 +46,7 @@ namespace Visualizer
         private void RunRnaButtonClick(object sender, RoutedEventArgs e)
         {
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
-                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithSelfCheckPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
+                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithoutPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
 
@@ -119,22 +119,23 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        ++_index;
-                        _image.Source = BitmapConverter.Convert(_rnaRunner.PixelMap);
-                        //_canvas.InvalidateVisual();
-                        DoEvents();
+                            _image.Source = BitmapConverter.Convert(_rnaRunner.PixelMap);
+                            //_canvas.InvalidateVisual();
+                            DoEvents();
                     }));
         }
 
         void RnaRunnerSomeDrawCommandsExecuted(object sender, EventArgs e)
         {
-            DrawBitmap();
+            ++_index;
+            if (_index % 10 == 0)
+                DrawBitmap();
             Dispatcher.Invoke(
                 DispatcherPriority.Normal,
                 new VoidDelegate(
                     () =>
                     {
-                         string message = _index + ": Изменения в изображении.";
+                        string message = _index + ": Изменения в изображении.";
                         _logListBox.Items.Add(message);
                         _logListBox.ScrollIntoView(message);
                     }));
@@ -179,6 +180,5 @@ namespace Visualizer
                         _logListBox.ScrollIntoView(message);
                     }));
         }
-
     }
 }

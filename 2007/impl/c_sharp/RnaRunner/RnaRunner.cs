@@ -339,7 +339,7 @@ namespace RnaRunner
 
         private void SetPixel(int x, int y)
         {
-            _bitmaps[0][x, y] = _currentColor;
+            _bitmaps[0][x, y] = _currentColor.Clone();
         }
 
         private Direction TurnClockwise(Direction direction)

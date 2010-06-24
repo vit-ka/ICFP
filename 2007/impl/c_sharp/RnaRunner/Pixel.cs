@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace RnaRunner
 {
     /// <summary>
     /// Pixel of map.
     /// </summary>
-    public class Pixel
+    public class Pixel : IEquatable<Pixel>
     {
         /// <summary>
         /// Constructor.
@@ -37,7 +38,8 @@ namespace RnaRunner
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return other.Color.Equals(Color) && other.Transparency == Transparency;
+            return other.Color.R.Equals(Color.R) && other.Color.G.Equals(Color.G) && other.Color.B.Equals(Color.B) &&
+                   other.Transparency == Transparency;
         }
 
         /// <summary>
@@ -56,13 +58,45 @@ namespace RnaRunner
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(Pixel left, Pixel right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(Pixel left, Pixel right)
+        {
+            return !Equals(left, right);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked
             {
-                return (Color.GetHashCode()*397) ^ Transparency.GetHashCode();
+                return (Color.GetHashCode() * 397) ^ Transparency.GetHashCode();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Pixel Clone()
+        {
+            var result = new Pixel(Color.FromArgb(Color.R, Color.G, Color.B), Transparency);
+            return result;
         }
     }
 }

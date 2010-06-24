@@ -25,6 +25,8 @@ namespace DnaRunner
         private const int _commandRaiseEventLimit = 1;
         private const int _charsRaiseEventLimit = 50;
 
+        private int _currentIndex;
+
         /// <summary>
         /// Constructor of DNA processor.
         /// </summary>
@@ -73,6 +75,7 @@ namespace DnaRunner
             _totalCommandProcessed = 0;
             _lastRaisedCharsCountOverEvent = 0;
             _lastRaisedCommandsCountOverEvent = 0;
+            _currentIndex = 0;
 
             _runningThread = new Thread(ProcessDna);
             _runningThread.Start();
@@ -134,7 +137,7 @@ namespace DnaRunner
 
         private void MatchReplace(PatternInfo pattern, TemplateInfo template)
         {
-            var index = 0;
+            long index = _currentIndex;
             var environment = new List<string>();
             var counters = new List<int>();
 
@@ -145,7 +148,7 @@ namespace DnaRunner
                     if (index >= _runningDna.Length)
                         return;
 
-                    if (_runningDna[index] == pat.Symbol)
+                    if (_runningDna[(int) index] == pat.Symbol)
                         ++index;
                     else 
                         return;
@@ -162,7 +165,7 @@ namespace DnaRunner
 
                 if (pat.IsSearch)
                 {
-                    var patterIndex = _runningDna.IndexOf(pat.SearchPattern, index);
+                    var patterIndex = _runningDna.IndexOf(pat.SearchPattern, (int)index);
                     if (patterIndex != -1)
                     {
                         index = patterIndex + pat.SearchPattern.Length;
@@ -175,19 +178,20 @@ namespace DnaRunner
 
                 if (pat.IsLevelUp)
                 {
-                    counters.Insert(0, index);
+                    counters.Insert(0, (int)index);
                     continue;
                 }
 
                 if (pat.IsLevelDown)
                 {
-                    environment.Add(_runningDna.Substring(counters[0], index - counters[0]));
+                    environment.Add(_runningDna.Substring(counters[0], (int)index - counters[0]));
                     counters.RemoveAt(0);
                     continue;
                 }
             }
 
-            _runningDna = _runningDna.Remove(0, index);
+            _runningDna = _runningDna.Remove(0, (int)index);
+            _currentIndex = 0;
             Replace(template, environment);
         }
 
@@ -278,63 +282,71 @@ namespace DnaRunner
             bool flag = true;
             while (flag)
             {
-                if (_runningDna.StartsWith("C"))
+                if (_currentIndex >= _runningDna.Length)
+                    lock (_runningMutex)
+                    {
+                        _state = RunningState.Stoped;
+                        return null;
+                    }
+
+                if (_runningDna[_currentIndex] == 'C')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     template.AppendBack('I');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("F"))
+                if (_runningDna[_currentIndex] == 'F')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     template.AppendBack('C');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("P"))
+                if (_runningDna[_currentIndex] == 'P')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     template.AppendBack('F');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IC"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'C')
                 {
-                    _runningDna = _runningDna.Remove(0, 2);
+                    _currentIndex += 2;
                     template.AppendBack('P');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IF") || _runningDna.StartsWith("IP"))
+                if (_runningDna[_currentIndex] == 'I' && (_runningDna[_currentIndex + 1] == 'F' || _runningDna[_currentIndex + 1] == 'P'))
                 {
-                    _runningDna = _runningDna.Remove(0, 2);
+                    _currentIndex += 2;
                     var level = DecodeNumber();
                     var reference = DecodeNumber();
                     template.AddReference(reference, level);
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIF"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' &&
+                    (_runningDna[_currentIndex + 2] == 'C' || _runningDna[_currentIndex + 2] == 'F'))
                 {
-                    _runningDna = _runningDna.Remove(0, 3);
+                    _currentIndex += 3;
                     flag = false;
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IIP"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' && _runningDna[_currentIndex + 2] == 'P')
                 {
-                    _runningDna = _runningDna.Remove(0, 3);
+                    _currentIndex += 3;
                     var reference = DecodeNumber();
                     template.AddLengthOfReference(reference);
                     continue;
                 }
 
-                if (_runningDna.StartsWith("III"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' && _runningDna[_currentIndex + 2] == 'I')
                 {
-                    string toRna = _runningDna.Substring(3, 7);
+                    string toRna = _runningDna.Substring(_currentIndex + 3, 7);
                     OutputToRna(toRna);
-                    _runningDna = _runningDna.Remove(0, 10);
+                    _currentIndex += 10;
                     continue;
                 }
 
@@ -358,61 +370,70 @@ namespace DnaRunner
             bool flag = true;
             while (flag)
             {
-                if (_runningDna.StartsWith("C"))
+                if (_currentIndex >= _runningDna.Length)
+                    lock (_runningMutex)
+                    {
+                        _state = RunningState.Stoped;
+                        return null;
+                    }
+
+                if (_runningDna[_currentIndex] == 'C')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     result.AppendBack('I');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("F"))
+                if (_runningDna[_currentIndex] == 'F')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     result.AppendBack('C');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("P"))
+                if (_runningDna[_currentIndex] == 'P')
                 {
-                    _runningDna = _runningDna.Remove(0, 1);
+                    ++_currentIndex;
                     result.AppendBack('F');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IC"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'C')
                 {
-                    _runningDna = _runningDna.Remove(0, 2);
+                    _currentIndex += 2;
                     result.AppendBack('P');
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IP"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'P')
                 {
-                    _runningDna = _runningDna.Remove(0, 2);
+                    _currentIndex += 2;
                     int number = DecodeNumber();
                     result.AppendSkip(number);
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IF"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'F')
                 {
-                    _runningDna = _runningDna.Remove(0, 3);
+                    _currentIndex += 3;
                     string consts = DecodeConsts();
                     result.AppendSearch(consts);
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IIP"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' &&
+                    _runningDna[_currentIndex + 2] == 'P')
                 {
-                    _runningDna = _runningDna.Remove(0, 3);
+                    _currentIndex += 3;
                     ++level;
                     result.IncreaseLevel();
                     continue;
                 }
 
-                if (_runningDna.StartsWith("IIC") || _runningDna.StartsWith("IIF"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' &&
+                    (_runningDna[_currentIndex + 2] == 'C' || _runningDna[_currentIndex + 2] == 'F'))
                 {
-                    _runningDna = _runningDna.Remove(0, 3);
+                    _currentIndex += 3;
                     if (level == 0)
                     {
                         flag = false;
@@ -424,11 +445,12 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.StartsWith("III"))
+                if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'I' &&
+                    _runningDna[_currentIndex + 2] == 'I')
                 {
-                    string toRna = _runningDna.Substring(3, 7);
+                    string toRna = _runningDna.Substring(_currentIndex + 3, 7);
                     OutputToRna(toRna);
-                    _runningDna = _runningDna.Remove(0, 10);
+                    _currentIndex += 10;
                     continue;
                 }
 
@@ -445,30 +467,30 @@ namespace DnaRunner
 
         private string DecodeConsts()
         {
-            if (_runningDna.StartsWith("C"))
+            if (_runningDna[_currentIndex] == 'C')
             {
-                _runningDna = _runningDna.Remove(0, 1);
+                ++_currentIndex;
                 var consts = DecodeConsts();
                 return "I" + consts;
             }
 
-            if (_runningDna.StartsWith("F"))
+            if (_runningDna[_currentIndex] == 'F')
             {
-                _runningDna = _runningDna.Remove(0, 1);
+                ++_currentIndex;
                 var consts = DecodeConsts();
                 return "C" + consts;
             }
 
-            if (_runningDna.StartsWith("P"))
+            if (_runningDna[_currentIndex] == 'P')
             {
-                _runningDna = _runningDna.Remove(0, 1);
+                ++_currentIndex;
                 var consts = DecodeConsts();
                 return "F" + consts;
             }
 
-            if (_runningDna.StartsWith("IC"))
+            if (_runningDna[_currentIndex] == 'I' && _runningDna[_currentIndex + 1] == 'C')
             {
-                _runningDna = _runningDna.Remove(0, 2);
+                _currentIndex += 2;
                 var consts = DecodeConsts();
                 return "P" + consts;
             }
@@ -480,7 +502,7 @@ namespace DnaRunner
         {
             int result = 0;
 
-            int firstPIndex = _runningDna.IndexOf('P');
+            int firstPIndex = _runningDna.IndexOf('P', _currentIndex);
 
             if (firstPIndex == -1)
             {
@@ -490,7 +512,7 @@ namespace DnaRunner
                 }
             }
 
-            for (int index = firstPIndex - 1; index >= 0; --index)
+            for (int index = firstPIndex - 1; index >= _currentIndex; --index)
             {
                 if (_runningDna[index] == 'I' || _runningDna[index] == 'F')
                 {
@@ -502,7 +524,7 @@ namespace DnaRunner
                 }
             }
 
-            _runningDna = _runningDna.Remove(0, firstPIndex + 1);
+            _currentIndex = firstPIndex + 1;
 
             return result;
         }

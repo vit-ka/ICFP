@@ -46,7 +46,7 @@ namespace Visualizer
         private void RunRnaButtonClick(object sender, RoutedEventArgs e)
         {
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
-                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithoutPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
+                        @"D:\Projects\ICFP\2007\source\Rna\RNA_IIPIFFCPICICIICPIICIPPPICIIC.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
 

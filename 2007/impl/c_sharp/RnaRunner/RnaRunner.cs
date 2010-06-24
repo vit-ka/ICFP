@@ -119,6 +119,8 @@ namespace RnaRunner
             _bucketAlpha = new List<byte>();
             _bitmaps.Add(CreateTransperentBitmap());
 
+            EvaluateCurrentColor();
+
             thread.Start();
         }
 

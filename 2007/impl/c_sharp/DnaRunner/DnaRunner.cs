@@ -130,6 +130,8 @@ namespace DnaRunner
                     return;
             }
 
+            _rnaWriter.Close();
+
             InvokeSomeCommandOfDnaHasBeenProcessed(_totalCommandProcessed);
             InvokeSomeCharsWrittenToRna(_totalCharsOfRna);
             InvokeDnaProcessingFinished();

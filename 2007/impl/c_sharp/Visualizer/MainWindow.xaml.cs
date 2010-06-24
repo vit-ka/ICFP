@@ -2,8 +2,10 @@
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using DnaRunner;
+using Microsoft.Win32;
 using Visualizer.Properties;
 
 namespace Visualizer
@@ -15,8 +17,11 @@ namespace Visualizer
     {
         private DnaRunner.DnaRunner _dnaRunner;
         private RnaRunner.RnaRunner _rnaRunner;
-        private int _drawCoeficient;
+        private int _sleepTime;
         private bool _waitOnImportantCommands;
+
+        private string _endoDnaFolder;
+        private string _rnaFolder;
 
         /// <summary>
         /// Main windows of application.
@@ -24,6 +29,9 @@ namespace Visualizer
         public MainWindow()
         {
             InitializeComponent();
+
+            _endoDnaFolder = Path.GetFullPath(Settings.Default.PathToEndoDNAFile);
+            _rnaFolder = Path.GetFullPath(Settings.Default.PathToRnaFolder);
         }
 
         private void RunDnaButtonClick(object sender, RoutedEventArgs e)
@@ -31,13 +39,18 @@ namespace Visualizer
             _dnaRunner =
                 new DnaRunner.DnaRunner(
                     new FileStream(
-                        Settings.Default.PathToEndoDNAFile.Trim(), FileMode.Open, FileAccess.Read, FileShare.None),
+                        _endoDnaFolder, FileMode.Open, FileAccess.Read, FileShare.None),
                     new FileStream(
-                        "D:\\RNA_"+_prefixTextBox.Text+".txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite));
+                        _rnaFolder + "\\RNA_" + _prefixTextBox.Text + ".rna",
+                        FileMode.Create,
+                        FileAccess.Write,
+                        FileShare.ReadWrite));
 
             _dnaRunner.SomeCharsWrittenToRna += DnaRunnerSomeCharsWrittenToRna;
             _dnaRunner.SomeCommandOfDnaHasBeenProcessed += DnaRunnerSomeCommandOfDnaHasBeenProcessed;
             _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
+
+            _dnaProcessingFinishedLabel.Content = "";
 
             _dnaRunner.Prefix = _prefixTextBox.Text;
             _dnaRunner.Start();
@@ -51,7 +64,7 @@ namespace Visualizer
             if (fileInfo == null)
                 return;
 
-            _drawCoeficient = (int) _drawCoefficientSlider.Value;
+            _sleepTime = (int) _waitOnImportantCommandSlider.Value;
             _waitOnImportantCommands = _waitOnImportantDrawCommandCheckBox.IsChecked.Value;
 
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(fileInfo, FileMode.Open, FileAccess.Read, FileShare.None));
@@ -59,6 +72,9 @@ namespace Visualizer
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
             _rnaRunner.AfterImportantDrawCommand += RnaRunnerAfterImportantDrawCommand;
             _rnaRunner.BeforeImportantDrawCommand += RnaRunnerBeforeImportantDrawCommand;
+
+            _rnaCommandIndex = 0;
+            _rnaProcessingFinishedLabel.Content = "";
 
             _rnaRunner.Start();
         }
@@ -68,7 +84,7 @@ namespace Visualizer
             if (_waitOnImportantCommands)
             {
                 DrawBitmap();
-                Thread.Sleep(500);
+                Thread.Sleep(_sleepTime);
             }
         }
 
@@ -77,7 +93,7 @@ namespace Visualizer
             if (_waitOnImportantCommands)
             {
                 DrawBitmap();
-                Thread.Sleep(500);
+                Thread.Sleep(_sleepTime);
             }
         }
 
@@ -87,7 +103,7 @@ namespace Visualizer
                 Settings.Default.PathToRnaFolder.Trim(), "*.rna", SearchOption.AllDirectories);
             foreach (var file in files)
             {
-                _rnaFileComboBox.Items.Add(file);
+                _rnaFileComboBox.Items.Add(Path.GetFullPath(file));
             }
         }
 
@@ -99,7 +115,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        _rnaProcessingFinishedLabel.Content = "Отрисовка РНК завершена";
+                        _rnaProcessingFinishedLabel.Content = "Отрисовка РНК завершена.";
                     }));
         }
 
@@ -143,7 +159,7 @@ namespace Visualizer
             return null;
         }
 
-        private int _index;
+        private int _rnaCommandIndex;
         private void DrawBitmap()
         {
             Dispatcher.Invoke(
@@ -158,15 +174,15 @@ namespace Visualizer
 
         void RnaRunnerSomeDrawCommandsExecuted(object sender, EventArgs e)
         {
-            ++_index;
-            if (_index % _drawCoeficient == 0)
+            ++_rnaCommandIndex;
+            if (_rnaCommandIndex % 50 == 0)
                 DrawBitmap();
             Dispatcher.Invoke(
                 DispatcherPriority.Normal,
                 new VoidDelegate(
                     () =>
                     {
-                        _processedRnaCommandLabel.Content = _index;
+                        _processedRnaCommandLabel.Content = _rnaCommandIndex;
                     }));
         }
 
@@ -202,6 +218,29 @@ namespace Visualizer
                     {
                         _rnaCharsWrittenLabel.Content = e.TotalCharsCount;
                     }));
+        }
+
+        private void SaveImageButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (_rnaRunner == null)
+                return;
+
+            var dialog = new SaveFileDialog();
+
+            var rnaFileName = (string) _rnaFileComboBox.SelectedItem;
+
+            dialog.FileName = Path.GetDirectoryName(rnaFileName) + "\\..\\Images\\" +
+                              Path.GetFileNameWithoutExtension(rnaFileName) + ".png";
+ 
+            if (dialog.ShowDialog().Value)
+            {
+                var stream = new FileStream(dialog.FileName, FileMode.Create);
+                var encoder = new PngBitmapEncoder();
+
+                encoder.Frames.Add(BitmapFrame.Create(BitmapConverter.Convert(_rnaRunner.PixelMap)));
+                encoder.Save(stream);
+                stream.Close();
+            }
         }
     }
 }

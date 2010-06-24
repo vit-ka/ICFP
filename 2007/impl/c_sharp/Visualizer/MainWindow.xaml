@@ -20,13 +20,14 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-			<Button Grid.Row="0" Grid.Column="0" x:Name="_runDnaButton" Click="RunDnaButtonClick">Run DNA</Button>
-			<Button Grid.Row="0" Grid.Column="1" x:Name="_runRnaButton" Click="RunRnaButtonClick">Run RNA</Button>
+			<Button Grid.Row="0" Grid.Column="0" x:Name="_runDnaButton" Click="RunDnaButtonClick" Height="40">Run DNA</Button>
+			<Button Grid.Row="0" Grid.Column="1" x:Name="_runRnaButton" Click="RunRnaButtonClick" Height="40">Run RNA</Button>
             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TextBox x:Name="_prefixTextBox">IIPIFFCPICICIICPIICIPPPICIIC</TextBox>
                 <ComboBox x:Name="_rnaFileComboBox"/>
-                <Slider x:Name="_drawCoefficientSlider" Minimum="1" Maximum="100" Value="10"></Slider>
-                <CheckBox x:Name="_waitOnImportantDrawCommandCheckBox" IsChecked="true">Подождать при выполнении важных команд.</CheckBox>
+                <Slider x:Name="_waitOnImportantCommandSlider" Minimum="50" Maximum="1000" Value="200"></Slider>
+                <CheckBox x:Name="_waitOnImportantDrawCommandCheckBox" IsChecked="true" Height="40">Подождать при выполнении важных команд.</CheckBox>
+                <Button Height="40" x:Name="_saveImageButton" Click="SaveImageButtonClick">Save Image</Button>
             </StackPanel>
 		</Grid>
         <Grid Grid.Row="1" Grid.Column="0">
@@ -51,7 +52,7 @@
             <Label Grid.Row="3" Grid.Column="0" x:Name="_dnaProcessingFinishedLabel"></Label>
             <Label Grid.Row="4" Grid.Column="0" x:Name="_rnaProcessingFinishedLabel"></Label>
         </Grid>
-        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_image" Width="600" Height="600"/>
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_image" Width="600" Height="600" SnapsToDevicePixels="True"/>
         <!--<Visualizer:BitmapCanvas Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_canvas" Width="600" Height="600"/>-->
 	</Grid>
 </Window>

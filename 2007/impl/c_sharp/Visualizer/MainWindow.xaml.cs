@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using DnaRunner;
 using Visualizer.Properties;
@@ -16,6 +15,8 @@ namespace Visualizer
     {
         private DnaRunner.DnaRunner _dnaRunner;
         private RnaRunner.RnaRunner _rnaRunner;
+        private int _drawCoeficient;
+        private bool _waitOnImportantCommands;
 
         /// <summary>
         /// Main windows of application.
@@ -45,17 +46,49 @@ namespace Visualizer
 
         private void RunRnaButtonClick(object sender, RoutedEventArgs e)
         {
-            _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
-                        @"D:\Projects\ICFP\2007\source\Rna\RNA_IIPIFFCPICICIICPIICIPPPICIIC.txt", FileMode.Open, FileAccess.Read, FileShare.None));
+            var fileInfo = _rnaFileComboBox.SelectedItem as string;
+
+            if (fileInfo == null)
+                return;
+
+            _drawCoeficient = (int) _drawCoefficientSlider.Value;
+            _waitOnImportantCommands = _waitOnImportantDrawCommandCheckBox.IsChecked.Value;
+
+            _rnaRunner = new RnaRunner.RnaRunner(new FileStream(fileInfo, FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
+            _rnaRunner.AfterImportantDrawCommand += RnaRunnerAfterImportantDrawCommand;
+            _rnaRunner.BeforeImportantDrawCommand += RnaRunnerBeforeImportantDrawCommand;
 
             _rnaRunner.Start();
         }
 
+        void RnaRunnerBeforeImportantDrawCommand(object sender, EventArgs e)
+        {
+            if (_waitOnImportantCommands)
+            {
+                DrawBitmap();
+                Thread.Sleep(500);
+            }
+        }
+
+        void RnaRunnerAfterImportantDrawCommand(object sender, EventArgs e)
+        {
+            if (_waitOnImportantCommands)
+            {
+                DrawBitmap();
+                Thread.Sleep(500);
+            }
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //_canvas.RnaRunner = _rnaRunner;
+            var files = Directory.GetFiles(
+                Settings.Default.PathToRnaFolder.Trim(), "*.rna", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                _rnaFileComboBox.Items.Add(file);
+            }
         }
 
         void RnaRunnerExecutionFinished(object sender, EventArgs e)
@@ -66,9 +99,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        const string message = "Обработка РНК завершена.";
-                        _logListBox.Items.Add(message);
-                        _logListBox.ScrollIntoView(message);
+                        _rnaProcessingFinishedLabel.Content = "Отрисовка РНК завершена";
                     }));
         }
 
@@ -128,16 +159,14 @@ namespace Visualizer
         void RnaRunnerSomeDrawCommandsExecuted(object sender, EventArgs e)
         {
             ++_index;
-            if (_index % 10 == 0)
+            if (_index % _drawCoeficient == 0)
                 DrawBitmap();
             Dispatcher.Invoke(
                 DispatcherPriority.Normal,
                 new VoidDelegate(
                     () =>
                     {
-                        string message = _index + ": Изменения в изображении.";
-                        _logListBox.Items.Add(message);
-                        _logListBox.ScrollIntoView(message);
+                        _processedRnaCommandLabel.Content = _index;
                     }));
         }
 
@@ -148,9 +177,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        const string message = "Обработка ДНК завершена.";
-                        _logListBox.Items.Add(message);
-                        _logListBox.ScrollIntoView(message);
+                        _dnaProcessingFinishedLabel.Content = "Обработка ДНК завершена.";
                     }));
         }
 
@@ -162,9 +189,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        string message = string.Format("Обработано {0} команд ДНК.", e.TotalCommandProcessed);
-                        _logListBox.Items.Add(message);
-                        _logListBox.ScrollIntoView(message);
+                        _dnaCommandsProcessedLabel.Content = e.TotalCommandProcessed;
                     }));
         }
 
@@ -175,9 +200,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        string message = string.Format("Произведено {0} символов РНК.", e.TotalCharsCount);
-                        _logListBox.Items.Add(message);
-                        _logListBox.ScrollIntoView(message);
+                        _rnaCharsWrittenLabel.Content = e.TotalCharsCount;
                     }));
         }
     }

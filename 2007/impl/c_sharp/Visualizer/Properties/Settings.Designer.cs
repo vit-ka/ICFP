@@ -31,5 +31,14 @@ namespace Visualizer.Properties {
                 return ((string)(this["PathToEndoDNAFile"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\..\\source\\Rna")]
+        public string PathToRnaFolder {
+            get {
+                return ((string)(this["PathToRnaFolder"]));
+            }
+        }
     }
 }

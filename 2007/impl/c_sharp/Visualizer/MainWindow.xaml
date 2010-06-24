@@ -6,8 +6,8 @@
 			<ColumnDefinition Width="2*" />
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Height="4*" />
 		</Grid.RowDefinitions>
 
 		<Grid Grid.Row="0" Grid.Column="0">
@@ -22,9 +22,35 @@
 
 			<Button Grid.Row="0" Grid.Column="0" x:Name="_runDnaButton" Click="RunDnaButtonClick">Run DNA</Button>
 			<Button Grid.Row="0" Grid.Column="1" x:Name="_runRnaButton" Click="RunRnaButtonClick">Run RNA</Button>
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="_prefixTextBox">IIPIFFCPICICIICPIICIPPPICIIC</TextBox>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBox x:Name="_prefixTextBox">IIPIFFCPICICIICPIICIPPPICIIC</TextBox>
+                <ComboBox x:Name="_rnaFileComboBox"/>
+                <Slider x:Name="_drawCoefficientSlider" Minimum="1" Maximum="100" Value="10"></Slider>
+                <CheckBox x:Name="_waitOnImportantDrawCommandCheckBox" IsChecked="true">Подождать при выполнении важных команд.</CheckBox>
+            </StackPanel>
 		</Grid>
-		<ListBox Grid.Row="1" Grid.Column="0" x:Name="_logListBox"/>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0">Выполнено команд ДНК:</Label>
+            <Label Grid.Row="1" Grid.Column="0">Произведено символов РНК:</Label>
+            <Label Grid.Row="2" Grid.Column="0">Исполнено команд рисования:</Label>
+            <Label Grid.Row="0" Grid.Column="1" x:Name="_dnaCommandsProcessedLabel">*</Label>
+            <Label Grid.Row="1" Grid.Column="1" x:Name="_rnaCharsWrittenLabel">*</Label>
+            <Label Grid.Row="2" Grid.Column="1" x:Name="_processedRnaCommandLabel">*</Label>
+            <Label Grid.Row="3" Grid.Column="0" x:Name="_dnaProcessingFinishedLabel"></Label>
+            <Label Grid.Row="4" Grid.Column="0" x:Name="_rnaProcessingFinishedLabel"></Label>
+        </Grid>
         <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_image" Width="600" Height="600"/>
         <!--<Visualizer:BitmapCanvas Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_canvas" Width="600" Height="600"/>-->
 	</Grid>

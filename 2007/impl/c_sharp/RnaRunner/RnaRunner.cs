@@ -31,8 +31,6 @@ namespace RnaRunner
         private Pixel _currentColor;
         private int _currentIndexOfRna;
 
-        private Size _defaultSize = new Size(600, 600);
-
         private Direction _direction;
         private Point _mark;
         private Point _position;
@@ -59,11 +57,6 @@ namespace RnaRunner
         {
             get
             {
-//                var result = new Bitmap(_defaultSize.Width, _defaultSize.Height, PixelFormat.Format32bppArgb);
-//                for (int x = 0; x < 600; ++x)
-//                    for (int y = 0; y < 600; ++y )
-//                        result.SetPixel(x, y, _bitmaps[0][x, y].Color);
-
                 return _bitmaps[0];
             }
         }
@@ -88,6 +81,28 @@ namespace RnaRunner
         private void InvokeExecutionFinished()
         {
             EventHandler<EventArgs> handler = ExecutionFinished;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+
+        ///<summary>
+        ///</summary>
+        public event EventHandler<EventArgs> BeforeImportantDrawCommand;
+
+        ///<summary>
+        ///</summary>
+        public event EventHandler<EventArgs> AfterImportantDrawCommand;
+
+        private void InvokeBeforeImportantDrawCommand()
+        {
+            EventHandler<EventArgs> handler = BeforeImportantDrawCommand;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+
+        private void InvokeAfterImportantDrawCommand()
+        {
+            EventHandler<EventArgs> handler = AfterImportantDrawCommand;
             if (handler != null)
                 handler(this, new EventArgs());
         }
@@ -197,20 +212,28 @@ namespace RnaRunner
                         InvokeSomeDrawCommandsExecuted();
                         break;
                     case "PIIPIIP":
+                        InvokeBeforeImportantDrawCommand();
                         TryFill();
                         InvokeSomeDrawCommandsExecuted();
+                        InvokeAfterImportantDrawCommand();
                         break;
                     case "PCCPFFP":
+                        InvokeBeforeImportantDrawCommand();
                         AddBitmap(CreateTransperentBitmap());
                         InvokeSomeDrawCommandsExecuted();
+                        InvokeAfterImportantDrawCommand();
                         break;
                     case "PFFPCCP":
+                        InvokeBeforeImportantDrawCommand();
                         Compose();
                         InvokeSomeDrawCommandsExecuted();
+                        InvokeAfterImportantDrawCommand();
                         break;
                     case "PFFICCF":
+                        InvokeBeforeImportantDrawCommand();
                         Clip();
                         InvokeSomeDrawCommandsExecuted();
+                        InvokeAfterImportantDrawCommand();
                         break;
                 }
 

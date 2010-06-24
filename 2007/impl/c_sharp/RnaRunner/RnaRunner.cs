@@ -176,6 +176,7 @@ namespace RnaRunner
                     case "PIIPICP":
                         _bucketColor = new List<Color>();
                         _bucketAlpha = new List<byte>();
+                        EvaluateCurrentColor();
                         break;
                     case "PIIIIIP":
                         _position = Move(_position, _direction);

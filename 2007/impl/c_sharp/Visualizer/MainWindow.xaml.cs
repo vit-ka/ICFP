@@ -51,7 +51,7 @@ namespace Visualizer
             _dnaRunner.DnaProcessingFinished += DnaRunnerDnaProcessingFinished;
 
             _rnaRunner = new RnaRunner.RnaRunner(new FileStream(
-                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithDefaultPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
+                        @"D:\Projects\ICFP\2007\source\Rna\RNA_WithSelfCheckPrefix.txt", FileMode.Open, FileAccess.Read, FileShare.None));
             _rnaRunner.SomeDrawCommandsExecuted += RnaRunnerSomeDrawCommandsExecuted;
             _rnaRunner.ExecutionFinished += RnaRunnerExecutionFinished;
 

@@ -234,10 +234,11 @@ namespace RnaRunner
                         Pixel p0 = _bitmaps[0][x, y];
                         Pixel p1 = _bitmaps[1][x, y];
 
-                        _bitmaps[1][x, y] = new Pixel(Color.FromArgb((p1.Color.R*p0.Transparency)/255,
-                                                                     (p1.Color.G*p0.Transparency)/255,
-                                                                     (p1.Color.B*p0.Transparency)/255),
-                                                      (byte) ((p1.Transparency*p0.Transparency)/255));
+                        _bitmaps[1][x, y].Color = Color.FromArgb(p1.Color.R*p0.Transparency/255,
+                                                                 p1.Color.G*p0.Transparency/255,
+                                                                 p1.Color.B*p0.Transparency/255);
+                        _bitmaps[1][x, y].Transparency =
+                            (byte) (p1.Transparency*p0.Transparency/255);
                     }
 
                 _bitmaps.RemoveAt(0);
@@ -254,12 +255,11 @@ namespace RnaRunner
                         Pixel p0 = _bitmaps[0][x, y];
                         Pixel p1 = _bitmaps[1][x, y];
 
-                        _bitmaps[1][x, y] =
-                            new Pixel(Color.FromArgb((int) (p0.Color.R + Math.Floor(p1.Color.R*(255 - p0.Transparency)/255.0)),
-                                                     (int) (p0.Color.G + Math.Floor(p1.Color.G*(255 - p0.Transparency)/255.0)),
-                                                     (int) (p0.Color.B + Math.Floor(p1.Color.B*(255 - p0.Transparency)/255.0))),
-                                                     (byte)
-                                                     (p0.Transparency + (p1.Transparency*(255 - p0.Transparency))/255));
+                        _bitmaps[1][x, y].Color = Color.FromArgb(p0.Color.R + p1.Color.R*(255 - p0.Transparency)/255,
+                                                                 p0.Color.G + p1.Color.G*(255 - p0.Transparency)/255,
+                                                                 p0.Color.B + p1.Color.B*(255 - p0.Transparency)/255);
+                        _bitmaps[1][x, y].Transparency = 
+                                                     (byte) (p0.Transparency + p1.Transparency*(255 - p0.Transparency)/255);
                     }
 
                 _bitmaps.RemoveAt(0);

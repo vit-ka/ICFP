@@ -199,13 +199,13 @@ namespace DnaRunner
 
         private void Replace(TemplateInfo template, List<string> environment)
         {
-            var newPrefix = string.Empty;
+            var newPrefix = new StringBuilder();
 
             foreach (var temp in template)
             {
                 if (temp.IsBase)
                 {
-                    newPrefix += temp.Symbol;
+                    newPrefix.Append(temp.Symbol);
                     continue;
                 }
 
@@ -214,7 +214,7 @@ namespace DnaRunner
                     if (temp.Reference >= environment.Count)
                         continue;
 
-                    newPrefix += Protect(temp.Level, environment[temp.Reference]);
+                    newPrefix.Append(Protect(temp.Level, environment[temp.Reference]));
                     continue;
                 }
 
@@ -222,16 +222,17 @@ namespace DnaRunner
                 {
                     if (temp.Reference >= environment.Count)
                     {
-                        newPrefix += AsNat(0);
+                        newPrefix.Append(AsNat(0));
                         continue;
                     }
 
-                    newPrefix += AsNat(environment[temp.Reference].Length);
+                    newPrefix.Append(AsNat(environment[temp.Reference].Length));
                     continue;
                 }
             }
 
-            _runningDna = newPrefix + _runningDna;
+            newPrefix.Append(_runningDna);
+            _runningDna = newPrefix.ToString();
         }
 
         private static string AsNat(int number)

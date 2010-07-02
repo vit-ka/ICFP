@@ -74,16 +74,14 @@ namespace RopeStrings
         /// </summary>
         public int Length { get; private set; }
 
-        /// <summary>
-        /// Append another rope string to back of current.
-        /// </summary>
-        /// <param name="ropeString">Another rope string.</param>
-        /// <param name="fromIndex">Index in another string from we append.</param>
-        public void AppendToBack(RopeString ropeString, int fromIndex)
+        private void AppendToBack(RopeString ropeString, int fromIndex, int length)
         {
+            if (length == 0)
+                return;
+
             // First we search sector with lesser or equals first index to fromIndex
             int anotherStringSectorIndex = SearchSectorByGlobalIndex(ropeString, fromIndex);
-         
+
             if (anotherStringSectorIndex == -1)
                 throw new InvalidOperationException("fromIndex ouside of bounds");
 
@@ -96,7 +94,7 @@ namespace RopeStrings
             // If index inside sector is zero --- just copy full sector.
             if (indexInsideFirstSector > 0)
             {
-                while (indexInsideFirstSector < firstOldSector.Length)
+                while (indexInsideFirstSector < firstOldSector.Length && firstNewSector.Length < length)
                 {
                     firstNewSector.AppendToBack(firstOldSector[indexInsideFirstSector++]);
                 }
@@ -104,26 +102,61 @@ namespace RopeStrings
                 // Add new first sector to back of current string.
                 _descriptors.Add(
                     new RopeSectorDescriptor
-                        {
-                            FirstIndexInGlobal = Length,
-                            Sector = firstNewSector
-                        });
+                    {
+                        FirstIndexInGlobal = Length,
+                        Sector = firstNewSector
+                    });
                 Length += firstNewSector.Length;
                 ++anotherStringSectorIndex;
             }
 
+            int lastIndex = fromIndex + length - 1;
+            // First we search sector with lesser or equals first index to fromIndex
+            int anotherStringSectorFinishIndex = SearchSectorByGlobalIndex(ropeString, lastIndex);
+
+            if (anotherStringSectorFinishIndex == -1)
+                throw new InvalidOperationException("fromIndex + length ouside of bounds");
+
             // Batch add all next sectors to back of currect string.
-            while (anotherStringSectorIndex < ropeString._descriptors.Count)
+            while (anotherStringSectorIndex < anotherStringSectorFinishIndex)
             {
                 RopeSector sector = ropeString._descriptors[anotherStringSectorIndex++].Sector;
                 _descriptors.Add(
                     new RopeSectorDescriptor
-                        {
-                            FirstIndexInGlobal = Length,
-                            Sector = sector
-                        });
+                    {
+                        FirstIndexInGlobal = Length,
+                        Sector = sector
+                    });
                 Length += sector.Length;
             }
+
+            // Add last sector if needed.
+            if (anotherStringSectorFinishIndex >= anotherStringSectorIndex &&
+                anotherStringSectorFinishIndex < ropeString._descriptors.Count &&
+                ropeString._descriptors[anotherStringSectorFinishIndex].FirstIndexInGlobal <= lastIndex)
+            {
+                var lastSector = ropeString._descriptors[anotherStringSectorFinishIndex].Sector;
+                int countOfCopiedChars = lastIndex -
+                                         ropeString._descriptors[anotherStringSectorFinishIndex].FirstIndexInGlobal + 1;
+
+                var newSector = new RopeSector();
+
+                for (int indexInsideSector = 0; indexInsideSector < countOfCopiedChars; ++indexInsideSector)
+                    newSector.AppendToBack(lastSector[indexInsideSector]);
+
+                _descriptors.Add(new RopeSectorDescriptor { FirstIndexInGlobal = Length, Sector = newSector });
+                Length += newSector.Length;
+            }
+        }
+
+        /// <summary>
+        /// Append another rope string to back of current.
+        /// </summary>
+        /// <param name="ropeString">Another rope string.</param>
+        /// <param name="fromIndex">Index in another string from we append.</param>
+        public void AppendToBack(RopeString ropeString, int fromIndex)
+        {
+            AppendToBack(ropeString, fromIndex, ropeString.Length - fromIndex);
         }
 
         private int SearchSectorByGlobalIndex(RopeString ropeString, int fromIndex)
@@ -143,7 +176,8 @@ namespace RopeStrings
             {
                 if (ropeString._descriptors[estimateSectorIndex].FirstIndexInGlobal <= fromIndex &&
                     ropeString._descriptors[estimateSectorIndex].FirstIndexInGlobal +
-                    ropeString._descriptors[estimateSectorIndex].Sector.Length > fromIndex)
+                    ropeString._descriptors[estimateSectorIndex].Sector.Length > fromIndex &&
+                    ropeString._descriptors[estimateSectorIndex].Sector.Length > 0)
                     return estimateSectorIndex;
 
                 estimateSectorIndex += stepSign;
@@ -176,7 +210,7 @@ namespace RopeStrings
                 // Check first sector.
                 int indexInsidePattern = 0;
 
-                while (indexInsidePattern < pattern.Length && indexInsideSector < RopeSector.SectorSize)
+                while (indexInsidePattern < pattern.Length && indexInsideSector < sector.Length)
                 {
                     if (pattern[indexInsidePattern++] != sector[indexInsideSector++])
                         return false;
@@ -185,10 +219,10 @@ namespace RopeStrings
                 // Check another sectors.
                 while (indexInsidePattern < pattern.Length && anotherStringSectorIndex + 1 < _descriptors.Count)
                 {
-                    sector = _descriptors[anotherStringSectorIndex++].Sector;
+                    sector = _descriptors[++anotherStringSectorIndex].Sector;
                     indexInsideSector = 0;
 
-                    while (indexInsidePattern < pattern.Length && indexInsideSector < RopeSector.SectorSize)
+                    while (indexInsidePattern < pattern.Length && indexInsideSector < sector.Length)
                     {
                         if (pattern[indexInsidePattern++] != sector[indexInsideSector++])
                             return false;
@@ -208,12 +242,58 @@ namespace RopeStrings
         /// <summary>
         /// Evaluate index of first occurs search pattern in string.
         /// </summary>
-        /// <param name="searchPattern">Pattern to search.</param>
+        /// <param name="pattern">Pattern to search.</param>
         /// <param name="fromIndex">Start index for search.</param>
         /// <returns>Index of first occurs or -1.</returns>
-        public int IndexOf(string searchPattern, int fromIndex)
+        public int IndexOf(string pattern, int fromIndex)
         {
+            int anotherStringSectorIndex = SearchSectorByGlobalIndex(this, fromIndex);
+
+            if (anotherStringSectorIndex == -1)
+                throw new InvalidOperationException("fromIndex outside of bounds");
+
+            var indexInsideSector = fromIndex - _descriptors[anotherStringSectorIndex].FirstIndexInGlobal;
+            var sector = _descriptors[anotherStringSectorIndex].Sector;
+            var globalIndex = fromIndex;
+
+            while (anotherStringSectorIndex < _descriptors.Count && globalIndex + pattern.Length < Length)
+            {
+                while (indexInsideSector < sector.Length && globalIndex + pattern.Length < Length)
+                {
+                    if (HasPatternAtPositionWithSectorsShift(indexInsideSector++, anotherStringSectorIndex, pattern))
+                        return globalIndex;
+                    ++globalIndex;
+                }
+
+                indexInsideSector = 0;
+                sector = _descriptors[++anotherStringSectorIndex].Sector;
+                globalIndex = _descriptors[anotherStringSectorIndex].FirstIndexInGlobal;
+            }
+
             return -1;
+        }
+
+        private bool HasPatternAtPositionWithSectorsShift(int indexInsideSector, int sectorIndex, string pattern)
+        {
+            var indexInsidePattern = 0;
+            var sector = _descriptors[sectorIndex].Sector;
+
+            while (indexInsidePattern < pattern.Length && sectorIndex < _descriptors.Count)
+            {
+                while (indexInsideSector < sector.Length && indexInsidePattern < pattern.Length)
+                {
+                    if (sector[indexInsideSector++] != pattern[indexInsidePattern++])
+                        return false;
+                }
+
+                if (indexInsidePattern == pattern.Length)
+                    return true;
+
+                sector = _descriptors[++sectorIndex].Sector;
+                indexInsideSector = 0;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -224,7 +304,11 @@ namespace RopeStrings
         /// <returns>Substring.</returns>
         public RopeString Substring(int fromIndex, int length)
         {
-            return new RopeString(string.Empty);
+            var result = new RopeString();
+
+            result.AppendToBack(this, fromIndex, length);
+
+            return result;
         }
 
         /// <summary>

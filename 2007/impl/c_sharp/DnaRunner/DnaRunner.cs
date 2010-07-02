@@ -233,6 +233,7 @@ namespace DnaRunner
 
             newPrefix.AppendToBack(_runningDna, _currentIndex);
             _runningDna = newPrefix;
+            _currentIndex = 0;
         }
 
         private static string AsNat(int number)

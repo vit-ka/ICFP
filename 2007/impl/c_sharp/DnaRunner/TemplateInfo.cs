@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DnaRunner
 {
@@ -51,6 +52,16 @@ namespace DnaRunner
         public void AddLengthOfReference(int reference)
         {
             _items.Add(new TemplateItemInfo(reference));
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+            foreach (var templateItemInfo in _items)
+            {
+                result.Append(templateItemInfo);
+            }
+            return result.ToString();
         }
     }
 

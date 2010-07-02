@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DnaRunner
 {
@@ -61,6 +62,16 @@ namespace DnaRunner
         public void DecreaseLevel()
         {
             _items.Add(new PatternItemInfo(false));
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+            foreach (var patternItemInfo in _items)
+            {
+                result.Append(patternItemInfo);
+            }
+            return result.ToString();
         }
     }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 namespace DnaRunner
@@ -23,11 +22,6 @@ namespace DnaRunner
         public void AppendToBack(StringManager anotherStr, int fromIndex)
         {
             _internalString += anotherStr._internalString.Substring(fromIndex);
-        }
-
-        public void AppendToBack(string anotherStr)
-        {
-            _internalString += anotherStr;
         }
 
         public bool HasPatternAtPosition(string[] patterns, int fromIndex)

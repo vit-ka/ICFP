@@ -10,21 +10,20 @@ namespace DnaRunner
     /// </summary>
     public class DnaRunner
     {
-        private readonly object _runningMutex = new object();
-
-        private Thread _runningThread;
-        private StringManager _runningDna;
-        private readonly StringManager _sourceDna;
-        private RunningState _state;
-        private int _totalCommandProcessed;
-        private int _totalCharsOfRna;
-        private StreamWriter _rnaWriter;
-        private int _lastRaisedCharsCountOverEvent;
-        private int _lastRaisedCommandsCountOverEvent;
         private const int _commandRaiseEventLimit = 1;
         private const int _charsRaiseEventLimit = 50;
+        private readonly object _runningMutex = new object();
 
+        private readonly StringManager _sourceDna;
         private int _currentIndex;
+        private int _lastRaisedCharsCountOverEvent;
+        private int _lastRaisedCommandsCountOverEvent;
+        private StreamWriter _rnaWriter;
+        private StringManager _runningDna;
+        private Thread _runningThread;
+        private RunningState _state;
+        private int _totalCharsOfRna;
+        private int _totalCommandProcessed;
 
         /// <summary>
         /// Constructor of DNA processor.
@@ -46,10 +45,7 @@ namespace DnaRunner
         /// <summary>
         /// Prefix of DNA.
         /// </summary>
-        public string Prefix
-        {
-            get; set;
-        }
+        public string Prefix { get; set; }
 
         ///<summary>
         /// Stream for produced RNA.
@@ -101,19 +97,15 @@ namespace DnaRunner
 
                 ++_totalCommandProcessed;
 
-                var pattern = DecodePattern();
-                
-                if (pattern == null)
-                {
-                    continue;
-                }
+                PatternInfo pattern = DecodePattern();
 
-                var template = DecodeTemplate();
+                if (pattern == null)
+                    continue;
+
+                TemplateInfo template = DecodeTemplate();
 
                 if (template == null)
-                {
                     continue;
-                }
 
                 MatchReplace(pattern, template);
 
@@ -144,16 +136,21 @@ namespace DnaRunner
             var environment = new List<StringManager>();
             var counters = new List<int>();
 
-            foreach (var pat in pattern)
+            foreach (PatternItemInfo pat in pattern)
             {
                 if (pat.IsBase)
                 {
                     if (index >= _runningDna.Length)
                         return;
 
-                    if (_runningDna.HasPatternAtPosition(new[]{new string(pat.Symbol, 1) }, (int)index))
+                    if (_runningDna.HasPatternAtPosition(
+                        new[]
+                            {
+                                new string(pat.Symbol, 1)
+                            },
+                        (int) index))
                         ++index;
-                    else 
+                    else
                         return;
                     continue;
                 }
@@ -168,11 +165,9 @@ namespace DnaRunner
 
                 if (pat.IsSearch)
                 {
-                    var patterIndex = _runningDna.IndexOf(pat.SearchPattern, (int)index);
+                    int patterIndex = _runningDna.IndexOf(pat.SearchPattern, (int) index);
                     if (patterIndex != -1)
-                    {
                         index = patterIndex + pat.SearchPattern.Length;
-                    }
                     else
                         return;
 
@@ -181,13 +176,13 @@ namespace DnaRunner
 
                 if (pat.IsLevelUp)
                 {
-                    counters.Insert(0, (int)index);
+                    counters.Insert(0, (int) index);
                     continue;
                 }
 
                 if (pat.IsLevelDown)
                 {
-                    environment.Add(_runningDna.Substring(counters[0], (int)index - counters[0]));
+                    environment.Add(_runningDna.Substring(counters[0], (int) index - counters[0]));
                     counters.RemoveAt(0);
                     continue;
                 }
@@ -201,11 +196,11 @@ namespace DnaRunner
         {
             var newPrefix = new StringManager(string.Empty);
 
-            foreach (var temp in template)
+            foreach (TemplateItemInfo temp in template)
             {
                 if (temp.IsBase)
                 {
-                    newPrefix.AppendToBack(new string(temp.Symbol, 1));
+                    newPrefix.AppendToBack(new StringManager(new string(temp.Symbol, 1)), 0);
                     continue;
                 }
 
@@ -222,11 +217,11 @@ namespace DnaRunner
                 {
                     if (temp.Reference >= environment.Count)
                     {
-                        newPrefix.AppendToBack(AsNat(0));
+                        newPrefix.AppendToBack(new StringManager(AsNat(0)), 0);
                         continue;
                     }
 
-                    newPrefix.AppendToBack(AsNat(environment[temp.Reference].Length));
+                    newPrefix.AppendToBack(new StringManager(AsNat(environment[temp.Reference].Length)), 0);
                     continue;
                 }
             }
@@ -249,7 +244,7 @@ namespace DnaRunner
         {
             if (level == 0)
                 return str;
-            
+
             return Protect(level - 1, Quote(str));
         }
 
@@ -257,24 +252,36 @@ namespace DnaRunner
         {
             var result = new StringManager(string.Empty);
 
-            for (int index = 0; index < str.Length; ++index )
+            for (int index = 0; index < str.Length; ++index)
             {
-                if (str.HasPatternAtPosition(new[]{"I"}, index))
-                {
-                    result.AppendToBack("C");
-                }
-                else if (str.HasPatternAtPosition(new[]{"C"}, index))
-                {
-                    result.AppendToBack("F");
-                }
-                else if (str.HasPatternAtPosition(new[]{"F"}, index))
-                {
-                    result.AppendToBack("P");
-                }
-                else if (str.HasPatternAtPosition(new[]{"P"}, index))
-                {
-                    result.AppendToBack("IC");
-                }
+                if (str.HasPatternAtPosition(
+                    new[]
+                        {
+                            "I"
+                        },
+                    index))
+                    result.AppendToBack(new StringManager("C"), 0);
+                else if (str.HasPatternAtPosition(
+                    new[]
+                        {
+                            "C"
+                        },
+                    index))
+                    result.AppendToBack(new StringManager("F"), 0);
+                else if (str.HasPatternAtPosition(
+                    new[]
+                        {
+                            "F"
+                        },
+                    index))
+                    result.AppendToBack(new StringManager("P"), 0);
+                else if (str.HasPatternAtPosition(
+                    new[]
+                        {
+                            "P"
+                        },
+                    index))
+                    result.AppendToBack(new StringManager("IC"), 0);
             }
 
             return result;
@@ -288,65 +295,107 @@ namespace DnaRunner
             while (flag)
             {
                 if (_currentIndex >= _runningDna.Length)
+                {
                     lock (_runningMutex)
                     {
                         _state = RunningState.Stoped;
                         return null;
                     }
+                }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "C" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "C"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     template.AppendBack('I');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "F"}, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "F"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     template.AppendBack('C');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "P" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "P"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     template.AppendBack('F');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IC" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IC"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 2;
                     template.AppendBack('P');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[]{"IF", "IP"}, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IF", "IP"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 2;
-                    var level = DecodeNumber();
-                    var reference = DecodeNumber();
+                    int level = DecodeNumber();
+                    int reference = DecodeNumber();
                     template.AddReference(reference, level);
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IIC", "IIF" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IIC", "IIF"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 3;
                     flag = false;
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IIP" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IIP"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 3;
-                    var reference = DecodeNumber();
+                    int reference = DecodeNumber();
                     template.AddLengthOfReference(reference);
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "III" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "III"
+                        },
+                    _currentIndex))
                 {
                     string toRna = _runningDna.Substring(_currentIndex + 3, 7).ToString();
                     OutputToRna(toRna);
@@ -375,41 +424,68 @@ namespace DnaRunner
             while (flag)
             {
                 if (_currentIndex >= _runningDna.Length)
+                {
                     lock (_runningMutex)
                     {
                         _state = RunningState.Stoped;
                         return null;
                     }
+                }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "C" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "C"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     result.AppendBack('I');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "F" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "F"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     result.AppendBack('C');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "P" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "P"
+                        },
+                    _currentIndex))
                 {
                     ++_currentIndex;
                     result.AppendBack('F');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IC" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IC"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 2;
                     result.AppendBack('P');
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IP" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IP"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 2;
                     int number = DecodeNumber();
@@ -417,7 +493,12 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IF" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IF"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 3;
                     string consts = DecodeConsts();
@@ -425,7 +506,12 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IIP" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IIP"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 3;
                     ++level;
@@ -433,7 +519,12 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "IIC", "IIF" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "IIC", "IIF"
+                        },
+                    _currentIndex))
                 {
                     _currentIndex += 3;
                     if (level == 0)
@@ -447,7 +538,12 @@ namespace DnaRunner
                     continue;
                 }
 
-                if (_runningDna.HasPatternAtPosition(new[] { "III" }, _currentIndex))
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "III"
+                        },
+                    _currentIndex))
                 {
                     string toRna = _runningDna.Substring(_currentIndex + 3, 7).ToString();
                     OutputToRna(toRna);
@@ -468,31 +564,51 @@ namespace DnaRunner
 
         private string DecodeConsts()
         {
-            if (_runningDna.HasPatternAtPosition(new[] { "C" }, _currentIndex))
+            if (_runningDna.HasPatternAtPosition(
+                new[]
+                    {
+                        "C"
+                    },
+                _currentIndex))
             {
                 ++_currentIndex;
-                var consts = DecodeConsts();
+                string consts = DecodeConsts();
                 return "I" + consts;
             }
 
-            if (_runningDna.HasPatternAtPosition(new[] { "F" }, _currentIndex))
+            if (_runningDna.HasPatternAtPosition(
+                new[]
+                    {
+                        "F"
+                    },
+                _currentIndex))
             {
                 ++_currentIndex;
-                var consts = DecodeConsts();
+                string consts = DecodeConsts();
                 return "C" + consts;
             }
 
-            if (_runningDna.HasPatternAtPosition(new[] { "P" }, _currentIndex))
+            if (_runningDna.HasPatternAtPosition(
+                new[]
+                    {
+                        "P"
+                    },
+                _currentIndex))
             {
                 ++_currentIndex;
-                var consts = DecodeConsts();
+                string consts = DecodeConsts();
                 return "F" + consts;
             }
 
-            if (_runningDna.HasPatternAtPosition(new[] { "IC" }, _currentIndex))
+            if (_runningDna.HasPatternAtPosition(
+                new[]
+                    {
+                        "IC"
+                    },
+                _currentIndex))
             {
                 _currentIndex += 2;
-                var consts = DecodeConsts();
+                string consts = DecodeConsts();
                 return "P" + consts;
             }
 
@@ -515,14 +631,20 @@ namespace DnaRunner
 
             for (int index = firstPIndex - 1; index >= _currentIndex; --index)
             {
-                if (_runningDna.HasPatternAtPosition(new[] { "I", "F" }, index))
-                {
+                if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "I", "F"
+                        },
+                    index))
                     result *= 2;
-                }
-                else if (_runningDna.HasPatternAtPosition(new[] { "C" }, index))
-                {
+                else if (_runningDna.HasPatternAtPosition(
+                    new[]
+                        {
+                            "C"
+                        },
+                    index))
                     result = result * 2 + 1;
-                }
             }
 
             _currentIndex = firstPIndex + 1;

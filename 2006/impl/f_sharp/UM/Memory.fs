@@ -4,19 +4,25 @@ open System.Collections.Generic
 
 type IMemory =
     interface
-        abstract member GetValueFromBlock : int * int -> int
-        abstract member WriteValueToBlock : int * int * int -> unit
+        abstract member GetValueFromBlock : uint32 * uint32 -> uint32
+        abstract member WriteValueToBlock : uint32 * uint32 * uint32 -> unit
     end
 
 type MemoryManager() =
     
     do printfn "Memory manager has been initialized."
 
-    member this.Platters : Dictionary<int, int array> = new Dictionary<_,_>()
+    member private this.Platters : Dictionary<uint32, uint32 array> = new Dictionary<_,_>()
 
     interface IMemory with
         member this.GetValueFromBlock(arrayAddress, address) =
-            0
+            if not <| this.Platters.ContainsKey(arrayAddress) then
+                failwithf "There is no array at address %d" arrayAddress
+            if this.Platters.[arrayAddress].Length <= int address then
+                failwithf "There is no element %d in the array %d" address arrayAddress
+
+            this.Platters.[arrayAddress].[int address]
+
         member this.WriteValueToBlock(arrayAddress, address, value) =
             ()
 
@@ -30,8 +36,8 @@ type MemoryManager() =
             | [a; b; c; d] -> (a, b, c, d) :: acc
             | a :: b :: c :: d :: xs -> zipDataToTuplesOfFourBytes xs ((a, b, c, d) :: acc)
 
-        let mergeTuple (a : byte, b : byte, c : byte, d : byte) : int =
-            int a <<< 24 ||| int b <<< 16 ||| int c <<< 8 ||| int d
+        let mergeTuple (a : byte, b : byte, c : byte, d : byte) : uint32 =
+            (uint32 a <<< 24) ||| (uint32 b <<< 16) ||| (uint32 c <<< 8) ||| (uint32 d)
 
         let rec mergeTuplesOfFourBytesToInt ar acc =
             match ar with
@@ -49,12 +55,11 @@ type MemoryManager() =
     member this.LoadScrollToZeroArray(data : byte array) =
         let intArray = this.convertByteArrayToIntArray data
 
-        if not <| this.Platters.ContainsKey(0) then
-            this.Platters.Add(0, null)
+        if not <| this.Platters.ContainsKey(0u) then
+            this.Platters.Add(0u, null)
+
+        this.Platters.[0u] <- intArray
 
         printfn "Scroll with %d commands has been loaded to 0 array" <| intArray.Length
-
-        this.Platters.[0] <- intArray
-
 
     

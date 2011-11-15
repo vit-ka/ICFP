@@ -46,8 +46,11 @@ let main (args: string[]) =
 
     memoryManager.LoadScrollToZeroArray <| programBytes
 
+    // Scroll parser
+    let scrollParser = new ScrollParser()
+
     // CPU
-    let cpu = new CPU(memoryManager, ioManager)
+    let cpu = new CPU(memoryManager, ioManager, scrollParser)
 
     cpu.StartInterpretation()
 

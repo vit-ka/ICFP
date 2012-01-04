@@ -25,25 +25,25 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="47" selection-start="697" selection-end="697" vertical-scroll-proportion="-10.461538">
+            <state line="17" column="47" selection-start="687" selection-end="687" vertical-scroll-proportion="-11.115385">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="look_and_feel.css" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="look_and_feel.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/look_and_feel.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="17" selection-start="226" selection-end="226" vertical-scroll-proportion="0.31288344">
+            <state line="42" column="0" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="memory.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="memory.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/memory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="6" column="3" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -74,8 +74,9 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/lookandfeel.css" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/look_and_feel.css" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/memory.js" />
       </list>
     </option>
   </component>
@@ -260,13 +261,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/memory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cpu.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -274,16 +268,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="47" selection-start="697" selection-end="697" vertical-scroll-proportion="-10.461538">
+        <state line="42" column="0" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="17" selection-start="226" selection-end="226" vertical-scroll-proportion="0.31288344">
+        <state line="17" column="47" selection-start="687" selection-end="687" vertical-scroll-proportion="-11.115385">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/memory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="3" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>

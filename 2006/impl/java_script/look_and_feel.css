@@ -1,0 +1,35 @@
+.output_console {
+    background: black;
+    width: 400px;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.hint_text{
+    font-family: sans-serif;
+    font-style: italic;
+    font-size: 8pt;
+    color: black;
+    display: inline;
+}
+
+.pane{
+    background: #d3d3d3;
+    padding: 4px;
+    width: 400px;
+}
+
+ .console_text{
+     color: white;
+     font-family: "Consolas", monospace;
+     font-size: 10pt;
+     margin-left: 6px;
+     margin-right: 6px;
+     margin-top: 0px;
+     margin-bottom: 0px;
+}
+
+ .input_field {
+     width: 100%;
+     margin: 4px;
+ }

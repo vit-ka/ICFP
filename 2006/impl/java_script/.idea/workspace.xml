@@ -25,22 +25,22 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="47" selection-start="687" selection-end="687" vertical-scroll-proportion="-11.115385">
+            <state line="16" column="30" selection-start="602" selection-end="602" vertical-scroll-proportion="-10.461538">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="look_and_feel.css" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="look_and_feel.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/look_and_feel.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="0" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
+            <state line="46" column="22" selection-start="810" selection-end="810" vertical-scroll-proportion="0.8435583">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="memory.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="memory.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/memory.js">
           <provider selected="true" editor-type-id="text-editor">
             <state line="6" column="3" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
@@ -74,9 +74,9 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/lookandfeel.css" />
-        <option value="$PROJECT_DIR$/look_and_feel.css" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/memory.js" />
+        <option value="$PROJECT_DIR$/look_and_feel.css" />
       </list>
     </option>
   </component>
@@ -268,23 +268,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
+    <entry file="file://$PROJECT_DIR$/memory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
+        <state line="6" column="3" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="47" selection-start="687" selection-end="687" vertical-scroll-proportion="-11.115385">
+        <state line="16" column="30" selection-start="602" selection-end="602" vertical-scroll-proportion="-10.461538">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/memory.js">
+    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="3" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
+        <state line="46" column="22" selection-start="810" selection-end="810" vertical-scroll-proportion="0.8435583">
           <folding />
         </state>
       </provider>

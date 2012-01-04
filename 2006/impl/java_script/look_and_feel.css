@@ -13,13 +13,6 @@ div#output_console {
     padding: 4px;
 }
 
-
-div#input_pane{
-    background: #d3d3d3;
-    width: 100%;
-    padding: 4px;
-}
-
  .console_text{
      color: white;
      font-family: "Consolas", monospace;
@@ -30,14 +23,26 @@ div#input_pane{
      margin-bottom: 0px;
 }
 
+div#input_pane{
+    background: #d3d3d3;
+    width: 100%;
+    padding: 4px;
+    display: -webkit-box;
+}
+
 p#hint_text{
     font-family: sans-serif;
     font-style: italic;
     font-size: 8pt;
     color: black;
-    display: inline;
+    display: block
+    -webkit-box-flex: 0;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
  input#input_field {
-     width: 98%;
+     -webkit-box-flex: 1;
+     display: block;
+     margin-left: 4px;
  }

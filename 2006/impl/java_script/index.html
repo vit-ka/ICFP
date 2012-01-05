@@ -6,6 +6,11 @@
     <script type="text/javascript" src="cpu.js"></script>
     <script type="text/javascript" src="memory.js"></script>
     <link rel="stylesheet" type="text/css" href="look_and_feel.css"/>
+    <script type="text/javascript">
+        window.onload = function () {
+            alert('aaaa');
+        }
+    </script>
 </head>
 <body>
     <div id="main">
@@ -13,9 +18,13 @@
             <p class="console_text">Test text.</p>
             <p class="console_text">Test text2.</p>
         </div>
-        <div id="input_pane">
-            <p id="hint_text">Type text you want to enter here:</p>
-            <input type="text" id="input_field"/>
+        <div id="input_pane" class="pane">
+            <p class="hint_text">Type text you want to enter here:</p>
+            <input type="text" id="input_field" class="text_box"/>
+        </div>
+        <div id="file_pane" class="pane">
+            <p class="hint_text">Select file to run:</p>
+            <input type="file" id="file_field" class="text_box"/>
         </div>
     </div>
 </body>

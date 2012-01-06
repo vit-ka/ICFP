@@ -25,16 +25,16 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="50" selection-start="769" selection-end="769" vertical-scroll-proportion="-9.807693">
+            <state line="11" column="22" selection-start="510" selection-end="510" vertical-scroll-proportion="-1.3076923">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cpu.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="cpu.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cpu.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="19" selection-start="896" selection-end="896" vertical-scroll-proportion="0.3726813">
+            <state line="139" column="66" selection-start="6076" selection-end="6081" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -43,16 +43,16 @@
       <file leaf-file-name="util.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="57" selection-start="2129" selection-end="2129" vertical-scroll-proportion="0.0">
+            <state line="19" column="32" selection-start="576" selection-end="576" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="look_and_feel.css" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="look_and_feel.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/look_and_feel.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="18" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0">
+            <state line="36" column="17" selection-start="617" selection-end="617" vertical-scroll-proportion="0.7740303">
               <folding />
             </state>
           </provider>
@@ -61,7 +61,7 @@
       <file leaf-file-name="memory.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/memory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="29" selection-start="1406" selection-end="1406" vertical-scroll-proportion="0.0">
+            <state line="55" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -83,11 +83,11 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/lookandfeel.css" />
-        <option value="$PROJECT_DIR$/look_and_feel.css" />
-        <option value="$PROJECT_DIR$/util.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/memory.js" />
         <option value="$PROJECT_DIR$/cpu.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/util.js" />
+        <option value="$PROJECT_DIR$/look_and_feel.css" />
       </list>
     </option>
   </component>
@@ -207,6 +207,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20684169" sideWeight="0.49483013" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28180355" sideWeight="0.49483013" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -216,7 +217,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -272,37 +272,37 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
+    <entry file="file://$PROJECT_DIR$/memory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="18" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/util.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="57" selection-start="2129" selection-end="2129" vertical-scroll-proportion="0.0">
+        <state line="55" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="50" selection-start="769" selection-end="769" vertical-scroll-proportion="-9.807693">
+        <state line="11" column="22" selection-start="510" selection-end="510" vertical-scroll-proportion="-1.3076923">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/memory.js">
+    <entry file="file://$PROJECT_DIR$/util.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="29" selection-start="1406" selection-end="1406" vertical-scroll-proportion="0.0">
+        <state line="19" column="32" selection-start="576" selection-end="576" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cpu.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="19" selection-start="896" selection-end="896" vertical-scroll-proportion="0.3726813">
+        <state line="139" column="66" selection-start="6076" selection-end="6081" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/look_and_feel.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="17" selection-start="617" selection-end="617" vertical-scroll-proportion="0.7740303">
           <folding />
         </state>
       </provider>

@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="look_and_feel.css"/>
     <script type="text/javascript">
         window.onload = function () {
+            write_to_notifier("Interpretation is in process...", true);
+
             var file = load_file_from_server("http://vitaly-kalinkin.name/files/um/data/sandmark.umz",
                     function (result) {
                         var fileAsCommandArray = convert_to_array_of_commands(result);
@@ -17,13 +19,17 @@
                         memory.loadToZeroArray(fileAsCommandArray);
 
                         var cpu = new Cpu(memory);
-                        cpu.startInterpretation();
+                        cpu.startInterpetation();
                     });
         };
     </script>
 </head>
 <body>
 <div id="main">
+    <div id="notifier">
+        <img src="working.gif" id="notifier_image">
+
+        <p id="notifier_text">Interpretation has not started yet.</p></div>
     <div id="output_console">
     </div>
     <div id="input_pane" class="pane">

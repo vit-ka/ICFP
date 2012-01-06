@@ -53,7 +53,6 @@ function createNewArray(capasity) {
 function findFreeIndex() {
     for (var i = 0; i < this.store.length; ++i) {
         if (!this.store[i]) {
-            console.log("Found free array at " + i);
             return i;
         }
     }

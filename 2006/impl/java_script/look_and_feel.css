@@ -1,4 +1,4 @@
-div#main{
+div#main {
     height: 400px;
     margin-left: 5%;
     margin-right: 5%;
@@ -9,45 +9,68 @@ div#output_console {
     width: 100%;
     height: auto;
     min-height: 300px;
+    max-height: 300px;
     margin-bottom: 8px;
     padding: 4px;
     overflow-y: scroll;
 }
 
- .console_text{
-     color: white;
-     font-family: "Consolas", monospace;
-     font-size: 10pt;
-     margin-left: 6px;
-     margin-right: 6px;
-     margin-top: 0px;
-     margin-bottom: 0px;
+#notifier_text{
+    color: black;
+    font-family: "Consolas", monospace;
+    font-size: 10pt;
+    display: inline;
+    vertical-align: top;
 }
 
-.console_log{
+#notifier_image{
+    display: inline;
+    visibility: hidden;
+}
+
+div#notifier {
+    background: #d3d3d3;
+    width: 100%;
+    height: auto;
+    min-height: 20px;
+    margin-bottom: 8px;
+    padding: 4px;
+    padding-left: 10px;
+}
+
+.console_text {
+    color: white;
+    font-family: "Consolas", monospace;
+    font-size: 10pt;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.console_log {
     color: #d3d3d3;
 }
 
-.pane{
+.pane {
     background: #d3d3d3;
     width: 100%;
     padding: 4px;
     display: -webkit-box;
 }
 
-.hint_text{
+.hint_text {
     font-family: sans-serif;
     font-style: italic;
     font-size: 8pt;
     color: black;
-    display: block
-    -webkit-box-flex: 0;
+    display: block -webkit-box-flex: 0;
     padding-left: 4px;
     padding-right: 4px;
 }
 
- .text_box {
-     -webkit-box-flex: 1;
-     display: block;
-     margin-left: 4px;
- }
+.text_box {
+    -webkit-box-flex: 1;
+    display: block;
+    margin-left: 4px;
+}

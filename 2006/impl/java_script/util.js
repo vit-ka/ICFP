@@ -9,18 +9,32 @@ function write_to_um_console(text) {
     }
 }
 
-function write_to_um_console_as_char(charCode) {
+function write_to_notifier(text, showImage) {
+    var notifier = document.getElementById("notifier_text");
+    var notifierImage = document.getElementById("notifier_image");
+
+    if (notifier)
+        notifier.innerText = text;
+
+    if (notifierImage)
+        notifierImage.style.visibility = showImage ? "visible" : "hidden";
+}
+
+function write_to_um_console_inside_machine(text) {
     var con = document.getElementById("output_console");
 
     if (con) {
         var lastPre = con.lastChild;
 
         if (lastPre.className.indexOf("console_log") >= 0)
-            con.innerHTML += '<pre class="console_text">' + String.fromCharCode(charCode) + '</pre>';
+            con.innerHTML += '<pre class="console_text">' + text + '</pre>';
         else {
             con.removeChild(lastPre);
-            con.innerHTML += '<pre class="console_text">' + lastPre.innerHTML + String.fromCharCode(charCode) + '</pre>';
+            con.innerHTML += '<pre class="console_text">' + lastPre.innerHTML + text + '</pre>';
         }
+
+        con.scrollTop = con.scrollHeight;
+//        console.log("UM Output: " + text);
     }
     else {
         console.log("Couldn't find element by id console_output.");

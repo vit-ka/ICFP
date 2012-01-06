@@ -5,27 +5,26 @@
     <title>The Page to run JS UM</title>
     <script type="text/javascript" src="cpu.js"></script>
     <script type="text/javascript" src="memory.js"></script>
+    <script type="text/javascript" src="util.js"></script>
     <link rel="stylesheet" type="text/css" href="look_and_feel.css"/>
     <script type="text/javascript">
         window.onload = function () {
-            alert('aaaa');
-        }
+            var file = load_file_from_server("http://vitaly-kalinkin.name/files/um/data/codex.umz",
+                    function (result) {
+                        var fileAsCommandArray = convert_to_array_of_commands(result);
+                        console.log(fileAsCommandArray.length);
+                    });
+        };
     </script>
 </head>
 <body>
-    <div id="main">
-        <div id="output_console">
-            <p class="console_text">Test text.</p>
-            <p class="console_text">Test text2.</p>
-        </div>
-        <div id="input_pane" class="pane">
-            <p class="hint_text">Type text you want to enter here:</p>
-            <input type="text" id="input_field" class="text_box"/>
-        </div>
-        <div id="file_pane" class="pane">
-            <p class="hint_text">Select file to run:</p>
-            <input type="file" id="file_field" class="text_box"/>
-        </div>
+<div id="main">
+    <div id="output_console">
     </div>
+    <div id="input_pane" class="pane">
+        <p class="hint_text">Type text you want to enter here:</p>
+        <input type="text" id="input_field" class="text_box"/>
+    </div>
+</div>
 </body>
 </html>

@@ -42,10 +42,16 @@ function convert_to_array_of_commands(text) {
 
     for (var i = 0; i < text.length; i += 4) {
         var command = 0;
-        command |= text[i] << 24;
-        command |= text[i + 1] << 16;
-        command |= text[i + 2] << 8;
-        command |= text[i + 3];
+        command |= (text.charCodeAt(i) & 0xff) << 24;
+        command |= (text.charCodeAt(i + 1) & 0xff) << 16;
+        command |= (text.charCodeAt(i + 2) & 0xff) << 8;
+        command |= (text.charCodeAt(i + 3) & 0xff);
+
+//        console.log('0x' + (command + 0x100000000).toString(16).substr(-8)
+//            + ' = 0x' + text.charCodeAt(i).toString(16)
+//            + ' | 0x' + text.charCodeAt(i + 1).toString(16)
+//            + ' | 0x' + text.charCodeAt(i + 2).toString(16)
+//            + ' | 0x' + text.charCodeAt(i + 3).toString(16));
 
         result[i / 4] = command;
     }

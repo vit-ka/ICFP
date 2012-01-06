@@ -21,7 +21,6 @@ public class MemoryManager
     
     private static MemoryManager instance;
     private List<long[]> arrays;
-    private int nextFreeArrayID = 1;
     
     /** Creates a new instance of MemoryManager */
     private MemoryManager()
@@ -46,6 +45,9 @@ public class MemoryManager
             newArray[i] = 0;
         
         int newArrayID = getFreeArrayID();
+        if (arrays.size() == newArrayID)
+        	arrays.add(null);
+        
         arrays.set(newArrayID, newArray);
         return newArrayID;
     }
@@ -64,26 +66,13 @@ public class MemoryManager
     {
         int arraysSize = arrays.size();
         
-        for (int i = nextFreeArrayID; i < arraysSize; ++i)
+        for (int i = 0; i < arraysSize; ++i)
             if (arrays.get(i) == null)
             {
-                nextFreeArrayID = i + 1;
                 return i;
             }
         
-        for (int i = 1; i < arraysSize; ++i)
-            if (arrays.get(i) == null)
-            {
-                nextFreeArrayID = i + 1;
-                return i;
-            }
-        
-        for (int i = 0; i < 2000; ++i)
-            arrays.add(null);
-        
-        nextFreeArrayID = arraysSize;
-        
-        return nextFreeArrayID;
+        return arraysSize;
     }
     
     public void copyToZeroArray(int anArrayID)

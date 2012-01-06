@@ -65,12 +65,33 @@ public class Processor
             registerBIndex = (int) ((instruction & 0x00000038L) >> 3);
             registerCIndex = (int) (instruction & 0x00000007L);
             
-        /*System.out.println(currentOffset + ":" + instructionType + "("
-                + instruction + ")"
-                + " [" + registerAIndex + " " +
-                registerBIndex + " " + registerCIndex + "] "
-                + Arrays.toString(registers));*/
+            /*String instrHex = Long.toHexString((instruction + 0x1000000000L));
+            String instrTypeHex = Long.toHexString((instructionType + 0x1000000000L));
+            String reg0Hex = Long.toHexString((registers[0] + 0x1000000000L));
+            String reg1Hex = Long.toHexString((registers[1] + 0x1000000000L));
+            String reg2Hex = Long.toHexString((registers[2] + 0x1000000000L));
+            String reg3Hex = Long.toHexString((registers[3] + 0x1000000000L));
+            String reg4Hex = Long.toHexString((registers[4] + 0x1000000000L));
+            String reg5Hex = Long.toHexString((registers[5] + 0x1000000000L));
+            String reg6Hex = Long.toHexString((registers[6] + 0x1000000000L));
+            String reg7Hex = Long.toHexString((registers[7] + 0x1000000000L));
             
+        System.out.println("0x"+Integer.toHexString(currentOffset) + ": "
+        	+"0x" + instrHex.substring(instrHex.length() - 8, instrHex.length())
+        	+ " as 0x" + instrTypeHex.substring(instrTypeHex.length() - 1, instrTypeHex.length())
+        	+" a=" + registerAIndex
+        	+" b=" + registerBIndex
+        	+" c=" + registerCIndex
+        	+"["
+        	+"0x"+reg0Hex.substring(reg0Hex.length() - 8, reg0Hex.length())
+            +",0x" + reg1Hex.substring(reg1Hex.length() - 8, reg1Hex.length())
+        +",0x" + reg2Hex.substring(reg2Hex.length() - 8, reg2Hex.length())
+        +",0x" + reg3Hex.substring(reg3Hex.length() - 8, reg3Hex.length())
+        +",0x" + reg4Hex.substring(reg4Hex.length() - 8, reg4Hex.length())
+        +",0x" + reg5Hex.substring(reg5Hex.length() - 8, reg5Hex.length())
+        +",0x" + reg6Hex.substring(reg6Hex.length() - 8, reg6Hex.length())
+        +",0x" + reg7Hex.substring(reg7Hex.length() - 8, reg7Hex.length()) + "]");
+            */
             switch (instructionType) {
                 //Conditional move
                 case 0x00:

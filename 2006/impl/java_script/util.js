@@ -2,7 +2,26 @@ function write_to_um_console(text) {
     var con = document.getElementById("output_console");
 
     if (con) {
-        con.innerHTML += '<pre class="console_text">' + text + '</pre>';
+        con.innerHTML += '<pre class="console_text console_log">' + text + '</pre>';
+    }
+    else {
+        console.log("Couldn't find element by id console_output.");
+    }
+}
+
+function write_to_um_console_as_char(charCode) {
+    console.log("OUTPUT: 0x" + charCode.toString(16));
+    var con = document.getElementById("output_console");
+
+    if (con) {
+        var lastPre = con.lastChild;
+
+        if (lastPre.className.indexOf("console_log") >= 0)
+            con.innerHTML += '<pre class="console_text">' + String.fromCharCode(charCode) + '</pre>';
+        else {
+            con.removeChild(lastPre);
+            con.innerHTML += '<pre class="console_text">' + lastPre.innerHTML + String.fromCharCode(charCode) + '</pre>';
+        }
     }
     else {
         console.log("Couldn't find element by id console_output.");
@@ -18,8 +37,8 @@ function load_file_from_server(url, callback) {
         if (fileToTest.readyState == 4 && fileToTest.status == 200) {
 
             var resp = fileToTest.responseText;
-            write_to_um_console('INFO: The file has been downloaded from the server.\n' +
-                'INFO: dataLength: ' + Math.floor(resp.length / 1024) + ' kBi.');
+            write_to_um_console('INFO: The file has been downloaded from the server.');
+            write_to_um_console('INFO: dataLength: ' + Math.floor(resp.length / 1024) + ' kBi.');
 
             callback(resp);
         }

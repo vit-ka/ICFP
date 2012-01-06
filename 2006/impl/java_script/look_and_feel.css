@@ -11,6 +11,7 @@ div#output_console {
     min-height: 300px;
     margin-bottom: 8px;
     padding: 4px;
+    overflow-y: scroll;
 }
 
  .console_text{
@@ -21,6 +22,10 @@ div#output_console {
      margin-right: 6px;
      margin-top: 0px;
      margin-bottom: 0px;
+}
+
+.console_log{
+    color: #d3d3d3;
 }
 
 .pane{

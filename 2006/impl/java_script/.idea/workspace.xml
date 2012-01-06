@@ -22,19 +22,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="17" selection-start="183" selection-end="183" vertical-scroll-proportion="0.14991182">
+            <state line="15" column="50" selection-start="769" selection-end="769" vertical-scroll-proportion="-9.807693">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cpu.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="cpu.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cpu.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="44" selection-start="538" selection-end="538" vertical-scroll-proportion="0.0">
+            <state line="26" column="19" selection-start="896" selection-end="896" vertical-scroll-proportion="0.3726813">
               <folding />
             </state>
           </provider>
@@ -43,7 +43,7 @@
       <file leaf-file-name="util.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="59" selection-start="777" selection-end="777" vertical-scroll-proportion="0.0">
+            <state line="63" column="57" selection-start="2129" selection-end="2129" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -61,7 +61,7 @@
       <file leaf-file-name="memory.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/memory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0">
+            <state line="54" column="29" selection-start="1406" selection-end="1406" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -83,11 +83,11 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/lookandfeel.css" />
-        <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/cpu.js" />
-        <option value="$PROJECT_DIR$/memory.js" />
         <option value="$PROJECT_DIR$/look_and_feel.css" />
         <option value="$PROJECT_DIR$/util.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/memory.js" />
+        <option value="$PROJECT_DIR$/cpu.js" />
       </list>
     </option>
   </component>
@@ -272,20 +272,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/memory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="44" selection-start="538" selection-end="538" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/look_and_feel.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="18" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0">
@@ -295,14 +281,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/util.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="59" selection-start="777" selection-end="777" vertical-scroll-proportion="0.0">
+        <state line="63" column="57" selection-start="2129" selection-end="2129" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="17" selection-start="183" selection-end="183" vertical-scroll-proportion="0.14991182">
+        <state line="15" column="50" selection-start="769" selection-end="769" vertical-scroll-proportion="-9.807693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/memory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="29" selection-start="1406" selection-end="1406" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cpu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="19" selection-start="896" selection-end="896" vertical-scroll-proportion="0.3726813">
           <folding />
         </state>
       </provider>

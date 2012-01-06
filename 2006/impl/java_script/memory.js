@@ -6,7 +6,8 @@ function Memory() {
     this.setArrayElem = setArrayElem;
     this.createNewArray = createNewArray;
     this.abandonArray = abandonArray;
-    this.moveArrayToZeroIndex = moveArrayToZeroIndex;
+    this.copyArrayToZeroIndex = copyArrayToZeroIndex;
+    this.findFreeIndex = findFreeIndex;
 }
 
 function loadToZeroArray(script) {
@@ -15,7 +16,10 @@ function loadToZeroArray(script) {
     write_to_um_console("INFO: Memory array at index 0 has been loaded.");
 }
 
-function moveArrayToZeroIndex(scriptIndex) {
+function copyArrayToZeroIndex(scriptIndex) {
+    if (scriptIndex == 0)
+        return;
+
     var copiedArray = [];
     for (var i = 0; i < this.store[scriptIndex].length; ++i)
         copiedArray[i] = this.store[scriptIndex][i];
@@ -39,9 +43,22 @@ function createNewArray(capasity) {
     for (var i = 0; i < capasity; ++i)
         newArray[i] = 0;
 
-    this.store[this.store.length] = newArray;
+    var freeIndex = this.findFreeIndex();
 
-    return this.store.length - 1;
+    this.store[freeIndex] = newArray;
+
+    return freeIndex;
+}
+
+function findFreeIndex() {
+    for (var i = 0; i < this.store.length; ++i) {
+        if (!this.store[i]) {
+            console.log("Found free array at " + i);
+            return i;
+        }
+    }
+
+    return this.store.length;
 }
 
 function abandonArray(scriptIndex) {

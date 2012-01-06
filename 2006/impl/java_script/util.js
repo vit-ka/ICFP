@@ -2,7 +2,7 @@ function write_to_um_console(text) {
     var con = document.getElementById("output_console");
 
     if (con) {
-        con.innerHTML += '<pre class="console_text console_log">' + text + '</pre>';
+        con.innerHTML += '<pre class="console_text console_log"> * ' + text + '</pre>';
     }
     else {
         console.log("Couldn't find element by id console_output.");
@@ -10,7 +10,6 @@ function write_to_um_console(text) {
 }
 
 function write_to_um_console_as_char(charCode) {
-    console.log("OUTPUT: 0x" + charCode.toString(16));
     var con = document.getElementById("output_console");
 
     if (con) {

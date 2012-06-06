@@ -1,0 +1,58 @@
+﻿<Window x:Class="Visualizer.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Visualizer="clr-namespace:Visualizer" Title="MainWindow" Height="647" Width="932"
+        Loaded="Window_Loaded">
+	<Grid Background="DarkKhaki">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<Button Grid.Row="0" Grid.Column="0" x:Name="_runDnaButton" Click="RunDnaButtonClick" Height="40">Run DNA</Button>
+			<Button Grid.Row="0" Grid.Column="1" x:Name="_runRnaButton" Click="RunRnaButtonClick" Height="40">Run RNA</Button>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBox x:Name="_prefixTextBox">IIPIFFCPICICIICPIICIPPPICIIC</TextBox>
+                <ComboBox x:Name="_rnaFileComboBox"/>
+                <Slider x:Name="_waitOnImportantCommandSlider" Minimum="50" Maximum="1000" Value="200"></Slider>
+                <CheckBox x:Name="_waitOnImportantDrawCommandCheckBox" IsChecked="true" Height="40">Подождать при выполнении важных команд.</CheckBox>
+                <Button Height="40" x:Name="_saveImageButton" Click="SaveImageButtonClick">Save Image</Button>
+            </StackPanel>
+		</Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0">Выполнено команд ДНК:</Label>
+            <Label Grid.Row="1" Grid.Column="0">Произведено символов РНК:</Label>
+            <Label Grid.Row="2" Grid.Column="0">Исполнено команд рисования:</Label>
+            <Label Grid.Row="0" Grid.Column="1" x:Name="_dnaCommandsProcessedLabel">*</Label>
+            <Label Grid.Row="1" Grid.Column="1" x:Name="_rnaCharsWrittenLabel">*</Label>
+            <Label Grid.Row="2" Grid.Column="1" x:Name="_processedRnaCommandLabel">*</Label>
+            <Label Grid.Row="3" Grid.Column="0" x:Name="_dnaProcessingFinishedLabel"></Label>
+            <Label Grid.Row="4" Grid.Column="0" x:Name="_rnaProcessingFinishedLabel"></Label>
+        </Grid>
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_image" Width="600" Height="600" SnapsToDevicePixels="True"/>
+        <!--<Visualizer:BitmapCanvas Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="_canvas" Width="600" Height="600"/>-->
+	</Grid>
+</Window>

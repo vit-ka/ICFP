@@ -1,0 +1,10 @@
+.svn
+bin
+obj
+__binaryOutput
+*.suo
+*.pdb
+*.user
+*_ReSharper*
+/2007/impl/c/runDNA/Debug/runDNA.exe
+/2007/impl/c/runDNA/Debug/runDNA.ilk

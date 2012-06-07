@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("js_mvc2")]
+[assembly: AssemblyTitle("asp_net_mvc4.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("js_mvc2")]
+[assembly: AssemblyProduct("asp_net_mvc4.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("591b3779-d514-4fbb-936d-4bd9be0a5190")]
+[assembly: Guid("fc9ad366-f749-42e3-a1d5-5bd86ca60077")]
 
 // Version information for an assembly consists of the following four values:
 //

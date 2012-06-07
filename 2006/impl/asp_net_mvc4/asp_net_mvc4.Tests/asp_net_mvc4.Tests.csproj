@@ -6,7 +6,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9C89286C-2F4E-4177-9978-95B5EEB89D28}</ProjectGuid>
+    <ProjectGuid>{CBB2C40D-20AF-4A99-8C3C-8DB61E050B4C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>asp_net_mvc4.Tests</RootNamespace>
@@ -107,7 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\asp_net_mvc4\asp_net_mvc4.csproj">
-      <Project>{B07533DB-9846-4430-A940-A012F74473DE}</Project>
+      <Project>{23E139C2-E409-4CC4-A5EF-5080FDB313F8}</Project>
       <Name>asp_net_mvc4</Name>
     </ProjectReference>
   </ItemGroup>

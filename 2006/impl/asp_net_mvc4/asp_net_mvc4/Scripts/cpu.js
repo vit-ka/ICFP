@@ -14,6 +14,9 @@ function Cpu(memory, inputProcessor) {
 }
 
 function continueInterpretation(cpu) {
+
+    console.log(cpu.operationFinger);
+
     var counterAtStart = cpu.counter;
     while (cpu.operationFinger < cpu.memory.getArrayLength(0) && cpu.counter - counterAtStart < 10000) {
         var operation = cpu.memory.getArrayElem(0, cpu.operationFinger);
@@ -139,8 +142,6 @@ function continueInterpretation(cpu) {
 //                + ', b = 0x' + cpu.register[b].toString(16)
         //                + ', c = 0x' + cpu.register[c].toString(16));
     }
-
-    console.log(cpu.counter);
 }
 
 function startInterpetation(cpu) {

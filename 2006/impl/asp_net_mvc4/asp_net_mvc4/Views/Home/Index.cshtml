@@ -11,7 +11,7 @@
             window.onload = function() {
                 write_to_notifier("Interpretation is in process...", true);
 
-                load_file_from_server("@Url.Content("~/packs/area.um")",
+                load_file_from_server("@Url.Content("~/packs/codex.umz")",
                     function(result) {
                         var fileAsCommandArray = convert_to_array_of_commands(result);
 
@@ -19,6 +19,7 @@
                         memory.loadToZeroArray(fileAsCommandArray);
 
                         var inputProcessor = new InputProcessor();
+                        inputProcessor.update_char_counter();
                         
                         var cpu = new Cpu(memory, inputProcessor);
                         startInterpetation(cpu);
@@ -35,8 +36,8 @@
             <div id="output_console">
             </div>
             <div id="input_pane" class="pane">
-                <p class="hint_text">Type text you want to enter here:</p>
-                <input type="text" id="input_field" class="text_box" onkeydown="return InputProcessor.prototype.instance.process_keydown(event);"/>
+                <div id="input_field_counter" class="hint_text">[*]</div><p class="hint_text">Type text you want to enter here:</p>
+                <input type="text" id="input_field" class="text_box" onkeypress="return InputProcessor.prototype.instance.process_keypress(event);"/>
             </div>
         </div>
     </body>

@@ -15,7 +15,7 @@ function Cpu(memory, inputProcessor) {
 
 function continueInterpretation(cpu) {
 
-    console.log(cpu.operationFinger);
+    //console.log(cpu.operationFinger);
 
     var counterAtStart = cpu.counter;
     while (cpu.operationFinger < cpu.memory.getArrayLength(0) && cpu.counter - counterAtStart < 10000) {
@@ -29,7 +29,7 @@ function continueInterpretation(cpu) {
         var b = (operation & 0x00000038) >>> 3;
         var c = (operation & 0x00000007);
 
-        if (operationType != 0x0a && cpu.buffer != "" && cpu.counter - cpu.lastWriteToBufferCounter > 10) {
+        if (operationType == 0x0b || (operationType != 0x0a && cpu.buffer != "" && cpu.counter - cpu.lastWriteToBufferCounter > 10)) {
             write_to_um_console_inside_machine(cpu.buffer);
             cpu.buffer = "";
         }
@@ -104,8 +104,8 @@ function continueInterpretation(cpu) {
             cpu.lastWriteToBufferCounter = cpu.counter;
             break;
         case 0x0b:
-                // Moves back counters in order to be in the same place next time a symbol occurred.
             if (cpu.inputProcessor.is_queue_empty()) {
+                // Moves counters back in order to be in the same place next time a symbol occurred.
                 --cpu.operationFinger;
                 --cpu.counter;
                 cpu.inputProcessor.set_in_wait_mode(cpu);

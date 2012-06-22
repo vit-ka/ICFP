@@ -1,6 +1,7 @@
-function Cpu(memory) {
+function Cpu(memory, inputProcessor) {
     this.operationFinger = 0;
     this.memory = memory;
+    this.inputProcessor = inputProcessor;
     this.register = [0, 0, 0, 0, 0, 0, 0, 0];
 
     this.debug = "";
@@ -8,7 +9,8 @@ function Cpu(memory) {
     this.lastWriteToBufferCounter = 0;
     this.counter = 0;
     this.halted = false;
-    this.startInterpetation = startInterpetation;
+    this.is_waiting_for_input = false;
+    this.intervalId = -1;
 }
 
 function continueInterpretation(cpu) {
@@ -59,84 +61,106 @@ function continueInterpretation(cpu) {
 //        }
 
         switch (operationType) {
-            case 0x00:
-                if (cpu.register[c] != 0)
-                    cpu.register[a] = cpu.register[b];
-                break;
-            case 0x01:
-                cpu.register[a] = cpu.memory.getArrayElem(cpu.register[b], cpu.register[c]);
-                break;
-            case 0x02:
-                cpu.memory.setArrayElem(cpu.register[a], cpu.register[b], cpu.register[c]);
-                break;
-            case 0x03:
-                cpu.register[a] = ((cpu.register[b] + cpu.register[c]) & 0xffffffff) >>> 0;
-                break;
-            case 0x04:
-                cpu.register[a] = ((cpu.register[b] * cpu.register[c]) & 0xffffffff) >>> 0;
-                break;
-            case 0x05:
+        case 0x00:
+            if (cpu.register[c] != 0)
+                cpu.register[a] = cpu.register[b];
+            break;
+        case 0x01:
+            cpu.register[a] = cpu.memory.getArrayElem(cpu.register[b], cpu.register[c]);
+            break;
+        case 0x02:
+            cpu.memory.setArrayElem(cpu.register[a], cpu.register[b], cpu.register[c]);
+            break;
+        case 0x03:
+            cpu.register[a] = ((cpu.register[b] + cpu.register[c]) & 0xffffffff) >>> 0;
+            break;
+        case 0x04:
+            cpu.register[a] = ((cpu.register[b] * cpu.register[c]) & 0xffffffff) >>> 0;
+            break;
+        case 0x05:
                 // TODO: Possible incorrect division in case of negative numbers.
-                cpu.register[a] = (((cpu.register[b] >>> 0) / (cpu.register[c] >>> 0)) & 0xffffffff) >>> 0;
-                break;
-            case 0x06:
-                cpu.register[a] = ((~(cpu.register[b] & cpu.register[c])) & 0xffffffff) >>> 0;
-                break;
-            case 0x07:
-                write_to_um_console("INFO: Halt command has been received.");
-                write_to_um_console(cpu.debug);
-                cpu.halted = true;
+            cpu.register[a] = (((cpu.register[b] >>> 0) / (cpu.register[c] >>> 0)) & 0xffffffff) >>> 0;
+            break;
+        case 0x06:
+            cpu.register[a] = ((~(cpu.register[b] & cpu.register[c])) & 0xffffffff) >>> 0;
+            break;
+        case 0x07:
+            write_to_um_console("INFO: Halt command has been received.");
+            write_to_um_console(cpu.debug);
+            cpu.halted = true;
+            return;
+        case 0x08:
+            var newArrayIndex = cpu.memory.createNewArray(cpu.register[c]);
+            cpu.register[b] = newArrayIndex;
+            break;
+        case 0x09:
+            cpu.memory.abandonArray(cpu.register[c]);
+            break;
+        case 0x0a:
+            cpu.buffer += String.fromCharCode(cpu.register[c]);
+            cpu.lastWriteToBufferCounter = cpu.counter;
+            break;
+        case 0x0b:
+                // Moves back counters in order to be in the same place next time a symbol occurred.
+            if (cpu.inputProcessor.is_queue_empty()) {
+                --cpu.operationFinger;
+                --cpu.counter;
+                cpu.inputProcessor.set_in_wait_mode(cpu);
+                //write_to_um_console("INFO: Queue is empty. Entering in waiting mode.");
                 return;
-            case 0x08:
-                var newArrayIndex = cpu.memory.createNewArray(cpu.register[c]);
-                cpu.register[b] = newArrayIndex;
-                break;
-            case 0x09:
-                cpu.memory.abandonArray(cpu.register[c]);
-                break;
-            case 0x0a:
-                cpu.buffer += String.fromCharCode(cpu.register[c]);
-                cpu.lastWriteToBufferCounter = cpu.counter;
-                break;
-            case 0x0b:
-                // TODO: Implement input queue.
-                cpu.register[c] = 'a'.charCodeAt(0);
-                break;
-            case 0x0c:
-                cpu.memory.copyArrayToZeroIndex(cpu.register[b]);
-                cpu.operationFinger = cpu.register[c];
-                break;
-            case 0x0d:
-                a = (operation & 0x0e000000) >>> 25;
-                var value = operation & 0x01ffffff;
+            } else {
+                cpu.register[c] = cpu.inputProcessor.get_next_char();
+            }
+            break;
+        case 0x0c:
+            cpu.memory.copyArrayToZeroIndex(cpu.register[b]);
+            cpu.operationFinger = cpu.register[c];
+            break;
+        case 0x0d:
+            a = (operation & 0x0e000000) >>> 25;
+            var value = operation & 0x01ffffff;
 
 //                console.log("Argument is: a = 0x" + a.toString(16));
 //                console.log("Register before operation was: a = 0x" + cpu.register[a].toString(16));
 //                console.log("Value before operation was: a = 0x" + value.toString(16));
 
-                cpu.register[a] = value;
+            cpu.register[a] = value;
 
 //                console.log("Register after operation was: a = 0x" + cpu.register[a].toString(16));
-                break;
-            default:
-                var message = "ERROR: Incorrect operator " + (operation + 0x100000000).toString(16).substr(-8);
-                console.log(message);
-                write_to_um_console(message);
+            break;
+        default:
+            var message = "ERROR: Incorrect operator " + (operation + 0x100000000).toString(16).substr(-8);
+            console.log(message);
+            write_to_um_console(message);
         }
 
 //        if (operationType != 0x0d)
 //            console.log("Registers after operation were: a = 0x" + cpu.register[a].toString(16)
 //                + ', b = 0x' + cpu.register[b].toString(16)
-//                + ', c = 0x' + cpu.register[c].toString(16));
+        //                + ', c = 0x' + cpu.register[c].toString(16));
     }
+
+    console.log(cpu.counter);
 }
 
-function startInterpetation() {
-    var cpu = this;
-    setInterval(function () {
-        if (!cpu.halted)
+function startInterpetation(cpu) {
+    cpu.intervalId = setInterval(function() {
+        if (!cpu.halted && !cpu.is_waiting_for_input) {
+            write_to_notifier("Interpretation is in progress.", true);
             continueInterpretation(cpu);
-        else
+        } else if (cpu.halted) {
             write_to_notifier("Interpretation has stopped.", false);
+            //write_to_um_console("DEBUG: Interval " + cpu.intervalId + " has been cleared.");
+            clearInterval(cpu.intervalId);
+            cpu.intervalId = -1;
+        } else if (cpu.is_waiting_for_input && cpu.intervalId > 0) {
+            //write_to_um_console("DEBUG: Interval " + cpu.intervalId + " has been cleared.");
+            write_to_notifier("Interpretation is waiting for input.", true);
+
+            clearInterval(cpu.intervalId);
+            cpu.intervalId = -1;
+        }
     }, 0);
+
+    //write_to_um_console("DEBUG: Interval set to: " + cpu.intervalId);
 }

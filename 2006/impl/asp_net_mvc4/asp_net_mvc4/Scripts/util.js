@@ -3,6 +3,7 @@ function write_to_um_console(text) {
 
     if (con) {
         con.innerHTML += '<pre class="console_text console_log"> * ' + text + '</pre>';
+        con.scrollTop = con.scrollHeight;
     }
     else {
         console.log("Couldn't find element by id console_output.");
@@ -92,3 +93,113 @@ function convert_to_array_of_commands(text) {
 
     return result;
 }
+
+function Queue() {
+
+    // initialise the queue and offset
+    var queue = [];
+    var offset = 0;
+
+    /* Returns the length of the queue.
+    */
+    this.getLength = function() {
+
+        // return the length of the queue
+        return (queue.length - offset);
+
+    };
+
+    /* Returns true if the queue is empty, and false otherwise.
+    */
+    this.isEmpty = function() {
+
+        // return whether the queue is empty
+        return (queue.length == 0);
+
+    };
+
+    /* Enqueues the specified item. The parameter is:
+    *
+    * item - the item to enqueue
+    */
+    this.enqueue = function(item) {
+
+        // enqueue the item
+        queue.push(item);
+
+    };
+
+    /* Dequeues an item and returns it. If the queue is empty then undefined is
+    * returned.
+    */
+    this.dequeue = function() {
+
+        // if the queue is empty, return undefined
+        if (queue.length == 0) return undefined;
+
+        // store the item at the front of the queue
+        var item = queue[offset];
+
+        // increment the offset and remove the free space if necessary
+        if (++offset * 2 >= queue.length) {
+            queue = queue.slice(offset);
+            offset = 0;
+        }
+
+        // return the dequeued item
+        return item;
+
+    };
+
+    /* Returns the item at the front of the queue (without dequeuing it). If the
+    * queue is empty then undefined is returned.
+    */
+    this.peek = function() {
+
+        // return the item at the front of the queue
+        return (queue.length > 0 ? queue[offset] : undefined);
+    };
+
+}
+
+
+
+function InputProcessor() {
+    this.queue = new Queue();
+
+    InputProcessor.prototype.instance = this;
+}
+
+InputProcessor.prototype.process_keydown = function (event) {
+    var code = event.keyCode;
+
+    this.queue.enqueue(code);
+
+    if (this.cpu) {
+        this.cpu.is_waiting_for_input = false;
+        startInterpetation(this.cpu);
+    }
+
+    console.log(code + ": " + String.fromCharCode(code));
+
+    return false;
+};
+
+InputProcessor.prototype.set_in_wait_mode = function (cpu) {
+    this.cpu = cpu;
+    this.cpu.is_waiting_for_input = true;
+};
+
+InputProcessor.prototype.is_queue_empty = function () {
+    return this.queue.isEmpty();
+};
+
+InputProcessor.prototype.get_next_char = function () {
+    if (!this.queue.isEmpty()) {
+        return this.queue.dequeue();
+    } else {
+        setTimeout(null, 100);
+        write_to_um_console("ERROR: Empty Queue input");
+        return 0xffffffff;
+    }
+};

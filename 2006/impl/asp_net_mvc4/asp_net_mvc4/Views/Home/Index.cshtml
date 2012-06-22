@@ -11,15 +11,17 @@
             window.onload = function() {
                 write_to_notifier("Interpretation is in process...", true);
 
-                load_file_from_server("@Url.Content("~/packs/sandmark.umz")",
+                load_file_from_server("@Url.Content("~/packs/area.um")",
                     function(result) {
                         var fileAsCommandArray = convert_to_array_of_commands(result);
 
                         var memory = new Memory();
                         memory.loadToZeroArray(fileAsCommandArray);
 
-                        var cpu = new Cpu(memory);
-                        cpu.startInterpetation();
+                        var inputProcessor = new InputProcessor();
+                        
+                        var cpu = new Cpu(memory, inputProcessor);
+                        startInterpetation(cpu);
                     });
             };
         </script>
@@ -34,7 +36,7 @@
             </div>
             <div id="input_pane" class="pane">
                 <p class="hint_text">Type text you want to enter here:</p>
-                <input type="text" id="input_field" class="text_box"/>
+                <input type="text" id="input_field" class="text_box" onkeydown="return InputProcessor.prototype.instance.process_keydown(event);"/>
             </div>
         </div>
     </body>

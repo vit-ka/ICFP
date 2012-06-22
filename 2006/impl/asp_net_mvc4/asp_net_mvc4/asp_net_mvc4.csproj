@@ -144,6 +144,9 @@
     <Content Include="packs\piles.um" />
     <Content Include="packs\sandmark.umz" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="packs\codex.um" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

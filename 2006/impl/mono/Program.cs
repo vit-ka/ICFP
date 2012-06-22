@@ -2,7 +2,6 @@
 using System.IO;
 
 using UM.Command;
-using UM.Memory;
 
 namespace UM
 {

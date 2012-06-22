@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\InstructionType.cs" />
+    <Compile Include="Command\MemoryManager.cs" />
     <Compile Include="Command\Processor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

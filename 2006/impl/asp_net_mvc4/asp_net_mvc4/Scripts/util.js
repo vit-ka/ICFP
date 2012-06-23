@@ -181,7 +181,7 @@ InputProcessor.prototype.process_keypress = function(event) {
 
     this.update_char_counter();
 
-    //console.log(code + ": " + String.fromCharCode(code));
+    console.log(code + ": " + String.fromCharCode(code));
 
     return false;
 };

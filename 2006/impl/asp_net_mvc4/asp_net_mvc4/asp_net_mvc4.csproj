@@ -145,7 +145,7 @@
     <Content Include="packs\sandmark.umz" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packs\codex.um" />
+    <Content Include="packs\umix.um" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

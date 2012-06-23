@@ -39,7 +39,7 @@ function setArrayElem(scriptIndex, elemIndex, newValue) {
 }
 
 function createNewArray(capasity) {
-    var newArray = [];
+    var newArray = new Array(capasity);
     for (var i = 0; i < capasity; ++i)
         newArray[i] = 0;
 

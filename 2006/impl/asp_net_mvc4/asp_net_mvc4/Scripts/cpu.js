@@ -15,7 +15,7 @@ function Cpu(memory, inputProcessor) {
 
 function continueInterpretation(cpu) {
 
-    //console.log(cpu.operationFinger);
+    //console.log("At continue interpretation " + cpu.operationFinger);
 
     var counterAtStart = cpu.counter;
     while (cpu.operationFinger < cpu.memory.getArrayLength(0) && cpu.counter - counterAtStart < 10000) {
@@ -29,7 +29,7 @@ function continueInterpretation(cpu) {
         var b = (operation & 0x00000038) >>> 3;
         var c = (operation & 0x00000007);
 
-        if (operationType == 0x0b || (operationType != 0x0a && cpu.buffer != "" && cpu.counter - cpu.lastWriteToBufferCounter > 10)) {
+        if (cpu.buffer != "" && (operationType == 0x0b || (operationType != 0x0a && cpu.counter - cpu.lastWriteToBufferCounter > 10))) {
             write_to_um_console_inside_machine(cpu.buffer);
             cpu.buffer = "";
         }
@@ -81,7 +81,6 @@ function continueInterpretation(cpu) {
             cpu.register[a] = ((cpu.register[b] * cpu.register[c]) & 0xffffffff) >>> 0;
             break;
         case 0x05:
-                // TODO: Possible incorrect division in case of negative numbers.
             cpu.register[a] = (((cpu.register[b] >>> 0) / (cpu.register[c] >>> 0)) & 0xffffffff) >>> 0;
             break;
         case 0x06:
@@ -112,7 +111,9 @@ function continueInterpretation(cpu) {
                 //write_to_um_console("INFO: Queue is empty. Entering in waiting mode.");
                 return;
             } else {
-                cpu.register[c] = cpu.inputProcessor.get_next_char();
+                var ch = cpu.inputProcessor.get_next_char();
+                console.log(ch);
+                cpu.register[c] = ch & 0x000000ff;
             }
             break;
         case 0x0c:

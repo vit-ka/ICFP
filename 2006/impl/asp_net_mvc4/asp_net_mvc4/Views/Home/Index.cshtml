@@ -3,10 +3,10 @@
 <html>
     <head>
         <title>The Page to run JS UM</title>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/look_and_feel.css")"/>
         <script type="text/javascript" src="@Url.Content("~/Scripts/cpu.js")"> </script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/memory.js")"> </script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/util.js")"> </script>
-        <link rel="stylesheet" type="text/css" href="@Url.Content("~/look_and_feel.css")"/>
         <script type="text/javascript">
             window.onload = function() {
                 write_to_notifier("Interpretation is in process...", true);

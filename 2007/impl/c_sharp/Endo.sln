@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnaRunner", "DnaRunner\DnaRunner.csproj", "{D94689DE-E998-4D27-946A-D990D1E901CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Visualizer.csproj", "{366B3AE5-46CF-4912-BBE7-4EBAC7C0AA18}"

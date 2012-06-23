@@ -115,7 +115,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        _rnaProcessingFinishedLabel.Content = "Отрисовка РНК завершена.";
+                        _rnaProcessingFinishedLabel.Content = "RNA paiting has been finished.";
                     }));
         }
 
@@ -193,7 +193,7 @@ namespace Visualizer
                 new VoidDelegate(
                     () =>
                     {
-                        _dnaProcessingFinishedLabel.Content = "Обработка ДНК завершена.";
+                        _dnaProcessingFinishedLabel.Content = "DNA processing has been finished.";
                     }));
         }
 

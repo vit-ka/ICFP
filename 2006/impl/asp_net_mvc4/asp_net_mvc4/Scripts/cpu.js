@@ -16,9 +16,11 @@ function Cpu(memory, inputProcessor) {
 function continueInterpretation(cpu) {
 
     //console.log("At continue interpretation " + cpu.operationFinger);
+//    console.log(this.debug);
+//    this.debug = "";
 
     var counterAtStart = cpu.counter;
-    while (cpu.operationFinger < cpu.memory.getArrayLength(0) && cpu.counter - counterAtStart < 10000) {
+    while (cpu.operationFinger < cpu.memory.getArrayLength(0) && cpu.counter - counterAtStart < 50000) {
         var operation = cpu.memory.getArrayElem(0, cpu.operationFinger);
 
         ++cpu.operationFinger;
@@ -34,7 +36,7 @@ function continueInterpretation(cpu) {
             cpu.buffer = "";
         }
 
-//        debug += "0x" + cpu.operationFinger.toString(16)
+//        this.debug += "0x" + cpu.operationFinger.toString(16)
 //            + ": 0x" + (operation + 0x100000000).toString(16).substr(-8)
 //            + " as 0x" + operationType.toString(16)
 //            + " a=" + a
@@ -112,7 +114,9 @@ function continueInterpretation(cpu) {
                 return;
             } else {
                 var ch = cpu.inputProcessor.get_next_char();
-                console.log(ch);
+                write_to_um_console_inside_machine(String.fromCharCode(ch));
+                //                console.log(ch);
+
                 cpu.register[c] = ch & 0x000000ff;
             }
             break;

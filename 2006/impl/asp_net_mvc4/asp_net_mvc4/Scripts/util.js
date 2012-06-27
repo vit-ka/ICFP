@@ -165,13 +165,18 @@ function InputProcessor() {
     InputProcessor.prototype.instance = this;
 }
 
-InputProcessor.prototype.process_keypress = function(event) {
+InputProcessor.prototype.process_keypress = function (event) {
     var code = event.charCode;
 
     if (code == 16 || code == 17 || code == 18)
         return false;
 
-    this.queue.enqueue(code);    
+    this.queue.enqueue(code);
+
+    // Adds a new line after carriage return.
+    if (code == 13) {
+        this.queue.enqueue(10);
+    }
 
 
     if (this.cpu) {
@@ -181,7 +186,7 @@ InputProcessor.prototype.process_keypress = function(event) {
 
     this.update_char_counter();
 
-    console.log(code + ": " + String.fromCharCode(code));
+//    console.log(code + ": " + String.fromCharCode(code));
 
     return false;
 };

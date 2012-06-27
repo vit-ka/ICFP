@@ -65,7 +65,7 @@ public class Processor
             registerBIndex = (int) ((instruction & 0x00000038L) >> 3);
             registerCIndex = (int) (instruction & 0x00000007L);
             
-            /*String instrHex = Long.toHexString((instruction + 0x1000000000L));
+            String instrHex = Long.toHexString((instruction + 0x1000000000L));
             String instrTypeHex = Long.toHexString((instructionType + 0x1000000000L));
             String reg0Hex = Long.toHexString((registers[0] + 0x1000000000L));
             String reg1Hex = Long.toHexString((registers[1] + 0x1000000000L));
@@ -91,7 +91,7 @@ public class Processor
         +",0x" + reg5Hex.substring(reg5Hex.length() - 8, reg5Hex.length())
         +",0x" + reg6Hex.substring(reg6Hex.length() - 8, reg6Hex.length())
         +",0x" + reg7Hex.substring(reg7Hex.length() - 8, reg7Hex.length()) + "]");
-            */
+            
             switch (instructionType) {
                 //Conditional move
                 case 0x00:

@@ -7,6 +7,7 @@ type ScrollItem =
     | Addition of uint32 * uint32 * uint32
     | Multiplication of uint32 * uint32 * uint32
     | Division of uint32 * uint32 * uint32
+    | NotAnd of uint32 * uint32 * uint32
 
 type IScrollParser =
     interface 
@@ -30,4 +31,5 @@ type ScrollParser() =
             | StandartOperatorExtract (3u, a, b, c) -> Addition(a, b, c)
             | StandartOperatorExtract (4u, a, b, c) -> Multiplication(a, b, c)
             | StandartOperatorExtract (5u, a, b, c) -> Division(a, b, c)
+            | StandartOperatorExtract (6u, a, b, c) -> NotAnd(a, b, c)
             | _ -> failwithf "Incorrect operator received %x" item

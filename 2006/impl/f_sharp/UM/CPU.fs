@@ -21,6 +21,10 @@ type CPU(memory : IMemory, io : IIO, parser : IScrollParser) =
         match operator with
         | ConditionalMove(a,b,c) -> if this.Registers.[int c] <> 0u then this.Registers.[int a] <- this.Registers.[int b]
         | ArrayIndex(a,b,c) -> this.Registers.[int a] <- this.Memory.GetValueFromBlock (this.Registers.[int b], this.Registers.[int c])
+        | ArrayAmendment(a,b,c) ->  this.Memory.WriteValueToBlock (this.Registers.[int a], this.Registers.[int b], this.Registers.[int c])
+        | Addition(a,b,c) ->  this.Registers.[int a] <- (this.Registers.[int b] + this.Registers.[int c]) % 0b00000000000000000000000100000000u
+        | Multiplication(a,b,c) ->  this.Registers.[int a] <- (this.Registers.[int b] * this.Registers.[int c]) % 0b00000000000000000000000100000000u
+        | Division(a,b,c) ->  this.Registers.[int a] <- (this.Registers.[int b] / this.Registers.[int c])
 
     member this.StartInterpretation() =
         printfn "Starting interpretation of scroll..."

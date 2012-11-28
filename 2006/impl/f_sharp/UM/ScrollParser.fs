@@ -3,6 +3,10 @@
 type ScrollItem =
     | ConditionalMove of uint32 * uint32 * uint32
     | ArrayIndex of uint32 * uint32 * uint32
+    | ArrayAmendment of uint32 * uint32 * uint32
+    | Addition of uint32 * uint32 * uint32
+    | Multiplication of uint32 * uint32 * uint32
+    | Division of uint32 * uint32 * uint32
 
 type IScrollParser =
     interface 
@@ -22,4 +26,8 @@ type ScrollParser() =
             match item with
             | StandartOperatorExtract (0u, a, b, c) -> ConditionalMove(a, b, c)
             | StandartOperatorExtract (1u, a, b, c) -> ArrayIndex(a, b, c)
+            | StandartOperatorExtract (2u, a, b, c) -> ArrayAmendment(a, b, c)
+            | StandartOperatorExtract (3u, a, b, c) -> Addition(a, b, c)
+            | StandartOperatorExtract (4u, a, b, c) -> Multiplication(a, b, c)
+            | StandartOperatorExtract (5u, a, b, c) -> Division(a, b, c)
             | _ -> failwithf "Incorrect operator received %x" item

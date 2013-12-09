@@ -75,13 +75,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\ICFP.2009.Common.csproj">
       <Project>{994A2986-2B70-4791-9392-F02D373EC056}</Project>
-      <Name>Common</Name>
+      <Name>ICFP.2009.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtualMachineLib\VirtualMachineLib.csproj">
+    <ProjectReference Include="..\VirtualMachineLib\ICFP.2009.VirtualMachine.Core.csproj">
       <Project>{0342D138-41FD-4E6C-B73E-9479877271D5}</Project>
-      <Name>VirtualMachineLib</Name>
+      <Name>ICFP.2009.VirtualMachine.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -147,17 +147,17 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Actuator\Actuator.csproj">
+    <ProjectReference Include="..\Actuator\ICFP.2009.Actuator.csproj">
       <Project>{584A1783-4DEC-41C7-AD68-5BD452C8812A}</Project>
-      <Name>Actuator</Name>
+      <Name>ICFP.2009.Actuator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\ICFP.2009.Common.csproj">
       <Project>{994A2986-2B70-4791-9392-F02D373EC056}</Project>
-      <Name>Common</Name>
+      <Name>ICFP.2009.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtualMachineLib\VirtualMachineLib.csproj">
+    <ProjectReference Include="..\VirtualMachineLib\ICFP.2009.VirtualMachine.Core.csproj">
       <Project>{0342D138-41FD-4E6C-B73E-9479877271D5}</Project>
-      <Name>VirtualMachineLib</Name>
+      <Name>ICFP.2009.VirtualMachine.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

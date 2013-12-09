@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Visualizer.csproj", "{9F5FB1FA-5D0A-4EF4-83BF-C3D427E35499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP.2009.UI.Visualizer", "Visualizer\ICFP.2009.UI.Visualizer.csproj", "{9F5FB1FA-5D0A-4EF4-83BF-C3D427E35499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualMachineLib", "VirtualMachineLib\VirtualMachineLib.csproj", "{0342D138-41FD-4E6C-B73E-9479877271D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP.2009.VirtualMachine.Core", "VirtualMachineLib\ICFP.2009.VirtualMachine.Core.csproj", "{0342D138-41FD-4E6C-B73E-9479877271D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMConsoleRunner", "VMConsoleRunner\VMConsoleRunner.csproj", "{C99E46F9-6E4A-4148-BD22-28D899E20407}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP.2009.Console", "VMConsoleRunner\ICFP.2009.Console.csproj", "{C99E46F9-6E4A-4148-BD22-28D899E20407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Actuator", "Actuator\Actuator.csproj", "{584A1783-4DEC-41C7-AD68-5BD452C8812A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP.2009.Actuator", "Actuator\ICFP.2009.Actuator.csproj", "{584A1783-4DEC-41C7-AD68-5BD452C8812A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{994A2986-2B70-4791-9392-F02D373EC056}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP.2009.Common", "Common\ICFP.2009.Common.csproj", "{994A2986-2B70-4791-9392-F02D373EC056}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8BF74A08-BF35-48BE-9536-331E4C98FEAC}"
 	ProjectSection(SolutionItems) = preProject

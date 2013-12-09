@@ -20,7 +20,6 @@ namespace ICFP2009.VirtualMachineLib
 
         public class PortsCollection : IEnumerable<KeyValuePair<Int16, Double>>
         {
-            // Словари значение I/O портов. Ключ --- номер порта. Значение --- значение в порте.
             private readonly IDictionary<Int16, Double> _ports;
 
             public PortsCollection()

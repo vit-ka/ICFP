@@ -54,8 +54,8 @@ namespace ICFP2009.Visualizer
 
         private void _factorSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _mainCanvas.AdditionalFactor = _factorSlider.Value;
-            _mainCanvas.InvalidateVisual();
+            //_mainCanvas.AdditionalFactor = _factorSlider.Value;
+            //_mainCanvas.InvalidateVisual();
         }
 
         private void _resetButton_Click(object sender, RoutedEventArgs e)

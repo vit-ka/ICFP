@@ -7,7 +7,7 @@ using System.Windows.Media;
 using ICFP2009.VirtualMachineLib;
 using Vector=ICFP2009.Common.Vector;
 
-namespace ICFP2009.Visualizer
+namespace ICFP2009.Visualizer.Controls
 {
     public class SpaceCanvas : Control
     {

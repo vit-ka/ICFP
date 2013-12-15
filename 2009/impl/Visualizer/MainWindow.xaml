@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ICFP2009.Visualizer.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:ICFP2009.Visualizer;assembly=ICFP2009.Visualizer"
+    xmlns:custom="clr-namespace:ICFP2009.Visualizer.Controls"
     Title="Visualizer" Height="474" Width="882">
     <Grid>
         <Grid.RowDefinitions>
@@ -18,9 +18,9 @@
             <Button Width="120" Click="LoadButton_Click">Load</Button>
         </StackPanel>
 
-        <local:SpaceCanvas Grid.Column="0" Grid.Row="1" x:Name="_mainCanvas" ClipToBounds="True">
-        </local:SpaceCanvas>
-        
+        <!--<custom:SpaceCanvas Grid.Column="0" Grid.Row="1" x:Name="_mainCanvas" ClipToBounds="True" />-->
+
+
         <GroupBox Grid.Column="1"  Grid.Row="1" Width="200">
             <Grid>
                 <Grid.RowDefinitions>

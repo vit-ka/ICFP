@@ -7,8 +7,8 @@
     <ProjectGuid>{7515BFE0-1D2E-45D2-9C74-FF445D7E074F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ICFP2009.VM.Core</RootNamespace>
-    <AssemblyName>ICFP2009.VM.Core</AssemblyName>
+    <RootNamespace>ICFP2009.VirtualMachine.Core</RootNamespace>
+    <AssemblyName>ICFP2009.VirtualMachine.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

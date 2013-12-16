@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP2009.VirtualMachine.Run
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP2009.VirtualMachine.Core", "ICFP2009.VirtualMachine.Core\ICFP2009.VirtualMachine.Core.csproj", "{7515BFE0-1D2E-45D2-9C74-FF445D7E074F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICFP2009.VirtualMachine.Core.Test", "ICFP2009.VirtualMachine.Core.Test\ICFP2009.VirtualMachine.Core.Test.csproj", "{CF82D960-DF93-4505-81CB-E996D8860905}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{7515BFE0-1D2E-45D2-9C74-FF445D7E074F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7515BFE0-1D2E-45D2-9C74-FF445D7E074F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7515BFE0-1D2E-45D2-9C74-FF445D7E074F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF82D960-DF93-4505-81CB-E996D8860905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF82D960-DF93-4505-81CB-E996D8860905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF82D960-DF93-4505-81CB-E996D8860905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF82D960-DF93-4505-81CB-E996D8860905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

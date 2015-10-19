@@ -6,6 +6,6 @@
 #define DBG_MEMORY(x)
 #define DBG_CPU(x)
 
-typedef unsigned int uint;
+typedef uint32_t uint;
 
 #endif

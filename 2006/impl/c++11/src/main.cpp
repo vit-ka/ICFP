@@ -15,8 +15,14 @@ int main(int argc, char* argv[]) {
   google::SetUsageMessage(USAGE_MESSAGE);
   google::ParseCommandLineFlags(&argc, &argv, true);
   google::InitGoogleLogging(argv[0]);
+  google::InstallFailureSignalHandler();
 
   if (FLAGS_load != "") {
+    if (argc > 1) {
+      LOG(FATAL) << "You should've not specified any regular scroll name while loading "
+                 << "from a dump file.";
+    }
+
     LOG(INFO) << "Dump file loading mode. I will load '" << FLAGS_load
               << "' file and continue execution from the previously saved state.";
   } else {

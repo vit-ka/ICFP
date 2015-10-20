@@ -42,9 +42,11 @@ int main(int argc, char* argv[]) {
 
 void LoadDumpFile(const string& file_name) {
   VLOG(1) << "Loading dump file '" << file_name << "'...";
+  LOG(FATAL) << "This functions has not been implemented yet";
 }
 
 void LoadRegularScroll(const string& file_name) {
   VLOG(1) << "Loading regular scroll file '" << file_name << "'...";
+  LOG(FATAL) << "This function has not been implemented yet";
 }
 

@@ -10,7 +10,7 @@ __binaryOutput
 /2007/impl/c/runDNA/Debug/runDNA.ilk
 packages
 /2006/impl/c++/um
-*.cmake
 CMakeFiles
+cmake_install.cmake
 CMakeCache.txt
 Makefile

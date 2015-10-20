@@ -10,6 +10,9 @@ static const char* USAGE_MESSAGE = "[flags] scroll_file.um";
 
 using namespace std;
 
+void LoadDumpFile(const string& file_name);
+void LoadRegularScroll(const string& file_name);
+
 int main(int argc, char* argv[]) {
   google::SetVersionString(VERSION);
   google::SetUsageMessage(USAGE_MESSAGE);
@@ -25,11 +28,23 @@ int main(int argc, char* argv[]) {
 
     LOG(INFO) << "Dump file loading mode. I will load '" << FLAGS_load
               << "' file and continue execution from the previously saved state.";
+
+    LoadDumpFile(FLAGS_load);
   } else {
     if (argc < 2) {
       LOG(FATAL) << "The scroll file name should be specified as the first argument.";
     }
 
     LOG(INFO) << "Normal startup mode. Image file name to execute: '" << argv[1] << "'";
+    LoadRegularScroll(string(argv[1]));
   }
 }
+
+void LoadDumpFile(const string& file_name) {
+  VLOG(1) << "Loading dump file '" << file_name << "'...";
+}
+
+void LoadRegularScroll(const string& file_name) {
+  VLOG(1) << "Loading regular scroll file '" << file_name << "'...";
+}
+

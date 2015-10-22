@@ -3,6 +3,8 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
+#include "ScrollLoader.h"
+
 DEFINE_string(load, "", "Dump file name to load.");
 
 static const char* VERSION = "0.0.1";
@@ -11,7 +13,7 @@ static const char* USAGE_MESSAGE = "[flags] scroll_file.um";
 using namespace std;
 
 void LoadDumpFile(const string& file_name);
-void LoadRegularScroll(const string& file_name);
+void LoadRegularScrollAddExecuteAllSteps(const string& file_name);
 
 int main(int argc, char* argv[]) {
   google::SetVersionString(VERSION);
@@ -36,7 +38,7 @@ int main(int argc, char* argv[]) {
     }
 
     LOG(INFO) << "Normal startup mode. Image file name to execute: '" << argv[1] << "'";
-    LoadRegularScroll(string(argv[1]));
+    LoadRegularScrollAddExecuteAllSteps(string(argv[1]));
   }
 }
 
@@ -45,8 +47,15 @@ void LoadDumpFile(const string& file_name) {
   LOG(FATAL) << "This functions has not been implemented yet";
 }
 
-void LoadRegularScroll(const string& file_name) {
+void LoadRegularScrollAndExecuteAllSteps(const string& file_name) {
   VLOG(1) << "Loading regular scroll file '" << file_name << "'...";
-  LOG(FATAL) << "This function has not been implemented yet";
+
+  ScrollLoader loader;
+  auto um = loader.PrepareUmFromScrollFile(file_name);
+
+  um.ExecuteAllSteps();
+
+  LOG(INFO) << "Regular scroll file execution has finished. File name: '"
+            << file_name << "'.";
 }
 

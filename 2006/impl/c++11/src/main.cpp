@@ -7,17 +7,18 @@
 
 DEFINE_string(load, "", "Dump file name to load.");
 
-static const char* VERSION = "0.0.1";
-static const char* USAGE_MESSAGE = "[flags] scroll_file.um";
+static const std::string VERSION = "0.0.1";
+static const std::string USAGE_MESSAGE = "[flags] scroll_file.um";
 
 using namespace std;
 
 void LoadDumpFile(const string& file_name);
-void LoadRegularScrollAddExecuteAllSteps(const string& file_name);
+void LoadRegularScrollAndExecuteAllSteps(const string& file_name);
 
 int main(int argc, char* argv[]) {
-  google::SetVersionString(VERSION);
-  google::SetUsageMessage(USAGE_MESSAGE);
+  // Strange behavior. G++ can't find these functions.
+  //google::SetVersionString(VERSION);
+  //google::SetUsageMessage(USAGE_MESSAGE);
   google::ParseCommandLineFlags(&argc, &argv, true);
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
     }
 
     LOG(INFO) << "Normal startup mode. Image file name to execute: '" << argv[1] << "'";
-    LoadRegularScrollAddExecuteAllSteps(string(argv[1]));
+    LoadRegularScrollAndExecuteAllSteps(string(argv[1]));
   }
 }
 

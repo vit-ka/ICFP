@@ -13,5 +13,5 @@ find_package(gflags REQUIRED)
 find_package(glog REQUIRED)
 
 add_executable(um src/main.cpp src/ScrollLoader.cpp src/UM.cpp)
-target_compile_features(um PRIVATE cxx_auto_type)
 target_link_libraries(um gflags glog)
+target_compile_features(um PRIVATE cxx_auto_type)

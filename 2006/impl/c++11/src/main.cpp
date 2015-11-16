@@ -17,8 +17,8 @@ void LoadRegularScrollAndExecuteAllSteps(const string& file_name);
 
 int main(int argc, char* argv[]) {
   // Strange behavior. G++ can't find these functions.
-  //google::SetVersionString(VERSION);
-  //google::SetUsageMessage(USAGE_MESSAGE);
+  google::SetVersionString(VERSION);
+  google::SetUsageMessage(USAGE_MESSAGE);
   google::ParseCommandLineFlags(&argc, &argv, true);
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();

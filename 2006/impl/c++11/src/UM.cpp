@@ -3,5 +3,5 @@
 #include "UM.h"
 
 void UM::ExecuteAllSteps() {
-  LOG(FATAL) << "Not implemented.";
+  LOG(INFO) << "Not implemented.";
 }

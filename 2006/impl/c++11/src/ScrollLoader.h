@@ -4,5 +4,5 @@
 
 class ScrollLoader {
   public:
-   UM&& PrepareUmFromScrollFile(const std::string& file_name);
+   UM PrepareUmFromScrollFile(const std::string& file_name);
 };

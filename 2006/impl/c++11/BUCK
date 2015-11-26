@@ -1,0 +1,36 @@
+# Compilation flags for artifacts.
+FLAGS = [
+    '-std=c++11',
+    '-fexceptions',
+    '-frtti',
+    '-Wall',
+    '-Werror',
+]
+
+FLAGS_RELEASE = FLAGS + [
+    '-DNDEBUG',
+    '-fvisibility=hidden'
+]
+
+FLAGS_DEBUG = FLAGS + [
+    '-UNDEBUG',
+    '-O0',
+    '-g',
+    '-ggdb',
+    '-gdwarf-2',
+]
+
+cxx_binary(
+  name = 'um',
+  srcs = [
+    'src/UM.cpp',
+    'src/ScrollLoader.cpp',
+    'src/main.cpp',
+  ],
+  headers = [
+    'src/ScrollLoader.h',
+    'src/UM.h',
+  ],
+  deps = [
+  ],
+)

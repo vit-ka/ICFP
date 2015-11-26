@@ -25,8 +25,9 @@ int main(int argc, char* argv[]) {
 
   if (FLAGS_load != "") {
     if (argc > 1) {
-      LOG(FATAL) << "You should've not specified any regular scroll name while loading "
+      LOG(ERROR) << "You should've not specified any regular scroll name while loading "
                  << "from a dump file.";
+      return -1;
     }
 
     LOG(INFO) << "Dump file loading mode. I will load '" << FLAGS_load
@@ -35,7 +36,8 @@ int main(int argc, char* argv[]) {
     LoadDumpFile(FLAGS_load);
   } else {
     if (argc < 2) {
-      LOG(FATAL) << "The scroll file name should be specified as the first argument.";
+      LOG(ERROR) << "The scroll file name should be specified as the first argument.";
+      return -1;
     }
 
     LOG(INFO) << "Normal startup mode. Image file name to execute: '" << argv[1] << "'";

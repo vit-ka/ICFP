@@ -32,5 +32,18 @@ cxx_binary(
     'src/UM.h',
   ],
   deps = [
+		':glog',
+  ],
+)
+
+prebuilt_cxx_library(
+  name = 'glog',
+  lib_dir = '/usr/local/Cellar/glog/0.3.4/lib/',
+  exported_headers = [
+  	'/usr/local/Cellar/glog/0.3.4/include/glog/log_severity.h',
+		'/usr/local/Cellar/glog/0.3.4/include/glog/logging.h',
+		'/usr/local/Cellar/glog/0.3.4/include/glog/raw_logging.h',
+		'/usr/local/Cellar/glog/0.3.4/include/glog/stl_logging.h',
+		'/usr/local/Cellar/glog/0.3.4/include/glog/vlog_is_on.h',
   ],
 )

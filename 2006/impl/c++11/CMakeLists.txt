@@ -12,6 +12,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 find_package(gflags REQUIRED)
 find_package(glog REQUIRED)
 
-add_executable(um src/main.cpp src/ScrollLoader.cpp src/UM.cpp)
+add_executable(um src/main.cpp src/ScrollLoader.cpp src/UM.cpp src/MemoryArray.cpp)
 target_link_libraries(um gflags glog)
 target_compile_features(um PRIVATE cxx_auto_type)

@@ -15,9 +15,20 @@ class UM {
     std::array<uint32_t, 8> regs_;
 };
 
-enum CpuInstructionType: uint8_t {
+enum class CpuInstructionType: uint8_t {
   CONDITIONAL_MOVE = 0x00,
   ARRAY_INDEX      = 0x01,
+  ARRAY_AMENDMENT  = 0x02,
+  ADDITION         = 0x03,
+  MULTIPLICATION   = 0x04,
+  DIVISION         = 0x05,
+  NOT_AND          = 0x06,
+  HALT             = 0x07,
+  ALLOCATION       = 0x08,
+  ABANDONMENT      = 0x09,
+  OUTPUT           = 0x0A,
+  INTPUT           = 0x0B,
+  LOAD_PROGRAM     = 0x0C,
   ORPHOGRAPY       = 0x0D,
 };
 

@@ -24,19 +24,18 @@ void UM::executeAllSteps() {
   LOG(INFO) << "           Starting scroll execution...";
   LOG(INFO) << "=======================================================";
 
-  //while (idx_ < memory_[0].size()) {
-  while (idx_ < 10 && !halt_) {
+  while (idx_ < memory_[0].size() && !halt_) {
     auto raw_instr = memory_[0][idx_];
     CpuInstruction instruction(raw_instr);
 
-    executeInstruction(instruction);
-
     ++idx_;
+
+    executeInstruction(instruction);
   }
 }
 
 void UM::executeInstruction(const CpuInstruction& instr) {
-  VLOG(10) << "Executing instruction at position " << idx_ << ": " << instr;
+  VLOG(15) << "Executing instruction at position " << idx_ << ": " << instr;
 
   // Warning! Gavnocode!
   switch (instr.type()) {
@@ -46,10 +45,10 @@ void UM::executeInstruction(const CpuInstruction& instr) {
       }
       break;
     case CpuInstructionType::ARRAY_INDEX:
-      regs_[instr.regA()] = memory_[instr.regB()][instr.regC()];
+      regs_[instr.regA()] = memory_[regs_[instr.regB()]][regs_[instr.regC()]];
       break;
     case CpuInstructionType::ARRAY_AMENDMENT:
-      memory_[instr.regA()][instr.regB()] = regs_[instr.regC()];
+      memory_[regs_[instr.regA()]][regs_[instr.regB()]] = regs_[instr.regC()];
       break;
     case CpuInstructionType::ADDITION:
       regs_[instr.regA()] = regs_[instr.regB()] + regs_[instr.regC()];
@@ -64,21 +63,28 @@ void UM::executeInstruction(const CpuInstruction& instr) {
       regs_[instr.regA()] = ~(regs_[instr.regB()] & regs_[instr.regC()]);
       break;
     case CpuInstructionType::HALT:
+      LOG(WARNING) << "Program halted!";
       halt_ = true;
       break;
     case CpuInstructionType::ALLOCATION:
-      regs_[instr.regB()] = memory_.allocate(instr.regC());
+      regs_[instr.regB()] = memory_.allocate(regs_[instr.regC()]);
       break;
     case CpuInstructionType::ABANDONMENT:
-      memory_.abandon(instr.regC());
+      memory_.abandon(regs_[instr.regC()]);
       break;
     case CpuInstructionType::OUTPUT:
-      std::cout << regs_[instr.regC()];
+      std::cout << static_cast<char>(regs_[instr.regC()]);
+      std::cout.flush();
       break;
     case CpuInstructionType::INTPUT:
       {
-        char ch = std::cin.get();
-        if (ch == static_cast<char>(255) /* ^C */) {
+        unsigned char ch = std::cin.get();
+
+        if (ch > 0x7f) {
+          ch = '*';
+        }
+
+        if (std::cin /* ^C */) {
           regs_[instr.regC()] = ch;
         } else {
           regs_[instr.regC()] = 0xFFFFFFFF;
@@ -87,10 +93,10 @@ void UM::executeInstruction(const CpuInstruction& instr) {
       }
     case CpuInstructionType::LOAD_PROGRAM:
       memory_.loadToZero(regs_[instr.regB()]);
-      idx_ = instr.regC();
+      idx_ = regs_[instr.regC()];
       break;
     case CpuInstructionType::ORPHOGRAPY:
-      regs_[instr.regC()] = instr.orphographyValue();
+      regs_[instr.regA()] = instr.orphographyValue();
       break;
     default:
       LOG(WARNING) << "Unsupported operation: " << instr;
@@ -101,14 +107,14 @@ CpuInstruction::CpuInstruction(uint32_t raw_instr) {
   type_ = static_cast<CpuInstructionType>((raw_instr >> 28) & 0x0F);
 
   if (CpuInstructionType::ORPHOGRAPY == type_) {
-    regA_ = (raw_instr >> 26) & 0x07;
+    regA_ = (raw_instr >> 25) & 0x00000007;
     regB_ = 0;
     regC_ = 0;
-    orphographyValue_ = raw_instr & 0x03FFFFFF;
+    orphographyValue_ = raw_instr & 0x01FFFFFF;
   } else {
-    regA_ = raw_instr & 0x07;
-    regB_ = (raw_instr & 0x38) >> 3;
-    regC_ = (raw_instr & 0x01C0) >> 6;
+    regA_ = (raw_instr & 0x000001C0) >> 6;
+    regB_ = (raw_instr & 0x00000038) >> 3;
+    regC_ =  raw_instr & 0x00000007;
     orphographyValue_ = 0;
   }
 }

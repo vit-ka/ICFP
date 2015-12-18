@@ -21,17 +21,27 @@ uint32_t MemoryArray::allocate(size_t size) {
       new std::vector<uint32_t>(size));
   uint32_t new_index = plates_.size();
   plates_.push_back(std::move(new_array_ptr));
+  VLOG(10) << "Allocated new array at " << new_index
+    << " with size " << size;
   return new_index;
 }
 
 void MemoryArray::abandon(uint32_t index) {
+  VLOG(10) << "Abandoning array " << index;
   plates_[index].reset();
 }
 
 void MemoryArray::loadToZero(uint32_t index) {
+  if (index == 0)
+    return;
+
   auto copy = std::unique_ptr<std::vector<uint32_t>>(
       new std::vector<uint32_t>(*plates_[index]));
+  plates_[0].reset();
   plates_[0] = std::move(copy);
+
+  VLOG(10) << "Array at index " << index
+    << " has been placed instead of array 0";
 }
 
 std::ostream& operator<< (std::ostream& out, const MemoryArray& memory) {

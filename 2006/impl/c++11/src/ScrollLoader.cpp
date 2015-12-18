@@ -20,8 +20,11 @@ UM ScrollLoader::prepareUmFromScrollFile(const string& file_name) {
     auto read_bytes = in_stream.gcount();
 
     for (auto i = 0; i < read_bytes; i += 4) {
-      uint32_t block = buffer[i] | buffer[i + 1] << 8 
-          | buffer[i + 2] << 16 | buffer[i + 3] << 24;
+      uint32_t block =
+          static_cast<uint32_t>(0xFF & buffer[i]) << 24
+        | static_cast<uint32_t>(0xFF & buffer[i + 1]) << 16
+        | static_cast<uint32_t>(0xFF & buffer[i + 2]) << 8
+        | static_cast<uint32_t>(0xFF & buffer[i + 3]);
       scroll.push_back(block);
     }
   }

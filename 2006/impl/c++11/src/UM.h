@@ -17,6 +17,7 @@ class UM {
     MemoryArray memory_;
     uint32_t idx_;
     std::array<uint32_t, 8> regs_;
+    bool halt_;
 };
 
 enum class CpuInstructionType: uint8_t {

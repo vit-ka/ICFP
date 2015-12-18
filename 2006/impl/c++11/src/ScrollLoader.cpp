@@ -8,7 +8,7 @@ using namespace std;
 
 const uint32_t BUFFER_SIZE = 10240;
 
-UM ScrollLoader::PrepareUmFromScrollFile(const string& file_name) {
+UM ScrollLoader::prepareUmFromScrollFile(const string& file_name) {
   ifstream in_stream(file_name);
   LOG(INFO) << "Loading file '" << file_name << "'...";
 

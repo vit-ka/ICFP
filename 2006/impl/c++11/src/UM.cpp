@@ -14,7 +14,7 @@ UM::UM(vector<uint32_t>&& scroll)
   LOG(INFO) << "Received scroll has been put into memory " << memory_;
 }
 
-void UM::ExecuteAllSteps() {
+void UM::executeAllSteps() {
   LOG(INFO) << "=======================================================";
   LOG(INFO) << "           Starting scroll execution...";
   LOG(INFO) << "=======================================================";
@@ -26,8 +26,14 @@ void UM::ExecuteAllSteps() {
 
     LOG(INFO) << "Decoded instruction at position " << idx_ << ": " << instruction;
 
+    executeInstruction(instruction);
+
     ++idx_;
   }
+}
+
+void UM::executeInstruction(const CpuInstruction& instr) {
+
 }
 
 CpuInstruction::CpuInstruction(uint32_t raw_instr) {

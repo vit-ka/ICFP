@@ -4,12 +4,16 @@
 
 #include "MemoryArray.h"
 
+class CpuInstruction;
+
 class UM {
   public:
     UM(std::vector<uint32_t>&& scroll);
-    void ExecuteAllSteps();
+    void executeAllSteps();
 
   private:
+    void executeInstruction(const CpuInstruction& inst);
+
     MemoryArray memory_;
     uint32_t idx_;
     std::array<uint32_t, 8> regs_;

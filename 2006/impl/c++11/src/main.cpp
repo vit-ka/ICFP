@@ -12,8 +12,8 @@ static const std::string USAGE_MESSAGE = "[flags] scroll_file.um";
 
 using namespace std;
 
-void LoadDumpFile(const string& file_name);
-void LoadRegularScrollAndExecuteAllSteps(const string& file_name);
+void loadDumpFile(const string& file_name);
+void loadRegularScrollAndExecuteAllSteps(const string& file_name);
 
 int main(int argc, char* argv[]) {
   // Strange behavior. G++ can't find these functions.
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     LOG(INFO) << "Dump file loading mode. I will load '" << FLAGS_load
               << "' file and continue execution from the previously saved state.";
 
-    LoadDumpFile(FLAGS_load);
+    loadDumpFile(FLAGS_load);
   } else {
     if (argc < 2) {
       LOG(ERROR) << "The scroll file name should be specified as the first argument.";
@@ -41,24 +41,26 @@ int main(int argc, char* argv[]) {
     }
 
     LOG(INFO) << "Normal startup mode. Image file name to execute: '" << argv[1] << "'";
-    LoadRegularScrollAndExecuteAllSteps(string(argv[1]));
+    loadRegularScrollAndExecuteAllSteps(string(argv[1]));
   }
 }
 
-void LoadDumpFile(const string& file_name) {
+void loadDumpFile(const string& file_name) {
   VLOG(1) << "Loading dump file '" << file_name << "'...";
   LOG(FATAL) << "This functions has not been implemented yet";
 }
 
-void LoadRegularScrollAndExecuteAllSteps(const string& file_name) {
+void loadRegularScrollAndExecuteAllSteps(const string& file_name) {
   VLOG(1) << "Loading regular scroll file '" << file_name << "'...";
 
   ScrollLoader loader;
-  auto um = loader.PrepareUmFromScrollFile(file_name);
+  auto um = loader.prepareUmFromScrollFile(file_name);
 
-  um.ExecuteAllSteps();
+  um.executeAllSteps();
 
-  LOG(INFO) << "Regular scroll file execution has finished. File name: '"
+  LOG(INFO) << "=================================";
+  LOG(INFO) << "     Regular scroll file execution has finished. File name: '"
             << file_name << "'.";
+  LOG(INFO) << "=================================";
 }
 

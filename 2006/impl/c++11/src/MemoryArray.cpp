@@ -4,6 +4,8 @@
 
 using namespace std;
 
+const std::vector<uint8_t> serializePlate(const std::unique_ptr<std::vector<uint32_t>> & plate);
+
 MemoryArray::MemoryArray(vector<uint32_t>&& scroll) :
   plates_() {
   LOG(INFO) << "Received new scroll of size " << scroll.size() << " commands. Hiding away.";
@@ -14,6 +16,28 @@ MemoryArray::MemoryArray(vector<uint32_t>&& scroll) :
   plates_[0] = std::move(local_scroll_ptr);
 
   LOG(INFO) << "Scroll has been put to plate 0.";
+}
+
+const std::vector<uint8_t> MemoryArray::serialize() {
+  LOG(INFO) << "Serializing memory...";
+
+  std::vector<uint8_t> result;
+  for (const auto & plate : plates_) {
+    if (!plate) {
+      result.push_back(0);
+    } else {
+      result.push_back(1);
+      auto serializedPlate = serializePlate(plate);
+      result.insert(result.end(), serializedPlate.begin(), serializedPlate.end());
+    }
+  }
+
+  LOG(INFO) << "Memory serialization finished";
+  return result;
+}
+
+const std::vector<uint8_t> serializePlate(const std::unique_ptr<std::vector<uint32_t>> & plate) {
+  return std::vector<uint8_t>();
 }
 
 uint32_t MemoryArray::allocate(size_t size) {

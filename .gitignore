@@ -1,3 +1,4 @@
+
 .svn
 bin
 obj
@@ -16,3 +17,4 @@ CMakeCache.txt
 Makefile
 .buckd
 buck-out
+.#*

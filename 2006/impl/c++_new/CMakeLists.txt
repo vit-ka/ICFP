@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 project(UniversalMachine CXX)
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(main.cpp)
+add_executable(um main.cpp)
 
 
 # Debug

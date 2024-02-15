@@ -6,7 +6,14 @@
 
 #include "fmt/core.h"
 
-enum Op { Orthography = 13 };
+enum Op {
+  ConditionaMove = 0x0,
+  Addition = 0x3,
+  Halt = 0x7,
+  Output = 0xa,
+  LoadProgram = 0xc,
+  Orthography = 0xd
+};
 
 std::vector<uint32_t> readScroll(const std::string &file) {
   std::vector<uint32_t> result;
@@ -16,13 +23,13 @@ std::vector<uint32_t> readScroll(const std::string &file) {
     size_t len = program.tellg();
     program.seekg(0, program.beg);
 
-    result.resize(len);
+    result.resize(len / sizeof(uint32_t));
     program.read(reinterpret_cast<char *>(result.data()), len);
 
     // Swapping endiness
     for (auto &v : result) {
-      unsigned char *pV = reinterpret_cast<unsigned char *>(&v);
-      std::reverse(pV, pV + sizeof(v));
+      uint8_t *pV = reinterpret_cast<uint8_t *>(&v);
+      // std::reverse(pV, pV + sizeof(v));
     }
 
     if (program) {
@@ -58,24 +65,67 @@ int main(int argc, char *argv[]) {
     b = (platter & 0x38) >> 3;
     c = (platter & 0x1c0) >> 6;
 
+    if (op != Op::Orthography) {
+      std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
+                << "][pl:" << fmt::format("0x{:08x}", platter) << "] opcode #"
+                << op << "(" << a << ";" << b << ";" << c << ")" << std::endl;
+    }
     switch (op) {
+    case ConditionaMove: {
+      if (rs[c]) {
+        rs[a] = rs[b];
+      }
+      ++ip;
+      break;
+    }
+    case Addition: {
+      rs[a] = rs[b] + rs[c];
+      ++ip;
+      break;
+    }
+    case Halt: {
+      std::cerr << "\tHalted" << std::endl;
+      return -1;
+    }
+    case Output: {
+      std::cout << static_cast<char>(rs[c]);
+      ++ip;
+      break;
+    }
+    case LoadProgram: {
+      if (rs[b] >= mem.size()) {
+        std::cerr << "\terror: Array " << rs[b]
+                  << " is outside allocated area. Max array #: "
+                  << mem.size() - 1 << std::endl;
+      }
+      if (rs[b] != 0) {
+        mem[0] = mem[rs[b]];
+      }
+      ip = rs[c];
+      break;
+    }
     case Orthography: {
       a = (platter & 0xe000000) >> 25;
       size_t value = platter & 0x1ffffff;
-      std::cerr << "[" << fmt::format("0x{:08x}", ip) << "]["
-                << fmt::format("0x{:08x}", platter) << "] opcode #" << op << "("
-                << a << "). Value: " << fmt::format("0x{:08x}", value)
-                << std::endl;
+      std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
+                << "][pl:" << fmt::format("0x{:08x}", platter) << "] opcode #"
+                << op << "(" << a
+                << "). Value: " << fmt::format("0x{:08x}", value) << std::endl;
       rs[a] = value;
       ++ip;
       break;
     }
     default:
-      std::cerr << "Unknown opcode: [" << fmt::format("0x{:08x}", ip) << "]["
+      std::cerr << "Unknown opcode: [ip:" << fmt::format("0x{:08x}", ip) << "]["
                 << fmt::format("0x{:08x}", platter) << "] opcode #" << op << "("
                 << a << ";" << b << ";" << c << ")" << std::endl;
       return -1;
     }
+    std::cerr << "\trs[";
+    for (const auto &r : rs) {
+      std::cerr << fmt::format("0x{:02x};", r);
+    }
+    std::cerr << "]" << std::endl;
   }
 
   return 0;

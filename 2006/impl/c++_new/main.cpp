@@ -21,6 +21,7 @@ enum Op {
   Allocation = 0x8,
   Abandonment = 0x9,
   Output = 0xa,
+  Input = 0xb,
   LoadProgram = 0xc,
   Orthography = 0xd
 };
@@ -163,6 +164,16 @@ int main(int argc, char *argv[]) {
     }
     case Output: {
       std::cout << static_cast<char>(rs[c]);
+      ++ip;
+      break;
+    }
+    case Input: {
+      uint8_t in = std::cin.get();
+      if (!std::cin) {
+        rs[c] = 0xffffffff;
+      } else {
+        rs[c] = in;
+      }
       ++ip;
       break;
     }

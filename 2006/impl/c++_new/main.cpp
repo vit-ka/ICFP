@@ -6,10 +6,20 @@
 
 #include "fmt/core.h"
 
+#define DBG_CPU(x) ; // DBG_CPU(x) x;
+#define DBG_RS(x) ;
+
 enum Op {
   ConditionaMove = 0x0,
+  ArrayIndex = 0x1,
+  ArrayAmendment = 0x2,
   Addition = 0x3,
+  Multiplication = 0x4,
+  Division = 0x5,
+  NotAnd = 0x6,
   Halt = 0x7,
+  Allocation = 0x8,
+  Abandonment = 0x9,
   Output = 0xa,
   LoadProgram = 0xc,
   Orthography = 0xd
@@ -45,7 +55,7 @@ std::vector<uint32_t> readScroll(const std::string &file) {
 }
 
 int main(int argc, char *argv[]) {
-  std::array<uint32_t, 9> rs{};
+  std::array<uint32_t, 8> rs{};
   std::vector<std::vector<uint32_t>> mem;
   size_t ip = 0;
 
@@ -66,9 +76,10 @@ int main(int argc, char *argv[]) {
     c = platter & 0x7;
 
     if (op != Op::Orthography) {
-      std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
-                << "][pl:" << fmt::format("0x{:08x}", platter) << "] opcode #"
-                << op << "(" << a << ";" << b << ";" << c << ")" << std::endl;
+      DBG_CPU(std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
+                        << "][pl:" << fmt::format("0x{:08x}", platter)
+                        << "] opcode #" << op << "(" << a << ";" << b << ";"
+                        << c << ")" << std::endl);
     }
     switch (op) {
     case ConditionaMove: {
@@ -78,14 +89,77 @@ int main(int argc, char *argv[]) {
       ++ip;
       break;
     }
+    case ArrayIndex: {
+      if (rs[b] >= mem.size()) {
+        std::cerr << "\terror: Array Index " << rs[b]
+                  << " is outside allocated area. Max array #: "
+                  << mem.size() - 1 << std::endl;
+      }
+
+      if (rs[c] >= mem[rs[b]].size()) {
+        std::cerr << "\terror: Offset " << rs[c]
+                  << " is outside allocated area in array # " << rs[b]
+                  << ". Max #: " << mem[rs[b]].size() - 1 << std::endl;
+      }
+      rs[a] = mem[rs[b]][rs[c]];
+      ++ip;
+      break;
+    }
+    case ArrayAmendment: {
+      if (rs[a] >= mem.size()) {
+        std::cerr << "\terror: Array Index " << rs[a]
+                  << " is outside allocated area. Max array #: "
+                  << mem.size() - 1 << std::endl;
+      }
+
+      if (rs[b] >= mem[rs[a]].size()) {
+        std::cerr << "\terror: Offset " << rs[b]
+                  << " is outside allocated area in array # " << rs[a]
+                  << ". Max #: " << mem[rs[a]].size() - 1 << std::endl;
+      }
+      mem[rs[a]][rs[b]] = rs[c];
+      ++ip;
+      break;
+    }
     case Addition: {
       rs[a] = rs[b] + rs[c];
+      ++ip;
+      break;
+    }
+    case Multiplication: {
+      rs[a] = rs[b] * rs[c];
+      ++ip;
+      break;
+    }
+    case Division: {
+      rs[a] = rs[b] / rs[c];
+      ++ip;
+      break;
+    }
+    case NotAnd: {
+      rs[a] = ~(rs[b] & rs[c]);
       ++ip;
       break;
     }
     case Halt: {
       std::cerr << "\tHalted" << std::endl;
       return -1;
+    }
+    case Allocation: {
+      mem.push_back(std::vector<uint32_t>(rs[c], 0));
+      rs[b] = mem.size() - 1;
+      ++ip;
+      break;
+    }
+    case Abandonment: {
+      if (rs[c] >= mem.size()) {
+        std::cerr << "\terror: Array Index " << rs[c]
+                  << " is outside allocated area. Max array #: "
+                  << mem.size() - 1 << std::endl;
+      }
+      mem[rs[c]] = {};
+      ++ip;
+      break;
     }
     case Output: {
       std::cout << static_cast<char>(rs[c]);
@@ -94,7 +168,7 @@ int main(int argc, char *argv[]) {
     }
     case LoadProgram: {
       if (rs[b] >= mem.size()) {
-        std::cerr << "\terror: Array " << rs[b]
+        std::cerr << "\terror: Array Index " << rs[b]
                   << " is outside allocated area. Max array #: "
                   << mem.size() - 1 << std::endl;
       }
@@ -107,10 +181,10 @@ int main(int argc, char *argv[]) {
     case Orthography: {
       a = (platter & 0xe000000) >> 25;
       uint32_t value = platter & 0x1ffffff;
-      std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
-                << "][pl:" << fmt::format("0x{:08x}", platter) << "] opcode #"
-                << op << "(" << a
-                << "). Value: " << fmt::format("0x{:08x}", value) << std::endl;
+      DBG_CPU(std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
+                        << "][pl:" << fmt::format("0x{:08x}", platter)
+                        << "] opcode #" << op << "(" << a << "). Value: "
+                        << fmt::format("0x{:08x}", value) << std::endl);
       rs[a] = value;
       ++ip;
       break;
@@ -121,11 +195,10 @@ int main(int argc, char *argv[]) {
                 << a << ";" << b << ";" << c << ")" << std::endl;
       return -1;
     }
-    std::cerr << "\trs[";
-    for (const auto &r : rs) {
-      std::cerr << fmt::format("0x{:02x};", r);
-    }
-    std::cerr << "]" << std::endl;
+
+    DBG_RS(std::cerr << "\trs[");
+    DBG_RS(for (auto r : rs) { std::cerr << fmt::format("0x{:02x};", r); })
+    DBG_RS(std::cerr << "\b]" << std::endl);
   }
 
   return 0;

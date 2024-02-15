@@ -12,7 +12,7 @@ add_executable(um main.cpp format.cc)
 
 
 # Debug
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++2a -fsanitize=address -Werror -pthread")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++2a -fsanitize=address -Werror -pthread")
 
 # Release
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++2a -Werror -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++2a -Werror -pthread")

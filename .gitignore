@@ -13,5 +13,6 @@ packages
 *.cmake
 CMakeFiles
 CMakeCache.txt
+Makefile
 2006/impl/c++/Makefile
 .DS_Store

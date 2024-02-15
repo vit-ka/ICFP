@@ -29,7 +29,7 @@ std::vector<uint32_t> readScroll(const std::string &file) {
     // Swapping endiness
     for (auto &v : result) {
       uint8_t *pV = reinterpret_cast<uint8_t *>(&v);
-      // std::reverse(pV, pV + sizeof(v));
+      std::reverse(pV, pV + sizeof(v));
     }
 
     if (program) {
@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
     auto platter = mem[0][ip];
     auto op = static_cast<Op>((platter & 0xf0000000) >> 28);
     size_t a, b, c;
-    a = platter & 0x7;
+    a = (platter & 0x1c0) >> 6;
     b = (platter & 0x38) >> 3;
-    c = (platter & 0x1c0) >> 6;
+    c = platter & 0x7;
 
     if (op != Op::Orthography) {
       std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
                   << " is outside allocated area. Max array #: "
                   << mem.size() - 1 << std::endl;
       }
-      if (rs[b] != 0) {
+      if (rs[b]) {
         mem[0] = mem[rs[b]];
       }
       ip = rs[c];
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
     }
     case Orthography: {
       a = (platter & 0xe000000) >> 25;
-      size_t value = platter & 0x1ffffff;
+      uint32_t value = platter & 0x1ffffff;
       std::cerr << "[ip:" << fmt::format("0x{:08x}", ip)
                 << "][pl:" << fmt::format("0x{:08x}", platter) << "] opcode #"
                 << op << "(" << a
